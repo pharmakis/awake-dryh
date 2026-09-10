@@ -1,0 +1,18 @@
+{
+  "id": "awake-dryh",
+  "title": "Awake — Unofficial Don't Rest Your Head System",
+  "description": "An unofficial Don't Rest Your Head game system for Foundry Virtual Tabletop. Not affiliated with or endorsed by Evil Hat Productions.",
+  "version": "0.1.0",
+  "compatibility": {
+    "minimum": "14",
+    "verified": "14",
+    "maximum": "14"
+  },
+  "languages": [
+    {
+      "lang": "en",
+      "name": "English",
+      "path": "lang/en.json"
+    }
+  ]
+}

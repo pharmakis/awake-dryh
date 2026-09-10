@@ -6,7 +6,7 @@ Awake is intended to provide a lightweight, focused implementation of the core m
 
 ## Status
 
-Early development.
+Early development. The repository contains a minimal system manifest and English localization infrastructure. Sheets, game data models, and mechanics are not implemented yet.
 
 The project is currently targeting **Foundry VTT v14**.
 
@@ -45,6 +45,10 @@ The source code of Awake is released under the MIT License.
 See [LICENSE](LICENSE) for details.
 
 ## Development
+
+For local installation, copy this repository into your Foundry user data directory as `Data/systems/awake-dryh`, then restart Foundry. The installed folder must be named `awake-dryh` to match the system ID. In Foundry VTT v14, create a world and select **Awake — Unofficial Don't Rest Your Head System**.
+
+English localization lives in `lang/en.json` under the `AWAKE` namespace. The manifest targets v14; runtime compatibility has not yet been verified in Foundry.
 
 Repository:
 

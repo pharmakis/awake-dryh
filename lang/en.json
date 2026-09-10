@@ -1,5 +1,17 @@
 {
   "AWAKE": {
-    "Title": "Awake — Unofficial Don't Rest Your Head System"
+    "Title": "Awake — Unofficial Don't Rest Your Head System",
+
+    "Validation": {
+      "FightCheckedExceedsTotal": "Checked Fight responses cannot exceed total Fight responses.",
+      "FlightCheckedExceedsTotal": "Checked Flight responses cannot exceed total Flight responses.",
+      "ResponseAllocation": "Fight and Flight totals must allocate exactly zero or three responses."
+    }
+  },
+
+  "TYPES": {
+    "Actor": {
+      "awake": "Awake"
+    }
   }
 }

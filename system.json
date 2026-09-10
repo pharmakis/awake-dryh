@@ -8,6 +8,14 @@
     "verified": "14",
     "maximum": "14"
   },
+  "esmodules": [
+    "scripts/awake.js"
+  ],
+  "documentTypes": {
+    "Actor": {
+      "awake": {}
+    }
+  },
   "languages": [
     {
       "lang": "en",

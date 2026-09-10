@@ -184,6 +184,15 @@ Do not perform destructive git operations unless explicitly requested.
 
 Do not rewrite git history.
 
+## Agent Permissions
+
+- Do not create commits unless explicitly requested.
+- Do not push to remotes.
+- Do not merge branches.
+- Do not rewrite git history.
+- Do not perform destructive git operations.
+- Make code changes only in the working tree and leave review and commit decisions to the maintainer.
+
 ## Testing
 
 Add tests for rules logic where feasible, especially:

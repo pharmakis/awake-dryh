@@ -37,6 +37,9 @@ export class AwakeActorData extends foundry.abstract.TypeDataModel {
     if (flight.checked > flight.total) {
       throw new Error(game.i18n.localize("AWAKE.Validation.FlightCheckedExceedsTotal"));
     }
+    if (data.discipline + data.permanentMadness !== 3) {
+      throw new Error(game.i18n.localize("AWAKE.Validation.DisciplineMadnessTotal"));
+    }
 
     const totalResponses = fight.total + flight.total;
     if (totalResponses !== 0 && totalResponses !== 3) {

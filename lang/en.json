@@ -12,6 +12,11 @@
   "TYPES": {
     "Actor": {
       "awake": "Awake"
-    }
+    },
+    "Item": {
+    "exhaustionTalent": "Exhaustion Talent",
+    "madnessTalent": "Madness Talent",
+    "gear": "Gear"
+  }
   }
 }

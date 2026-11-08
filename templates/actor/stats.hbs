@@ -1,0 +1,48 @@
+<section class="awake-stats">
+  <h2>{{localize "AWAKE.Actor.Stats"}}</h2>
+
+  <div class="awake-stat">
+    <label>
+      <span>{{localize "AWAKE.Actor.Discipline"}}</span>
+      <input
+        type="number"
+        name="system.discipline"
+        value="{{system.discipline}}"
+        min="0"
+        max="3"
+        step="1"
+        {{#unless editable}}disabled{{/unless}}
+      />
+    </label>
+  </div>
+
+  <div class="awake-stat">
+    <label>
+      <span>{{localize "AWAKE.Actor.Exhaustion"}}</span>
+      <input
+        type="number"
+        name="system.exhaustion"
+        value="{{system.exhaustion}}"
+        min="0"
+        max="6"
+        step="1"
+        {{#unless editable}}disabled{{/unless}}
+      />
+    </label>
+  </div>
+
+  <div class="awake-stat">
+    <label>
+      <span>{{localize "AWAKE.Actor.PermanentMadness"}}</span>
+      <input
+        type="number"
+        name="system.permanentMadness"
+        value="{{system.permanentMadness}}"
+        min="0"
+        max="3"
+        step="1"
+        {{#unless editable}}disabled{{/unless}}
+      />
+    </label>
+  </div>
+</section>

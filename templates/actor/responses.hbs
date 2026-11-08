@@ -1,0 +1,77 @@
+<section class="awake-responses">
+  <header class="awake-section-header">
+    <h2>{{localize "AWAKE.Actor.Responses"}}</h2>
+
+    {{#if editable}}
+      <button
+        type="button"
+        class="awake-response-lock"
+        data-action="toggleResponsesEdit"
+        title="{{localize "AWAKE.Actor.EditResponses"}}"
+      >
+        {{#if responses.editMode}}
+          🔓
+        {{else}}
+          🔒
+        {{/if}}
+      </button>
+    {{/if}}
+  </header>
+
+  <div class="awake-response-row">
+    <span class="awake-response-label">
+      {{localize "AWAKE.Actor.Fight"}}
+    </span>
+
+    <div class="awake-response-boxes">
+      {{#each responses.fight as |box|}}
+        <button
+          type="button"
+          class="
+            awake-response-box
+            {{#if box.selected}}selected{{/if}}
+            {{#if box.checked}}checked{{/if}}
+            {{#if box.unavailable}}unavailable{{/if}}
+          "
+          data-action="responseBox"
+          data-response-type="fight"
+          data-response-index="{{box.index}}"
+          {{#unless ../editable}}disabled{{/unless}}
+          aria-label="{{localize "AWAKE.Actor.Fight"}} {{box.position}}"
+        ></button>
+      {{/each}}
+    </div>
+  </div>
+
+  <div class="awake-response-row">
+    <span class="awake-response-label">
+      {{localize "AWAKE.Actor.Flight"}}
+    </span>
+
+    <div class="awake-response-boxes">
+      {{#each responses.flight as |box|}}
+        <button
+          type="button"
+          class="
+            awake-response-box
+            {{#if box.selected}}selected{{/if}}
+            {{#if box.checked}}checked{{/if}}
+            {{#if box.unavailable}}unavailable{{/if}}
+          "
+          data-action="responseBox"
+          data-response-type="flight"
+          data-response-index="{{box.index}}"
+          {{#unless ../editable}}disabled{{/unless}}
+          aria-label="{{localize "AWAKE.Actor.Flight"}} {{box.position}}"
+        ></button>
+      {{/each}}
+    </div>
+  </div>
+
+  {{#if responses.editMode}}
+    <div class="awake-response-count">
+      {{localize "AWAKE.Actor.ResponsesSelected"}}:
+      {{responses.selected}} / 3
+    </div>
+  {{/if}}
+</section>

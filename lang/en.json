@@ -5,7 +5,64 @@
     "Validation": {
       "FightCheckedExceedsTotal": "Checked Fight responses cannot exceed total Fight responses.",
       "FlightCheckedExceedsTotal": "Checked Flight responses cannot exceed total Flight responses.",
-      "ResponseAllocation": "Fight and Flight totals must allocate exactly zero or three responses."
+      "ResponseAllocation": "Fight and Flight totals must allocate exactly zero or three responses.",
+      "DisciplineMadnessTotal": "Discipline and Permanent Madness must always add up to three."
+    },
+
+    "Actor": {
+      "Name": "Name",
+      "Identity": "I am...",
+      "IdentityPlaceholder": "Short description, profession, or role",
+      "Stats": "Stats",
+      "Discipline": "Discipline",
+      "Exhaustion": "Exhaustion",
+      "PermanentMadness": "Permanent Madness",
+      "Responses": "Responses",
+      "Fight": "Fight",
+      "Flight": "Flight",
+      "EditResponses": "Edit responses",
+      "ResponsesSelected": "Selected",
+      "Questionnaire": "Questions",
+      "Talents": "Talents",
+      "Scars": "Scars"
+    },
+    "Scars": {
+      "Recalled": "Recalled this session",
+      "Placeholder": "Describe an important experience...",
+      "Transform": "Transform",
+      "TransformTitle": "Transform Scar",
+      "TransformWarning": "A transformed Scar is permanently crossed out and can never be recalled or transformed again.",
+      "TransformReminder": "When you transform a Scar, choose one: change your Madness Talent, change your Exhaustion Talent, or gain the equivalent of 5 Hope.",
+      "TransformConfirm": "Transform",
+      "Cancel": "Cancel"
+    },
+
+    "Questionnaire": {
+      "WhatsKeepingYouAwake": "What's been keeping you awake?",
+      "WhatJustHappened": "What just happened to you?",
+      "WhatsOnTheSurface": "What's on the surface?",
+      "WhatLiesBeneath": "What lies beneath?",
+      "WhatsYourPath": "What's your path?"
+    },
+
+    "Items": {
+      "AddExhaustionTalent": "Add Exhaustion Talent",
+      "AddMadnessTalent": "Add Madness Talent",
+      "AddGear": "Add Gear",
+      "Delete": "Delete"
+    },
+
+    "Hope": {
+      "Chalice": "Hope Chalice",
+      "Spend": "Spend",
+      "SpendTitle": "Spend Hope",
+      "SpendPlaceholder": "Hope spending options will be available here."
+    },
+    "Despair": {
+      "Chalice": "Despair Chalice"
+    },
+    "Common": {
+      "Close": "Close"
     }
   },
 
@@ -14,9 +71,9 @@
       "awake": "Awake"
     },
     "Item": {
-    "exhaustionTalent": "Exhaustion Talent",
-    "madnessTalent": "Madness Talent",
-    "gear": "Gear"
-  }
+      "exhaustionTalent": "Exhaustion Talent",
+      "madnessTalent": "Madness Talent",
+      "gear": "Gear"
+    }
   }
 }

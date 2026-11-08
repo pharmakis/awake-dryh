@@ -1,0 +1,31 @@
+<section class="awake-chalices">
+  <div class="awake-chalice awake-hope-chalice">
+    <span class="awake-chalice-label">
+      {{localize "AWAKE.Hope.Chalice"}}
+    </span>
+
+    <span class="awake-chalice-value">
+      {{hope}}
+    </span>
+
+    {{#if editable}}
+      <button
+        type="button"
+        data-action="spendHope"
+        class="awake-hope-spend"
+      >
+        {{localize "AWAKE.Hope.Spend"}}
+      </button>
+    {{/if}}
+  </div>
+
+  <div class="awake-chalice awake-despair-chalice">
+    <span class="awake-chalice-label">
+      {{localize "AWAKE.Despair.Chalice"}}
+    </span>
+
+    <span class="awake-chalice-value">
+      {{despair}}
+    </span>
+  </div>
+</section>

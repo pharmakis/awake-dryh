@@ -1,0 +1,48 @@
+<section class="awake-gear">
+  <header class="awake-section-header">
+    <h2>{{localize "TYPES.Item.gear"}}</h2>
+
+    {{#if editable}}
+      <button
+        type="button"
+        data-action="createItem"
+        data-item-type="gear"
+        title="{{localize "AWAKE.Items.AddGear"}}"
+      >
+        +
+      </button>
+    {{/if}}
+  </header>
+
+  <div class="awake-item-list">
+    {{#each items.gear as |item|}}
+      <div
+        class="awake-item awake-gear-item"
+        data-item-id="{{item.id}}"
+      >
+        <button
+          type="button"
+          class="awake-item-name"
+          data-action="openItem"
+        >
+          {{item.name}}
+        </button>
+
+        <span class="awake-gear-quantity">
+          × {{item.system.quantity}}
+        </span>
+
+        {{#if ../editable}}
+          <button
+            type="button"
+            class="awake-item-delete"
+            data-action="deleteItem"
+            title="{{localize "AWAKE.Items.Delete"}}"
+          >
+            −
+          </button>
+        {{/if}}
+      </div>
+    {{/each}}
+  </div>
+</section>

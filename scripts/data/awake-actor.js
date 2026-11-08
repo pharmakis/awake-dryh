@@ -1,4 +1,6 @@
-const { SchemaField, StringField, NumberField } = foundry.data.fields;
+import { validateResponseAllocation } from "../rules/responses.js";
+const { ArrayField, BooleanField, SchemaField, StringField, NumberField } = foundry.data.fields;
+
 
 export class AwakeActorData extends foundry.abstract.TypeDataModel {
   static defineSchema() {
@@ -23,27 +25,40 @@ export class AwakeActorData extends foundry.abstract.TypeDataModel {
           total: new NumberField({ integer: true, initial: 0, min: 0, max: 3 }),
           checked: new NumberField({ integer: true, initial: 0, min: 0, max: 3 })
         })
-      })
+      }),
+      scars: new ArrayField(
+        new SchemaField({
+            text: new StringField({ initial: "" }),
+            recalled: new BooleanField({ initial: false }),
+            transformed: new BooleanField({ initial: false })
+        }),
+        {
+          initial: () =>
+            Array.from({ length: 9 }, () => ({
+              text: "",
+              recalled: false,
+              transformed: false
+            }))
+        }
+      )
     };
   }
 
   static validateJoint(data) {
     super.validateJoint(data);
     const { fight, flight } = data.responses;
+    const responseError = validateResponseAllocation({
+      fightTotal: fight.total,
+      fightChecked: fight.checked,
+      flightTotal: flight.total,
+      flightChecked: flight.checked
+    });
 
-    if (fight.checked > fight.total) {
-      throw new Error(game.i18n.localize("AWAKE.Validation.FightCheckedExceedsTotal"));
-    }
-    if (flight.checked > flight.total) {
-      throw new Error(game.i18n.localize("AWAKE.Validation.FlightCheckedExceedsTotal"));
+    if (responseError) {
+      throw new Error(game.i18n.localize(responseError));
     }
     if (data.discipline + data.permanentMadness !== 3) {
       throw new Error(game.i18n.localize("AWAKE.Validation.DisciplineMadnessTotal"));
-    }
-
-    const totalResponses = fight.total + flight.total;
-    if (totalResponses !== 0 && totalResponses !== 3) {
-      throw new Error(game.i18n.localize("AWAKE.Validation.ResponseAllocation"));
     }
   }
 }

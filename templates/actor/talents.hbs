@@ -1,0 +1,93 @@
+<section class="awake-talents">
+  <h2>{{localize "AWAKE.Actor.Talents"}}</h2>
+
+  <div class="awake-item-group exhaustion-talents">
+    <header class="awake-item-group-header">
+      <h3>{{localize "TYPES.Item.exhaustionTalent"}}</h3>
+
+      {{#if editable}}
+        <button
+          type="button"
+          data-action="createItem"
+          data-item-type="exhaustionTalent"
+          title="{{localize "AWAKE.Items.AddExhaustionTalent"}}"
+        >
+          +
+        </button>
+      {{/if}}
+    </header>
+
+    <div class="awake-item-list">
+      {{#each items.exhaustionTalents as |item|}}
+        <div
+          class="awake-item"
+          data-item-id="{{item.id}}"
+        >
+          <button
+            type="button"
+            class="awake-item-name"
+            data-action="openItem"
+          >
+            {{item.name}}
+          </button>
+
+          {{#if ../editable}}
+            <button
+              type="button"
+              class="awake-item-delete"
+              data-action="deleteItem"
+              title="{{localize "AWAKE.Items.Delete"}}"
+            >
+              −
+            </button>
+          {{/if}}
+        </div>
+      {{/each}}
+    </div>
+  </div>
+
+  <div class="awake-item-group madness-talents">
+    <header class="awake-item-group-header">
+      <h3>{{localize "TYPES.Item.madnessTalent"}}</h3>
+
+      {{#if editable}}
+        <button
+          type="button"
+          data-action="createItem"
+          data-item-type="madnessTalent"
+          title="{{localize "AWAKE.Items.AddMadnessTalent"}}"
+        >
+          +
+        </button>
+      {{/if}}
+    </header>
+
+    <div class="awake-item-list">
+      {{#each items.madnessTalents as |item|}}
+        <div
+          class="awake-item"
+          data-item-id="{{item.id}}"
+        >
+          <button
+            type="button"
+            class="awake-item-name"
+            data-action="openItem"
+          >
+            {{item.name}}
+          </button>
+
+          {{#if ../editable}}
+            <button
+              type="button"
+              class="awake-item-delete"
+              data-action="deleteItem"
+              title="{{localize "AWAKE.Items.Delete"}}"
+            >
+              −
+            </button>
+          {{/if}}
+        </div>
+      {{/each}}
+    </div>
+  </div>
+</section>

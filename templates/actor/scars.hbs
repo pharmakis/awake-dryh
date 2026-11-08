@@ -1,0 +1,44 @@
+<section class="awake-scars">
+  <h2>{{localize "AWAKE.Actor.Scars"}}</h2>
+
+  <div class="awake-scar-list">
+    {{#each system.scars as |scar index|}}
+      <div
+        class="awake-scar {{#if scar.transformed}}transformed{{/if}}"
+        data-scar-index="{{index}}"
+      >
+        <input
+          class="awake-scar-recalled"
+          type="checkbox"
+          name="system.scars.{{index}}.recalled"
+          {{checked scar.recalled}}
+          {{#if scar.transformed}}disabled{{/if}}
+          {{#unless ../editable}}disabled{{/unless}}
+          title="{{localize "AWAKE.Scars.Recalled"}}"
+        />
+
+        <textarea
+          class="awake-scar-text"
+          name="system.scars.{{index}}.text"
+          rows="2"
+          placeholder="{{localize "AWAKE.Scars.Placeholder"}}"
+          {{#unless ../editable}}disabled{{/unless}}
+        >{{scar.text}}</textarea>
+
+        {{#unless scar.transformed}}
+          {{#if ../editable}}
+            <button
+              type="button"
+              class="awake-scar-transform"
+              data-action="transformScar"
+              data-scar-index="{{index}}"
+              title="{{localize "AWAKE.Scars.TransformTitle"}}"
+            >
+              {{localize "AWAKE.Scars.Transform"}}
+            </button>
+          {{/if}}
+        {{/unless}}
+      </div>
+    {{/each}}
+  </div>
+</section>

@@ -49,9 +49,12 @@
       "AddExhaustionTalent": "Add Exhaustion Talent",
       "AddMadnessTalent": "Add Madness Talent",
       "AddGear": "Add Gear",
-      "Delete": "Delete"
+      "Delete": "Delete",
+      "Name": "Name",
+      "Quantity": "Quantity",
+      "Description": "Description"
     },
-
+    
     "Hope": {
       "Chalice": "Hope Chalice",
       "Spend": "Spend",

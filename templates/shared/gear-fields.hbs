@@ -1,0 +1,32 @@
+<label class="awake-field">
+  <span>{{localize "AWAKE.Items.Name"}}</span>
+
+  <input
+    type="text"
+    name="name"
+    value="{{item.name}}"
+    {{#unless editable}}disabled{{/unless}}
+  />
+</label>
+
+<label class="awake-field">
+  <span>{{localize "AWAKE.Items.Quantity"}}</span>
+
+  <input
+    type="number"
+    name="system.quantity"
+    value="{{item.system.quantity}}"
+    min="0"
+    step="1"
+    {{#unless editable}}disabled{{/unless}}
+  />
+</label>
+
+<label class="awake-item-description">
+  <span>{{localize "AWAKE.Items.Description"}}</span>
+
+  <textarea
+    name="system.description"
+    {{#unless editable}}disabled{{/unless}}
+  >{{item.system.description}}</textarea>
+</label>

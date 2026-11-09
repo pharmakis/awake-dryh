@@ -47,10 +47,6 @@ export class AwakeActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
       template: "systems/awake-dryh/templates/actor/talents.hbs"
     },
 
-    gear: {
-      template: "systems/awake-dryh/templates/actor/gear.hbs"
-    },
-
     scars: {
       template: "systems/awake-dryh/templates/actor/scars.hbs"
     },

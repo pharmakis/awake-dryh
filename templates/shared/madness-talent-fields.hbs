@@ -1,20 +1,19 @@
 <div class="awake-madness-talent-fields">
 
-  <div class="awake-item-header">
+  <div class="awake-talent-header">
 
     <img
-      class="awake-item-image"
+      class="awake-talent-image"
       src="{{item.img}}"
       alt="{{item.name}}"
       data-edit="img"
       data-action="editImage"
     />
 
-    <div class="awake-item-header-fields">
+    <div class="awake-talent-header-fields">
 
       <label class="awake-field">
         <span>{{localize "AWAKE.Items.Name"}}</span>
-
         <input
           type="text"
           name="name"
@@ -23,29 +22,30 @@
         />
       </label>
 
+      <label class="awake-field awake-talent-description">
+        <span>{{localize "AWAKE.Items.Description"}}</span>
+        <textarea
+          name="system.description"
+          rows="4"
+          {{#unless editable}}disabled{{/unless}}
+        >{{system.description}}</textarea>
+      </label>
+
     </div>
 
   </div>
 
-  <label class="awake-item-description">
-    <span>{{localize "AWAKE.MadnessTalent.WhatCanIDo"}}</span>
+  <section class="awake-madness-section">
 
-    <textarea
-      name="system.description"
-      rows="5"
-      {{#unless editable}}disabled{{/unless}}
-    >{{system.description}}</textarea>
-  </label>
-
-  <section class="awake-madness-levels">
+    <header class="awake-section-header">
+      <h2>{{localize "AWAKE.MadnessTalent.WhatCanIDo"}}</h2>
+    </header>
 
     <div class="awake-madness-level-group">
-
       <h3>{{localize "AWAKE.MadnessTalent.Level12"}}</h3>
 
       <label class="awake-madness-level">
         <span>{{localize "AWAKE.MadnessTalent.OneDie"}}</span>
-
         <textarea
           name="system.levels.one"
           rows="3"
@@ -55,23 +55,19 @@
 
       <label class="awake-madness-level">
         <span>{{localize "AWAKE.MadnessTalent.TwoDice"}}</span>
-
         <textarea
           name="system.levels.two"
           rows="3"
           {{#unless editable}}disabled{{/unless}}
         >{{system.levels.two}}</textarea>
       </label>
-
     </div>
 
     <div class="awake-madness-level-group">
-
       <h3>{{localize "AWAKE.MadnessTalent.Level34"}}</h3>
 
       <label class="awake-madness-level">
         <span>{{localize "AWAKE.MadnessTalent.ThreeDice"}}</span>
-
         <textarea
           name="system.levels.three"
           rows="3"
@@ -81,23 +77,19 @@
 
       <label class="awake-madness-level">
         <span>{{localize "AWAKE.MadnessTalent.FourDice"}}</span>
-
         <textarea
           name="system.levels.four"
           rows="3"
           {{#unless editable}}disabled{{/unless}}
         >{{system.levels.four}}</textarea>
       </label>
-
     </div>
 
     <div class="awake-madness-level-group">
-
       <h3>{{localize "AWAKE.MadnessTalent.Level56"}}</h3>
 
       <label class="awake-madness-level">
         <span>{{localize "AWAKE.MadnessTalent.FiveDice"}}</span>
-
         <textarea
           name="system.levels.five"
           rows="3"
@@ -107,27 +99,25 @@
 
       <label class="awake-madness-level">
         <span>{{localize "AWAKE.MadnessTalent.SixDice"}}</span>
-
         <textarea
           name="system.levels.six"
           rows="3"
           {{#unless editable}}disabled{{/unless}}
         >{{system.levels.six}}</textarea>
       </label>
-
     </div>
 
   </section>
 
-  <section class="awake-madness-breaks">
+  <section class="awake-madness-section">
 
-    <h3>{{localize "AWAKE.MadnessTalent.HowDoesItBreakMe"}}</h3>
+    <header class="awake-section-header">
+      <h2>{{localize "AWAKE.MadnessTalent.HowDoesItBreakMe"}}</h2>
+    </header>
 
-    <div class="awake-madness-break-grid">
-
+    <div class="awake-madness-two-column">
       <label>
         <span>{{localize "AWAKE.Actor.Fight"}}</span>
-
         <textarea
           name="system.breaks.fight"
           rows="5"
@@ -137,36 +127,44 @@
 
       <label>
         <span>{{localize "AWAKE.Actor.Flight"}}</span>
-
         <textarea
           name="system.breaks.flight"
           rows="5"
           {{#unless editable}}disabled{{/unless}}
         >{{system.breaks.flight}}</textarea>
       </label>
-
     </div>
 
   </section>
 
-  <label class="awake-item-description">
-    <span>{{localize "AWAKE.MadnessTalent.HowDoIChange"}}</span>
+  <hr class="awake-divider">
 
-    <textarea
-      name="system.change"
-      rows="5"
-      {{#unless editable}}disabled{{/unless}}
-    >{{system.change}}</textarea>
-  </label>
+  <section class="awake-madness-two-column awake-madness-final">
 
-  <label class="awake-item-description">
-    <span>{{localize "AWAKE.MadnessTalent.WhatAmIBecoming"}}</span>
+    <label>
+      <span class="awake-section-title">
+        {{localize "AWAKE.MadnessTalent.HowDoIChange"}}
+      </span>
 
-    <textarea
-      name="system.becoming"
-      rows="5"
-      {{#unless editable}}disabled{{/unless}}
-    >{{system.becoming}}</textarea>
-  </label>
+      <textarea
+        name="system.change"
+        rows="5"
+        {{#unless editable}}disabled{{/unless}}
+      >{{system.change}}</textarea>
+    </label>
+
+    <label>
+      <span class="awake-section-title">
+        {{localize "AWAKE.MadnessTalent.WhatAmIBecoming"}}
+      </span>
+
+      <textarea
+        name="system.becoming"
+        rows="5"
+        {{#unless editable}}disabled{{/unless}}
+      >{{system.becoming}}</textarea>
+    </label>
+
+  </section>
 
 </div>

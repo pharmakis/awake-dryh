@@ -29,7 +29,7 @@
         <input
           type="number"
           name="system.quantity"
-          value="{{item.system.quantity}}"
+          value="{{system.quantity}}"
           min="0"
           step="1"
           {{#unless editable}}disabled{{/unless}}
@@ -40,6 +40,8 @@
 
   </div>
 
+  <hr class="awake-divider">
+
   <label class="awake-gear-description">
     <span>{{localize "AWAKE.Items.Description"}}</span>
 
@@ -47,7 +49,7 @@
       name="system.description"
       rows="6"
       {{#unless editable}}disabled{{/unless}}
-    >{{item.system.description}}</textarea>
+    >{{system.description}}</textarea>
   </label>
 
 </div>

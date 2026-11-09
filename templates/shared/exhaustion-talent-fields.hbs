@@ -1,16 +1,16 @@
 <div class="awake-exhaustion-talent-fields">
 
-  <div class="awake-item-header">
+  <div class="awake-talent-header">
 
     <img
-      class="awake-item-image"
+      class="awake-talent-image"
       src="{{item.img}}"
       alt="{{item.name}}"
       data-edit="img"
       data-action="editImage"
     />
 
-    <div class="awake-item-header-fields">
+    <div class="awake-talent-header-fields">
 
       <label class="awake-field">
         <span>{{localize "AWAKE.Items.Name"}}</span>
@@ -23,30 +23,42 @@
         />
       </label>
 
+      <label class="awake-field awake-talent-description">
+        <span>{{localize "AWAKE.Items.Description"}}</span>
+
+        <textarea
+          name="system.description"
+          rows="4"
+          {{#unless editable}}disabled{{/unless}}
+        >{{system.description}}</textarea>
+      </label>
+
     </div>
 
   </div>
 
-  <label class="awake-item-description">
-    <span>{{localize "AWAKE.Items.Description"}}</span>
+  <section class="awake-section">
 
-    <textarea
-      name="system.description"
-      rows="6"
-      {{#unless editable}}disabled{{/unless}}
-    >{{system.description}}</textarea>
-  </label>
+    <header class="awake-section-header">
+      <h3>{{localize "AWAKE.ExhaustionTalent.MinorUse"}}</h3>
+    </header>
 
-  <section class="awake-talent-rules">
-    <p>
-      <strong>{{localize "AWAKE.ExhaustionTalent.MinorUse"}}</strong><br>
+    <p class="awake-rule-text">
       {{localize "AWAKE.ExhaustionTalent.MinorUseText"}}
     </p>
 
-    <p>
-      <strong>{{localize "AWAKE.ExhaustionTalent.MajorUse"}}</strong><br>
+  </section>
+
+  <section class="awake-section">
+
+    <header class="awake-section-header">
+      <h3>{{localize "AWAKE.ExhaustionTalent.MajorUse"}}</h3>
+    </header>
+
+    <p class="awake-rule-text">
       {{localize "AWAKE.ExhaustionTalent.MajorUseText"}}
     </p>
+
   </section>
 
 </div>

@@ -37,6 +37,34 @@
   gap: 0.45rem;
 }
 
+.awake-heading-with-icon {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.awake-heading-with-icon h2,
+.awake-heading-with-icon h3 {
+  margin: 0;
+}
+
+.awake-stats .awake-heading-with-icon,
+.awake-responses .awake-heading-with-icon {
+  margin-bottom: 0.55rem;
+}
+
+.awake-heading-icon {
+  width: 2rem;
+  height: 2rem;
+  object-fit: contain;
+  flex: 0 0 auto;
+}
+
+.awake-item-heading .awake-heading-icon {
+  width: 1.75rem;
+  height: 1.75rem;
+}
+
 /* Stats + Responses side by side */
 
 .awake-overview-dashboard {
@@ -46,10 +74,7 @@
   align-items: start;
 }
 
-.awake-stats h2,
-.awake-responses h2 {
-  margin: 0 0 0.55rem;
-}
+
 
 .awake-field {
   display: grid;

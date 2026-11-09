@@ -404,6 +404,23 @@ export class AwakeActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
       transformed: scar.transformed
     }));
 
+    for (const row of this.element.querySelectorAll(".awake-scar")) {
+      const rowIndex = Number(row.dataset.scarIndex);
+
+      if (!Number.isInteger(rowIndex)) continue;
+
+      const textInput = row.querySelector("input.awake-scar-text");
+      const recalledInput = row.querySelector("input.awake-scar-recalled");
+
+      if (textInput) {
+        scars[rowIndex].text = textInput.value;
+      }
+
+      if (recalledInput && !scars[rowIndex].transformed) {
+        scars[rowIndex].recalled = recalledInput.checked;
+      }
+    }
+
     scars[index].transformed = true;
     scars[index].recalled = false;
 

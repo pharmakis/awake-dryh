@@ -1,4 +1,7 @@
-const { SchemaField, StringField } = foundry.data.fields;
+const {
+  SchemaField,
+  StringField
+} = foundry.data.fields;
 
 export class MadnessTalentData extends foundry.abstract.TypeDataModel {
   static defineSchema() {
@@ -6,9 +9,12 @@ export class MadnessTalentData extends foundry.abstract.TypeDataModel {
       description: new StringField({ initial: "" }),
 
       levels: new SchemaField({
-        low: new StringField({ initial: "" }),
-        medium: new StringField({ initial: "" }),
-        high: new StringField({ initial: "" })
+        one: new StringField({ initial: "" }),
+        two: new StringField({ initial: "" }),
+        three: new StringField({ initial: "" }),
+        four: new StringField({ initial: "" }),
+        five: new StringField({ initial: "" }),
+        six: new StringField({ initial: "" })
       }),
 
       breaks: new SchemaField({
@@ -17,6 +23,7 @@ export class MadnessTalentData extends foundry.abstract.TypeDataModel {
       }),
 
       change: new StringField({ initial: "" }),
+
       becoming: new StringField({ initial: "" })
     };
   }

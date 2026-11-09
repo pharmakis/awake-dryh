@@ -281,3 +281,52 @@
   width: 100%;
   resize: vertical;
 }
+
+/* All about madness talents */
+
+.awake-madness-talent-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.awake-madness-levels {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.awake-madness-level-group {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+
+.awake-madness-level-group h3 {
+  grid-column: 1 / -1;
+  margin: 0;
+}
+
+.awake-madness-level,
+.awake-madness-break-grid label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.awake-madness-level > span,
+.awake-madness-break-grid label > span {
+  font-weight: 600;
+}
+
+.awake-madness-level textarea,
+.awake-madness-break-grid textarea {
+  width: 100%;
+  resize: vertical;
+}
+
+.awake-madness-break-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem;
+}

@@ -1,0 +1,172 @@
+<div class="awake-madness-talent-fields">
+
+  <div class="awake-item-header">
+
+    <img
+      class="awake-item-image"
+      src="{{item.img}}"
+      alt="{{item.name}}"
+      data-edit="img"
+      data-action="editImage"
+    />
+
+    <div class="awake-item-header-fields">
+
+      <label class="awake-field">
+        <span>{{localize "AWAKE.Items.Name"}}</span>
+
+        <input
+          type="text"
+          name="name"
+          value="{{item.name}}"
+          {{#unless editable}}disabled{{/unless}}
+        />
+      </label>
+
+    </div>
+
+  </div>
+
+  <label class="awake-item-description">
+    <span>{{localize "AWAKE.MadnessTalent.WhatCanIDo"}}</span>
+
+    <textarea
+      name="system.description"
+      rows="5"
+      {{#unless editable}}disabled{{/unless}}
+    >{{system.description}}</textarea>
+  </label>
+
+  <section class="awake-madness-levels">
+
+    <div class="awake-madness-level-group">
+
+      <h3>{{localize "AWAKE.MadnessTalent.Level12"}}</h3>
+
+      <label class="awake-madness-level">
+        <span>{{localize "AWAKE.MadnessTalent.OneDie"}}</span>
+
+        <textarea
+          name="system.levels.one"
+          rows="3"
+          {{#unless editable}}disabled{{/unless}}
+        >{{system.levels.one}}</textarea>
+      </label>
+
+      <label class="awake-madness-level">
+        <span>{{localize "AWAKE.MadnessTalent.TwoDice"}}</span>
+
+        <textarea
+          name="system.levels.two"
+          rows="3"
+          {{#unless editable}}disabled{{/unless}}
+        >{{system.levels.two}}</textarea>
+      </label>
+
+    </div>
+
+    <div class="awake-madness-level-group">
+
+      <h3>{{localize "AWAKE.MadnessTalent.Level34"}}</h3>
+
+      <label class="awake-madness-level">
+        <span>{{localize "AWAKE.MadnessTalent.ThreeDice"}}</span>
+
+        <textarea
+          name="system.levels.three"
+          rows="3"
+          {{#unless editable}}disabled{{/unless}}
+        >{{system.levels.three}}</textarea>
+      </label>
+
+      <label class="awake-madness-level">
+        <span>{{localize "AWAKE.MadnessTalent.FourDice"}}</span>
+
+        <textarea
+          name="system.levels.four"
+          rows="3"
+          {{#unless editable}}disabled{{/unless}}
+        >{{system.levels.four}}</textarea>
+      </label>
+
+    </div>
+
+    <div class="awake-madness-level-group">
+
+      <h3>{{localize "AWAKE.MadnessTalent.Level56"}}</h3>
+
+      <label class="awake-madness-level">
+        <span>{{localize "AWAKE.MadnessTalent.FiveDice"}}</span>
+
+        <textarea
+          name="system.levels.five"
+          rows="3"
+          {{#unless editable}}disabled{{/unless}}
+        >{{system.levels.five}}</textarea>
+      </label>
+
+      <label class="awake-madness-level">
+        <span>{{localize "AWAKE.MadnessTalent.SixDice"}}</span>
+
+        <textarea
+          name="system.levels.six"
+          rows="3"
+          {{#unless editable}}disabled{{/unless}}
+        >{{system.levels.six}}</textarea>
+      </label>
+
+    </div>
+
+  </section>
+
+  <section class="awake-madness-breaks">
+
+    <h3>{{localize "AWAKE.MadnessTalent.HowDoesItBreakMe"}}</h3>
+
+    <div class="awake-madness-break-grid">
+
+      <label>
+        <span>{{localize "AWAKE.Actor.Fight"}}</span>
+
+        <textarea
+          name="system.breaks.fight"
+          rows="5"
+          {{#unless editable}}disabled{{/unless}}
+        >{{system.breaks.fight}}</textarea>
+      </label>
+
+      <label>
+        <span>{{localize "AWAKE.Actor.Flight"}}</span>
+
+        <textarea
+          name="system.breaks.flight"
+          rows="5"
+          {{#unless editable}}disabled{{/unless}}
+        >{{system.breaks.flight}}</textarea>
+      </label>
+
+    </div>
+
+  </section>
+
+  <label class="awake-item-description">
+    <span>{{localize "AWAKE.MadnessTalent.HowDoIChange"}}</span>
+
+    <textarea
+      name="system.change"
+      rows="5"
+      {{#unless editable}}disabled{{/unless}}
+    >{{system.change}}</textarea>
+  </label>
+
+  <label class="awake-item-description">
+    <span>{{localize "AWAKE.MadnessTalent.WhatAmIBecoming"}}</span>
+
+    <textarea
+      name="system.becoming"
+      rows="5"
+      {{#unless editable}}disabled{{/unless}}
+    >{{system.becoming}}</textarea>
+  </label>
+
+</div>

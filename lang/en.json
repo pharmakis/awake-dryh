@@ -64,6 +64,25 @@
       "MajorUseText": "Increase Exhaustion by 1 and add your current Exhaustion to the Degree."
     },
 
+    "MadnessTalent": {
+      "WhatCanIDo": "What can I do?",
+
+      "Level12": "1–2 Madness Dice",
+      "Level34": "3–4 Madness Dice",
+      "Level56": "5–6 Madness Dice",
+
+      "OneDie": "1 die",
+      "TwoDice": "2 dice",
+      "ThreeDice": "3 dice",
+      "FourDice": "4 dice",
+      "FiveDice": "5 dice",
+      "SixDice": "6 dice",
+
+      "HowDoesItBreakMe": "How does it break me?",
+      "HowDoIChange": "How do I change?",
+      "WhatAmIBecoming": "What am I becoming?"
+    },
+
     "Hope": {
       "Chalice": "Hope Chalice",
       "Spend": "Spend",

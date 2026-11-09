@@ -164,15 +164,13 @@
 
 .awake-questionnaire,
 .awake-talents,
-.awake-scars,
-.awake-gear {
+.awake-scars {
   margin-top: 1rem;
 }
 
 .awake-questionnaire > h2,
 .awake-talents > h2,
-.awake-scars > h2,
-.awake-gear > h2 {
+.awake-scars > h2 {
   margin: 0 0 0.6rem;
 }
 

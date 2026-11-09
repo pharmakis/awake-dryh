@@ -1,32 +1,53 @@
-<label class="awake-field">
-  <span>{{localize "AWAKE.Items.Name"}}</span>
+<div class="awake-gear-fields">
 
-  <input
-    type="text"
-    name="name"
-    value="{{item.name}}"
-    {{#unless editable}}disabled{{/unless}}
-  />
-</label>
+  <div class="awake-gear-header">
 
-<label class="awake-field">
-  <span>{{localize "AWAKE.Items.Quantity"}}</span>
+    <img
+      class="awake-gear-image"
+      src="{{item.img}}"
+      alt="{{item.name}}"
+      data-edit="img"
+      data-action="editImage"
+    />
 
-  <input
-    type="number"
-    name="system.quantity"
-    value="{{item.system.quantity}}"
-    min="0"
-    step="1"
-    {{#unless editable}}disabled{{/unless}}
-  />
-</label>
+    <div class="awake-gear-main-fields">
 
-<label class="awake-item-description">
-  <span>{{localize "AWAKE.Items.Description"}}</span>
+      <label class="awake-field">
+        <span>{{localize "AWAKE.Items.Name"}}</span>
 
-  <textarea
-    name="system.description"
-    {{#unless editable}}disabled{{/unless}}
-  >{{item.system.description}}</textarea>
-</label>
+        <input
+          type="text"
+          name="name"
+          value="{{item.name}}"
+          {{#unless editable}}disabled{{/unless}}
+        />
+      </label>
+
+      <label class="awake-field">
+        <span>{{localize "AWAKE.Items.Quantity"}}</span>
+
+        <input
+          type="number"
+          name="system.quantity"
+          value="{{item.system.quantity}}"
+          min="0"
+          step="1"
+          {{#unless editable}}disabled{{/unless}}
+        />
+      </label>
+
+    </div>
+
+  </div>
+
+  <label class="awake-gear-description">
+    <span>{{localize "AWAKE.Items.Description"}}</span>
+
+    <textarea
+      name="system.description"
+      rows="6"
+      {{#unless editable}}disabled{{/unless}}
+    >{{item.system.description}}</textarea>
+  </label>
+
+</div>

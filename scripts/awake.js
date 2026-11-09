@@ -74,3 +74,22 @@ Hooks.once("init", async () => {
   }
 );
 });
+
+Hooks.on("preCreateItem", (item, data) => {
+  const defaultImages = {
+    exhaustionTalent: "systems/awake-dryh/assets/ui/icons/exhaustion-talent.png",
+    madnessTalent: "systems/awake-dryh/assets/ui/icons/madness-talent.png",
+    gear: "systems/awake-dryh/assets/ui/icons/gear.png"
+  };
+
+  const defaultImage = defaultImages[item.type];
+  if (!defaultImage) return;
+
+  const currentImage = data.img ?? item.img;
+
+  if (!currentImage || currentImage === "icons/svg/item-bag.svg") {
+    item.updateSource({
+      img: defaultImage
+    });
+  }
+});

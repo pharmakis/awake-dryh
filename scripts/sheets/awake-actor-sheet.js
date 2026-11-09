@@ -49,10 +49,6 @@ export class AwakeActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
     scars: {
       template: "systems/awake-dryh/templates/actor/scars.hbs"
     },
-
-    coffers: {
-      template: "systems/awake-dryh/templates/actor/coffers.hbs"
-    }
   };
 
   /**
@@ -88,8 +84,8 @@ export class AwakeActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
       )
     };
 
-    context.hope = game.settings.get("awake-dryh", "hope");
-    context.despair = game.settings.get("awake-dryh", "despair");
+    context.hope = game.settings.get(game.system.id, "hope");
+    context.despair = game.settings.get(game.system.id, "despair");
 
     const fight = this.actor.system.responses.fight;
     const flight = this.actor.system.responses.flight;

@@ -93,6 +93,34 @@
   width: 2rem;
   height: 2rem;
   padding: 0;
+  border: 1px solid currentColor;
+  background: transparent;
+}
+
+/* Response входит в выбранные три */
+.awake-response-box.selected {
+  background: rgba(255, 255, 255, 0.18);
+  border-width: 2px;
+}
+
+/* Response уже сработал / отмечен */
+.awake-response-box.checked {
+  background: rgba(255, 255, 255, 0.55);
+  position: relative;
+}
+
+.awake-response-box.checked::after {
+  content: "✓";
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  font-weight: 700;
+}
+/* Эта позиция вообще не входит в выбранный Fight/Flight */
+.awake-response-box.unavailable {
+  opacity: 0.25;
+  cursor: default;
 }
 
 .awake-questionnaire,

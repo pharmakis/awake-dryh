@@ -1,168 +1,172 @@
-<section class="awake-talents">
+<div class="awake-talents-part">
 
-  <h2>{{localize "AWAKE.Actor.Talents"}}</h2>
+  <section class="awake-talents">
 
-  <div class="awake-talents-grid">
+    <h2>{{localize "AWAKE.Actor.Talents"}}</h2>
 
-    <div class="awake-item-group exhaustion-talents">
+    <div class="awake-talents-grid">
 
-      <header class="awake-item-group-header">
+      <div class="awake-item-group exhaustion-talents">
 
-        <h3>{{localize "TYPES.Item.exhaustionTalent"}}</h3>
+        <header class="awake-item-group-header">
 
-        {{#if editable}}
-          <button
-            type="button"
-            data-action="createItem"
-            data-item-type="exhaustionTalent"
-            title="{{localize "AWAKE.Items.AddExhaustionTalent"}}"
-          >
-            +
-          </button>
-        {{/if}}
+          <h3>{{localize "TYPES.Item.exhaustionTalent"}}</h3>
 
-      </header>
-
-      <div class="awake-item-list">
-
-        {{#each items.exhaustionTalents as |item|}}
-          <div class="awake-item" data-item-id="{{item.id}}">
-
+          {{#if editable}}
             <button
               type="button"
-              class="awake-item-name"
-              data-action="openItem"
+              data-action="createItem"
+              data-item-type="exhaustionTalent"
+              title="{{localize "AWAKE.Items.AddExhaustionTalent"}}"
             >
-              {{item.name}}
+              +
             </button>
+          {{/if}}
 
-            {{#if ../editable}}
+        </header>
+
+        <div class="awake-item-list">
+
+          {{#each items.exhaustionTalents as |item|}}
+            <div class="awake-item" data-item-id="{{item.id}}">
+
               <button
                 type="button"
-                class="awake-item-delete"
-                data-action="deleteItem"
-                title="{{localize "AWAKE.Items.Delete"}}"
+                class="awake-item-name"
+                data-action="openItem"
               >
-                −
+                {{item.name}}
               </button>
-            {{/if}}
 
-          </div>
-        {{/each}}
+              {{#if ../editable}}
+                <button
+                  type="button"
+                  class="awake-item-delete"
+                  data-action="deleteItem"
+                  title="{{localize "AWAKE.Items.Delete"}}"
+                >
+                  −
+                </button>
+              {{/if}}
+
+            </div>
+          {{/each}}
+
+        </div>
+
+      </div>
+
+      <div class="awake-item-group madness-talents">
+
+        <header class="awake-item-group-header">
+
+          <h3>{{localize "TYPES.Item.madnessTalent"}}</h3>
+
+          {{#if editable}}
+            <button
+              type="button"
+              data-action="createItem"
+              data-item-type="madnessTalent"
+              title="{{localize "AWAKE.Items.AddMadnessTalent"}}"
+            >
+              +
+            </button>
+          {{/if}}
+
+        </header>
+
+        <div class="awake-item-list">
+
+          {{#each items.madnessTalents as |item|}}
+            <div class="awake-item" data-item-id="{{item.id}}">
+
+              <button
+                type="button"
+                class="awake-item-name"
+                data-action="openItem"
+              >
+                {{item.name}}
+              </button>
+
+              {{#if ../editable}}
+                <button
+                  type="button"
+                  class="awake-item-delete"
+                  data-action="deleteItem"
+                  title="{{localize "AWAKE.Items.Delete"}}"
+                >
+                  −
+                </button>
+              {{/if}}
+
+            </div>
+          {{/each}}
+
+        </div>
+
+      </div>
+
+      <div class="awake-item-group awake-gear">
+
+        <header class="awake-item-group-header">
+
+          <h3>{{localize "TYPES.Item.gear"}}</h3>
+
+          {{#if editable}}
+            <button
+              type="button"
+              data-action="createItem"
+              data-item-type="gear"
+              title="{{localize "AWAKE.Items.AddGear"}}"
+            >
+              +
+            </button>
+          {{/if}}
+
+        </header>
+
+        <div class="awake-item-list">
+
+          {{#each items.gear as |item|}}
+            <div
+              class="awake-item awake-gear-item"
+              data-item-id="{{item.id}}"
+            >
+
+              <button
+                type="button"
+                class="awake-item-name"
+                data-action="openItem"
+              >
+                {{item.name}}
+              </button>
+
+              <span class="awake-gear-quantity">
+                × {{item.system.quantity}}
+              </span>
+
+              {{#if ../editable}}
+                <button
+                  type="button"
+                  class="awake-item-delete"
+                  data-action="deleteItem"
+                  title="{{localize "AWAKE.Items.Delete"}}"
+                >
+                  −
+                </button>
+              {{/if}}
+
+            </div>
+          {{/each}}
+
+        </div>
 
       </div>
 
     </div>
 
-    <div class="awake-item-group madness-talents">
+  </section>
 
-      <header class="awake-item-group-header">
-
-        <h3>{{localize "TYPES.Item.madnessTalent"}}</h3>
-
-        {{#if editable}}
-          <button
-            type="button"
-            data-action="createItem"
-            data-item-type="madnessTalent"
-            title="{{localize "AWAKE.Items.AddMadnessTalent"}}"
-          >
-            +
-          </button>
-        {{/if}}
-
-      </header>
-
-      <div class="awake-item-list">
-
-        {{#each items.madnessTalents as |item|}}
-          <div class="awake-item" data-item-id="{{item.id}}">
-
-            <button
-              type="button"
-              class="awake-item-name"
-              data-action="openItem"
-            >
-              {{item.name}}
-            </button>
-
-            {{#if ../editable}}
-              <button
-                type="button"
-                class="awake-item-delete"
-                data-action="deleteItem"
-                title="{{localize "AWAKE.Items.Delete"}}"
-              >
-                −
-              </button>
-            {{/if}}
-
-          </div>
-        {{/each}}
-
-      </div>
-
-    </div>
-
-    <div class="awake-item-group awake-gear">
-
-      <header class="awake-item-group-header">
-
-        <h3>{{localize "TYPES.Item.gear"}}</h3>
-
-        {{#if editable}}
-          <button
-            type="button"
-            data-action="createItem"
-            data-item-type="gear"
-            title="{{localize "AWAKE.Items.AddGear"}}"
-          >
-            +
-          </button>
-        {{/if}}
-
-      </header>
-
-      <div class="awake-item-list">
-
-        {{#each items.gear as |item|}}
-          <div
-            class="awake-item awake-gear-item"
-            data-item-id="{{item.id}}"
-          >
-
-            <button
-              type="button"
-              class="awake-item-name"
-              data-action="openItem"
-            >
-              {{item.name}}
-            </button>
-
-            <span class="awake-gear-quantity">
-              × {{item.system.quantity}}
-            </span>
-
-            {{#if ../editable}}
-              <button
-                type="button"
-                class="awake-item-delete"
-                data-action="deleteItem"
-                title="{{localize "AWAKE.Items.Delete"}}"
-              >
-                −
-              </button>
-            {{/if}}
-
-          </div>
-        {{/each}}
-
-      </div>
-
-    </div>
-
-  </div>
-
-</section>
-
-<hr class="awake-divider">
+  <hr class="awake-divider">
+  
+</div>

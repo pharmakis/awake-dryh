@@ -220,7 +220,7 @@
   border-left: 1px solid var(--color-border-light-primary);
 }
 
-awake-item-group-header {
+.awake-item-group-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -517,10 +517,8 @@ awake-item-group-header {
 }
 
 .awake-madness-final {
-  padding-top: 1rem;
-  border-top: 1px solid var(--color-border-light-primary);
+  padding-top: 0;
 }
-
 
 .awake-section-title {
   display: block;

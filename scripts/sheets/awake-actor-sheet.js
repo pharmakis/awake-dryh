@@ -15,6 +15,11 @@ export class AwakeActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
       resizable: true
     },
 
+    form: {
+      closeOnSubmit: false,
+      submitOnChange: true
+    },
+
     actions: {
       toggleResponsesEdit: AwakeActorSheet.#onToggleResponsesEdit,
       responseBox: AwakeActorSheet.#onResponseBox,
@@ -126,6 +131,15 @@ export class AwakeActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
     };
 
     return context;
+  }
+  async _onRender(context, options) {
+    await super._onRender(context, options);
+
+    for (const input of this.element.querySelectorAll(
+      ".awake-scar input.awake-scar-text, .awake-scar input.awake-scar-recalled"
+    )) {
+      input.addEventListener("change", event => this.#onScarChange(event));
+    }
   }
 
   /**
@@ -423,6 +437,35 @@ export class AwakeActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
 
     scars[index].transformed = true;
     scars[index].recalled = false;
+
+    await this.actor.update({
+      "system.scars": scars
+    });
+  }
+
+  async #onScarChange(event) {
+    const row = event.currentTarget.closest(".awake-scar");
+    if (!row) return;
+
+    const index = Number(row.dataset.scarIndex);
+    if (!Number.isInteger(index)) return;
+
+    const scars = this.actor.system.scars.map(scar => ({
+      text: scar.text,
+      recalled: scar.recalled,
+      transformed: scar.transformed
+    }));
+
+    const textInput = row.querySelector("input.awake-scar-text");
+    const recalledInput = row.querySelector("input.awake-scar-recalled");
+
+    if (textInput) {
+      scars[index].text = textInput.value;
+    }
+
+    if (recalledInput) {
+      scars[index].recalled = recalledInput.checked;
+    }
 
     await this.actor.update({
       "system.scars": scars

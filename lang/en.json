@@ -52,9 +52,18 @@
       "Delete": "Delete",
       "Name": "Name",
       "Quantity": "Quantity",
-      "Description": "Description"
+      "Description": "Description",
+      "Scope": "Scope"
     },
-    
+
+    "ExhaustionTalent": {
+      "Rules": "Rules",
+      "MinorUse": "Minor Use",
+      "MinorUseText": "Your Degree cannot be lower than your current Exhaustion.",
+      "MajorUse": "Major Use",
+      "MajorUseText": "Increase Exhaustion by 1 and add your current Exhaustion to the Degree."
+    },
+
     "Hope": {
       "Chalice": "Hope Chalice",
       "Spend": "Spend",

@@ -3,6 +3,7 @@ import { AwakeActorSheet } from "./sheets/awake-actor-sheet.js";
 import { ExhaustionTalentData } from "./data/exhaustion-talent.js";
 import { MadnessTalentData } from "./data/madness-talent.js";
 import { AwakeGearSheet } from "./sheets/awake-gear-sheet.js";
+import { AwakeExhaustionTalentSheet } from "./sheets/awake-exhaustion-talent-sheet.js";
 import { GearData } from "./data/gear.js";
 
 
@@ -13,7 +14,8 @@ Hooks.once("init", async () => {
   CONFIG.Item.dataModels.gear = GearData;
   
   await loadTemplates([
-    "systems/awake-dryh/templates/shared/gear-fields.hbs"
+    "systems/awake-dryh/templates/shared/gear-fields.hbs",
+    "systems/awake-dryh/templates/shared/exhaustion-talent-fields.hbs"
   ]);
 
   game.settings.register(game.system.id, "hope", {
@@ -48,6 +50,15 @@ Hooks.once("init", async () => {
     AwakeGearSheet,
     {
       types: ["gear"],
+      makeDefault: true
+    }
+  );
+  DocumentSheetConfig.registerSheet(
+    foundry.documents.Item,
+    game.system.id,
+    AwakeExhaustionTalentSheet,
+    {
+      types: ["exhaustionTalent"],
       makeDefault: true
     }
   );

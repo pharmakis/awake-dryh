@@ -362,17 +362,17 @@ export class AwakeActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
   /**
    * Transform a Scar.
    */
-  static async #onTransformScar (event, target) {
+  static async #onTransformScar(event, target) {
     if (!this.isEditable) return;
-    
+
     const index = Number(target.dataset.scarIndex);
 
     if (!Number.isInteger(index) || index < 0 || index > 8) {
       return;
     }
-    
+
     const scar = this.actor.system.scars[index];
-    
+
     if (!scar || scar.transformed) {
       return;
     }
@@ -381,6 +381,7 @@ export class AwakeActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
       window: {
         title: game.i18n.localize("AWAKE.Scars.TransformTitle")
       },
+
       content: `
         <p>${game.i18n.localize("AWAKE.Scars.TransformWarning")}</p>
         <p>${game.i18n.localize("AWAKE.Scars.TransformReminder")}</p>
@@ -397,9 +398,17 @@ export class AwakeActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
 
     if (!confirmed) return;
 
+    const scars = this.actor.system.scars.map(scar => ({
+      text: scar.text,
+      recalled: scar.recalled,
+      transformed: scar.transformed
+    }));
+
+    scars[index].transformed = true;
+    scars[index].recalled = false;
+
     await this.actor.update({
-      [`system.scars.${index}.transformed`]: true,
-      [`system.scars.${index}.recalled`]: false
+      "system.scars": scars
     });
   }
   

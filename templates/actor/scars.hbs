@@ -19,14 +19,24 @@
           title="{{localize "AWAKE.Scars.Recalled"}}"
         />
 
-        <input
-          class="awake-scar-text"
-          type="text"
-          name="system.scars.{{index}}.text"
-          value="{{scar.text}}"
-          placeholder="{{localize "AWAKE.Scars.Placeholder"}}"
-          {{#unless ../editable}}disabled{{/unless}}
-        />
+        {{#if scar.transformed}}
+
+          <span class="awake-scar-text">
+            {{scar.text}}
+          </span>
+
+        {{else}}
+
+          <input
+            class="awake-scar-text"
+            type="text"
+            name="system.scars.{{index}}.text"
+            value="{{scar.text}}"
+            placeholder="{{localize "AWAKE.Scars.Placeholder"}}"
+            {{#unless ../editable}}disabled{{/unless}}
+          />
+
+        {{/if}}
 
         {{#unless scar.transformed}}
           {{#if ../editable}}

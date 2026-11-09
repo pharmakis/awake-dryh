@@ -2,11 +2,13 @@
   <h2>{{localize "AWAKE.Actor.Scars"}}</h2>
 
   <div class="awake-scar-list">
+
     {{#each system.scars as |scar index|}}
       <div
         class="awake-scar {{#if scar.transformed}}transformed{{/if}}"
         data-scar-index="{{index}}"
       >
+
         <input
           class="awake-scar-recalled"
           type="checkbox"
@@ -17,13 +19,14 @@
           title="{{localize "AWAKE.Scars.Recalled"}}"
         />
 
-        <textarea
+        <input
           class="awake-scar-text"
+          type="text"
           name="system.scars.{{index}}.text"
-          rows="2"
+          value="{{scar.text}}"
           placeholder="{{localize "AWAKE.Scars.Placeholder"}}"
           {{#unless ../editable}}disabled{{/unless}}
-        >{{scar.text}}</textarea>
+        />
 
         {{#unless scar.transformed}}
           {{#if ../editable}}
@@ -38,7 +41,9 @@
             </button>
           {{/if}}
         {{/unless}}
+
       </div>
     {{/each}}
+
   </div>
 </section>

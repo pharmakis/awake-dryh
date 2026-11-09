@@ -15,11 +15,13 @@
   </header>
 
   <div class="awake-item-list">
+
     {{#each items.gear as |item|}}
       <div
         class="awake-item awake-gear-item"
         data-item-id="{{item.id}}"
       >
+
         <button
           type="button"
           class="awake-item-name"
@@ -42,7 +44,9 @@
             −
           </button>
         {{/if}}
+
       </div>
     {{/each}}
+
   </div>
 </section>

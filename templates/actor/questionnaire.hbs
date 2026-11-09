@@ -1,48 +1,52 @@
 <section class="awake-questionnaire">
   <h2>{{localize "AWAKE.Actor.Questionnaire"}}</h2>
 
-  <label class="awake-question">
-    <span>{{localize "AWAKE.Questionnaire.WhatsKeepingYouAwake"}}</span>
-    <textarea
-      name="system.questionnaire.whatsKeepingYouAwake"
-      rows="3"
-      {{#unless editable}}disabled{{/unless}}
-    >{{system.questionnaire.whatsKeepingYouAwake}}</textarea>
-  </label>
+  <div class="awake-questionnaire-grid">
 
-  <label class="awake-question">
-    <span>{{localize "AWAKE.Questionnaire.WhatJustHappened"}}</span>
-    <textarea
-      name="system.questionnaire.whatJustHappened"
-      rows="3"
-      {{#unless editable}}disabled{{/unless}}
-    >{{system.questionnaire.whatJustHappened}}</textarea>
-  </label>
+    <label class="awake-question">
+      <span>{{localize "AWAKE.Questionnaire.WhatsKeepingYouAwake"}}</span>
+      <textarea
+        name="system.questionnaire.whatsKeepingYouAwake"
+        rows="3"
+        {{#unless editable}}disabled{{/unless}}
+      >{{system.questionnaire.whatsKeepingYouAwake}}</textarea>
+    </label>
 
-  <label class="awake-question">
-    <span>{{localize "AWAKE.Questionnaire.WhatsOnTheSurface"}}</span>
-    <textarea
-      name="system.questionnaire.whatsOnTheSurface"
-      rows="3"
-      {{#unless editable}}disabled{{/unless}}
-    >{{system.questionnaire.whatsOnTheSurface}}</textarea>
-  </label>
+    <label class="awake-question">
+      <span>{{localize "AWAKE.Questionnaire.WhatJustHappened"}}</span>
+      <textarea
+        name="system.questionnaire.whatJustHappened"
+        rows="3"
+        {{#unless editable}}disabled{{/unless}}
+      >{{system.questionnaire.whatJustHappened}}</textarea>
+    </label>
 
-  <label class="awake-question">
-    <span>{{localize "AWAKE.Questionnaire.WhatLiesBeneath"}}</span>
-    <textarea
-      name="system.questionnaire.whatLiesBeneath"
-      rows="3"
-      {{#unless editable}}disabled{{/unless}}
-    >{{system.questionnaire.whatLiesBeneath}}</textarea>
-  </label>
+    <label class="awake-question">
+      <span>{{localize "AWAKE.Questionnaire.WhatsOnTheSurface"}}</span>
+      <textarea
+        name="system.questionnaire.whatsOnTheSurface"
+        rows="3"
+        {{#unless editable}}disabled{{/unless}}
+      >{{system.questionnaire.whatsOnTheSurface}}</textarea>
+    </label>
 
-  <label class="awake-question">
-    <span>{{localize "AWAKE.Questionnaire.WhatsYourPath"}}</span>
-    <textarea
-      name="system.questionnaire.whatsYourPath"
-      rows="3"
-      {{#unless editable}}disabled{{/unless}}
-    >{{system.questionnaire.whatsYourPath}}</textarea>
-  </label>
+    <label class="awake-question">
+      <span>{{localize "AWAKE.Questionnaire.WhatLiesBeneath"}}</span>
+      <textarea
+        name="system.questionnaire.whatLiesBeneath"
+        rows="3"
+        {{#unless editable}}disabled{{/unless}}
+      >{{system.questionnaire.whatLiesBeneath}}</textarea>
+    </label>
+
+    <label class="awake-question awake-question-path">
+      <span>{{localize "AWAKE.Questionnaire.WhatsYourPath"}}</span>
+      <textarea
+        name="system.questionnaire.whatsYourPath"
+        rows="3"
+        {{#unless editable}}disabled{{/unless}}
+      >{{system.questionnaire.whatsYourPath}}</textarea>
+    </label>
+
+  </div>
 </section>

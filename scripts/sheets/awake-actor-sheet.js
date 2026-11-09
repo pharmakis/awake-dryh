@@ -7,8 +7,12 @@ export class AwakeActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
     classes: ["awake", "awake-actor-sheet"],
 
     position: {
-      width: 720,
-      height: 960
+      width: 960,
+      height: 1100
+    },
+
+    window: {
+      resizable: true
     },
 
     actions: {
@@ -26,16 +30,8 @@ export class AwakeActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
   };
 
   static PARTS = {
-    header: {
-      template: "systems/awake-dryh/templates/actor/header.hbs"
-    },
-
-    stats: {
-      template: "systems/awake-dryh/templates/actor/stats.hbs"
-    },
-
-    responses: {
-      template: "systems/awake-dryh/templates/actor/responses.hbs"
+    overview: {
+      template: "systems/awake-dryh/templates/actor/overview.hbs"
     },
 
     questionnaire: {

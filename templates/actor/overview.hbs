@@ -1,0 +1,203 @@
+<section class="awake-overview">
+
+  <div class="awake-overview-portrait">
+    <img
+      class="awake-portrait"
+      src="{{actor.img}}"
+      alt="{{actor.name}}"
+      data-action="editImage"
+      data-edit="img"
+    />
+  </div>
+
+  <div class="awake-overview-main">
+
+    <div class="awake-identity">
+      <label class="awake-field">
+        <span>{{localize "AWAKE.Actor.Name"}}</span>
+
+        <input
+          type="text"
+          name="name"
+          value="{{actor.name}}"
+          {{#unless editable}}disabled{{/unless}}
+        />
+      </label>
+
+      <label class="awake-field">
+        <span>{{localize "AWAKE.Actor.Identity"}}</span>
+
+        <input
+          type="text"
+          name="system.identity"
+          value="{{system.identity}}"
+          placeholder="{{localize "AWAKE.Actor.IdentityPlaceholder"}}"
+          {{#unless editable}}disabled{{/unless}}
+        />
+      </label>
+    </div>
+
+    <section class="awake-stats">
+      <h2>{{localize "AWAKE.Actor.Stats"}}</h2>
+
+      <div class="awake-stats-grid">
+
+        <label class="awake-stat">
+          <span>{{localize "AWAKE.Actor.Discipline"}}</span>
+
+          <input
+            type="number"
+            name="system.discipline"
+            value="{{system.discipline}}"
+            min="0"
+            max="3"
+            step="1"
+            {{#unless editable}}disabled{{/unless}}
+          />
+        </label>
+
+        <label class="awake-stat">
+          <span>{{localize "AWAKE.Actor.PermanentMadness"}}</span>
+
+          <input
+            type="number"
+            name="system.permanentMadness"
+            value="{{system.permanentMadness}}"
+            min="0"
+            max="3"
+            step="1"
+            {{#unless editable}}disabled{{/unless}}
+          />
+        </label>
+
+        <label class="awake-stat">
+          <span>{{localize "AWAKE.Actor.Exhaustion"}}</span>
+
+          <input
+            type="number"
+            name="system.exhaustion"
+            value="{{system.exhaustion}}"
+            min="0"
+            max="6"
+            step="1"
+            {{#unless editable}}disabled{{/unless}}
+          />
+        </label>
+
+      </div>
+    </section>
+
+    <section class="awake-chalices">
+
+      <div class="awake-chalice awake-hope-chalice">
+        <span class="awake-chalice-label">
+          {{localize "AWAKE.Hope.Chalice"}}
+        </span>
+
+        <span class="awake-chalice-value">
+          {{hope}}
+        </span>
+
+        {{#if editable}}
+          <button
+            type="button"
+            class="awake-hope-spend"
+            data-action="spendHope"
+          >
+            {{localize "AWAKE.Hope.Spend"}}
+          </button>
+        {{/if}}
+      </div>
+
+      <div class="awake-chalice awake-despair-chalice">
+        <span class="awake-chalice-label">
+          {{localize "AWAKE.Despair.Chalice"}}
+        </span>
+
+        <span class="awake-chalice-value">
+          {{despair}}
+        </span>
+      </div>
+
+    </section>
+
+    <section class="awake-responses">
+
+      <header class="awake-section-header">
+        <h2>{{localize "AWAKE.Actor.Responses"}}</h2>
+
+        {{#if editable}}
+          <button
+            type="button"
+            class="awake-response-lock"
+            data-action="toggleResponsesEdit"
+            title="{{localize "AWAKE.Actor.EditResponses"}}"
+          >
+            {{#if responses.editMode}}
+              🔓
+            {{else}}
+              🔒
+            {{/if}}
+          </button>
+        {{/if}}
+      </header>
+
+      <div class="awake-response-row">
+        <span class="awake-response-label">
+          {{localize "AWAKE.Actor.Fight"}}
+        </span>
+
+        <div class="awake-response-boxes">
+          {{#each responses.fight as |box|}}
+            <button
+              type="button"
+              class="
+                awake-response-box
+                {{#if box.selected}}selected{{/if}}
+                {{#if box.checked}}checked{{/if}}
+                {{#if box.unavailable}}unavailable{{/if}}
+              "
+              data-action="responseBox"
+              data-response-type="fight"
+              data-response-index="{{box.index}}"
+              {{#unless ../editable}}disabled{{/unless}}
+            ></button>
+          {{/each}}
+        </div>
+      </div>
+
+      <div class="awake-response-row">
+        <span class="awake-response-label">
+          {{localize "AWAKE.Actor.Flight"}}
+        </span>
+
+        <div class="awake-response-boxes">
+          {{#each responses.flight as |box|}}
+            <button
+              type="button"
+              class="
+                awake-response-box
+                {{#if box.selected}}selected{{/if}}
+                {{#if box.checked}}checked{{/if}}
+                {{#if box.unavailable}}unavailable{{/if}}
+              "
+              data-action="responseBox"
+              data-response-type="flight"
+              data-response-index="{{box.index}}"
+              {{#unless ../editable}}disabled{{/unless}}
+            ></button>
+          {{/each}}
+        </div>
+      </div>
+
+      {{#if responses.editMode}}
+        <div class="awake-response-count">
+          {{localize "AWAKE.Actor.ResponsesSelected"}}:
+          {{responses.selected}} / 3
+        </div>
+      {{/if}}
+
+    </section>
+
+  </div>
+</section>

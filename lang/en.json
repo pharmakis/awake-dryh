@@ -88,6 +88,7 @@
       "Chalice": "Hope Chalice",
       "Spend": "Spend",
       "SpendTitle": "Spend Hope",
+      "SpendHope": "Spend Hope",
       "SpendPlaceholder": "Hope spending options will be available here.",
       "SpendDescription": "Each Hope coin adds a 1 to the protagonist's Discipline pool.",
       "Available": "Hope available",
@@ -97,7 +98,16 @@
       "NotEnough": "There is not enough Hope in the Chalice."
     },
     "Despair": {
-      "Chalice": "Despair Chalice"
+      "Chalice": "Despair Chalice",
+      "CastShadow": "Cast Shadow",
+      "CastShadowTitle": "Cast Shadow",
+      "Available": "Despair available",
+      "AddSix": "Add a 6",
+      "RemoveSix": "Remove a 6",
+      "NoneAvailable": "There is no Despair available.",
+      "EmptyPool": "A 6 cannot be added to an empty pool.",
+      "NoSix": "That pool does not contain a 6.",
+      "NoSixesAvailable": "There are no sixes available to remove."
     },
     "Common": {
       "Close": "Close"
@@ -144,6 +154,12 @@
       "IncreaseDespair": "Add Despair",
       "DecreaseDespair": "Remove Despair",
       "GMOnly": "Only the GM can change the Chalices."
+    },
+    "DicePools": {
+      "discipline": "Discipline",
+      "exhaustion": "Exhaustion",
+      "madness": "Madness",
+      "pain": "Pain"
     }
   },
 

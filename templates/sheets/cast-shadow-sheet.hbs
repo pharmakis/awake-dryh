@@ -1,0 +1,78 @@
+<div class="awake-cast-shadow">
+
+  <div class="awake-cast-shadow-available">
+    <span>
+      {{localize "AWAKE.Despair.Available"}}
+    </span>
+
+    <strong>
+      {{despairAvailable}}
+    </strong>
+  </div>
+  {{#if despairAvailable}}
+
+    <section class="awake-cast-shadow-section">
+
+        <h3>
+        {{localize "AWAKE.Despair.AddSix"}}
+        </h3>
+
+        <div class="awake-cast-shadow-targets">
+        {{#each addTargets}}
+
+            <button
+            type="button"
+            data-action="castShadow"
+            data-operation="add"
+            data-pool="{{key}}"
+            >
+            {{label}}
+            </button>
+
+        {{/each}}
+        </div>
+
+    </section>
+
+
+    <section class="awake-cast-shadow-section">
+
+        <h3>
+        {{localize "AWAKE.Despair.RemoveSix"}}
+        </h3>
+
+        {{#if removeTargets.length}}
+
+        <div class="awake-cast-shadow-targets">
+            {{#each removeTargets}}
+
+            <button
+                type="button"
+                data-action="castShadow"
+                data-operation="remove"
+                data-pool="{{key}}"
+            >
+                {{label}}
+            </button>
+
+            {{/each}}
+        </div>
+
+        {{else}}
+
+        <p class="awake-cast-shadow-none">
+            {{localize "AWAKE.Despair.NoSixesAvailable"}}
+        </p>
+
+        {{/if}}
+
+    </section>
+  {{else}}
+
+    <p class="awake-cast-shadow-none">
+      {{localize "AWAKE.Despair.NoDespairAvailable"}}
+    </p>
+
+  {{/if}}
+
+</div>

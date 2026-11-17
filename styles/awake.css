@@ -358,6 +358,7 @@
 .awake-start-conflict-sheet .window-content,
 .awake-build-roll-sheet .window-content,
 .awake-chalices-sheet .window-content,
+.awake-cast-shadow-sheet .window-content,
 .awake-spend-hope-sheet .window-content{
   background:
     url("../assets/ui/backgrounds/actor-bg.webp")
@@ -444,6 +445,48 @@
 
 .awake-spend-hope button[type="submit"] {
   margin-top: 0.25rem;
+}
+
+/* Cast Shadow sheet */
+
+.awake-cast-shadow {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.awake-cast-shadow-available {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 1rem;
+  align-items: center;
+}
+
+.awake-cast-shadow-available strong {
+  font-size: 1.25rem;
+}
+
+.awake-cast-shadow-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.awake-cast-shadow-section h3 {
+  margin: 0;
+}
+
+.awake-cast-shadow-targets {
+  display: grid;
+  grid-template-columns:
+    repeat(2, minmax(0, 1fr));
+  gap: 0.5rem;
+}
+
+.awake-cast-shadow-none {
+  margin: 0;
+  opacity: 0.7;
+  font-style: italic;
 }
 
 /* Build Roll sheet */

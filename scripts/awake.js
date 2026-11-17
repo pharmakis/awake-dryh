@@ -10,6 +10,7 @@ import {  openStartConflictSheet } from "./sheets/start-conflict-sheet.js";
 import { openBuildRollSheet, handleConflictRollSubmission } from "./sheets/build-roll-sheet.js";
 import { openChalicesSheet } from "./sheets/chalices-sheet.js";
 import { openSpendHopeSheet, handleSpendHopeSubmission } from "./sheets/spend-hope-sheet.js";
+import { openCastShadowSheet } from "./sheets/cast-shadow-sheet.js";
 
 
 Hooks.once("init", async () => {
@@ -175,6 +176,7 @@ Hooks.on("renderChatMessageHTML", (message, html) => {
 
     card.append(button);
 
+
     return;
   }
 
@@ -196,7 +198,7 @@ Hooks.on("renderChatMessageHTML", (message, html) => {
 
     button.textContent =
       game.i18n.localize(
-        "AWAKE.Hope.Spend"
+        "AWAKE.Hope.SpendHope"
       );
 
 
@@ -211,6 +213,41 @@ Hooks.on("renderChatMessageHTML", (message, html) => {
 
 
     card.append(button);
+
+    if (game.user.isGM) {
+      const castShadowButton =
+      document.createElement(
+        "button"
+      );
+
+      castShadowButton.type =
+        "button";
+
+      castShadowButton.classList.add(
+        "awake-cast-shadow-button"
+      );
+
+      castShadowButton.textContent =
+        game.i18n.localize(
+          "AWAKE.Despair.CastShadow"
+        );
+
+
+      castShadowButton.addEventListener(
+        "click",
+        () => {
+          openCastShadowSheet({
+          messageId: message.id
+        });
+    }
+  );
+
+
+  card.append(
+    castShadowButton
+  );
+}
+
   }
 });
 

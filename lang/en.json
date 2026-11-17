@@ -88,7 +88,13 @@
       "Chalice": "Hope Chalice",
       "Spend": "Spend",
       "SpendTitle": "Spend Hope",
-      "SpendPlaceholder": "Hope spending options will be available here."
+      "SpendPlaceholder": "Hope spending options will be available here.",
+      "SpendDescription": "Each Hope coin adds a 1 to the protagonist's Discipline pool.",
+      "Available": "Hope available",
+      "Amount": "Hope to spend",
+      "NoneAvailable": "There is no Hope available.",
+      "InvalidAmount": "Choose at least one Hope coin.",
+      "NotEnough": "There is not enough Hope in the Chalice."
     },
     "Despair": {
       "Chalice": "Despair Chalice"

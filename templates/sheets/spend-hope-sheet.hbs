@@ -1,0 +1,37 @@
+<div class="awake-spend-hope">
+
+  <p class="awake-spend-hope-description">
+    {{localize "AWAKE.Hope.SpendDescription"}}
+  </p>
+
+  <div class="awake-spend-hope-available">
+    <span>
+      {{localize "AWAKE.Hope.Available"}}
+    </span>
+
+    <strong>
+      {{hopeAvailable}}
+    </strong>
+  </div>
+
+  <label class="awake-spend-hope-amount">
+    <span>
+      {{localize "AWAKE.Hope.Amount"}}
+    </span>
+
+    <input
+      type="number"
+      name="amount"
+      value="1"
+      min="1"
+      max="{{hopeAvailable}}"
+      step="1"
+      required
+    />
+  </label>
+
+  <button type="submit">
+    {{localize "AWAKE.Hope.Spend"}}
+  </button>
+
+</div>

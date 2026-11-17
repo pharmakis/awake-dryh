@@ -357,7 +357,8 @@
 .awake-gear-sheet .window-content,
 .awake-start-conflict-sheet .window-content,
 .awake-build-roll-sheet .window-content,
-.awake-chalices-sheet .window-content{
+.awake-chalices-sheet .window-content,
+.awake-spend-hope-sheet .window-content{
   background:
     url("../assets/ui/backgrounds/actor-bg.webp")
     center / cover no-repeat;
@@ -409,6 +410,40 @@
 .awake-chalice-count {
   text-align: center;
   font-size: 1.4rem;
+}
+
+/* Spend Hope sheet */
+
+.awake-spend-hope {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.awake-spend-hope-description {
+  margin: 0;
+}
+
+.awake-spend-hope-available,
+.awake-spend-hope-amount {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 4rem;
+  gap: 1rem;
+  align-items: center;
+}
+
+.awake-spend-hope-available strong {
+  text-align: center;
+  font-size: 1.25rem;
+}
+
+.awake-spend-hope-amount input {
+  width: 4rem;
+  text-align: center;
+}
+
+.awake-spend-hope button[type="submit"] {
+  margin-top: 0.25rem;
 }
 
 /* Build Roll sheet */

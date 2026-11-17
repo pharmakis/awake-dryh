@@ -718,7 +718,7 @@ function validateDicePool(
 }
 
 
-function buildRollResultContent(
+export function buildRollResultContent(
   actor,
   painRating,
   result

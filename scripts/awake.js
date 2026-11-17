@@ -9,6 +9,7 @@ import { GearData } from "./data/gear.js";
 import {  openStartConflictSheet } from "./sheets/start-conflict-sheet.js";
 import { openBuildRollSheet, handleConflictRollSubmission } from "./sheets/build-roll-sheet.js";
 import { openChalicesSheet } from "./sheets/chalices-sheet.js";
+import { openSpendHopeSheet, handleSpendHopeSubmission } from "./sheets/spend-hope-sheet.js";
 
 
 Hooks.once("init", async () => {
@@ -109,30 +110,6 @@ Hooks.on("renderChatMessageHTML", (message, html) => {
 
   if (!conflict) return;
 
-  if (conflict.status !== "awaitingPlayer") {
-    return;
-  }
-
-  const actor = foundry.utils.fromUuidSync(
-    conflict.actorUuid
-  );
-
-  if (
-    !actor ||
-    actor.documentName !== "Actor" ||
-    actor.type !== "awake"
-  ) {
-    return;
-  }
-
-  const canBuildRoll =
-    game.user.isGM ||
-    actor.testUserPermission(
-      game.user,
-      CONST.DOCUMENT_OWNERSHIP_LEVELS.OWNER
-    );
-
-  if (!canBuildRoll) return;
 
   const card = html.querySelector(
     ".awake-conflict-card"
@@ -140,22 +117,101 @@ Hooks.on("renderChatMessageHTML", (message, html) => {
 
   if (!card) return;
 
-  const button = document.createElement("button");
 
-  button.type = "button";
-  button.classList.add("awake-build-roll-button");
+  /*
+   * Awaiting player:
+   * selected protagonist owner or GM may build the roll.
+   */
 
-  button.textContent = game.i18n.localize(
-    "AWAKE.Conflict.BuildRoll"
-  );
+  if (conflict.status === "awaitingPlayer") {
+    const actor = foundry.utils.fromUuidSync(
+      conflict.actorUuid
+    );
 
-  button.addEventListener("click", () => {
-    openBuildRollSheet({
-      messageId: message.id
-    });
-  });
+    if (
+      !actor ||
+      actor.documentName !== "Actor" ||
+      actor.type !== "awake"
+    ) {
+      return;
+    }
 
-  card.append(button);
+
+    const canBuildRoll =
+      game.user.isGM ||
+      actor.testUserPermission(
+        game.user,
+        CONST.DOCUMENT_OWNERSHIP_LEVELS.OWNER
+      );
+
+
+    if (!canBuildRoll) return;
+
+
+    const button =
+      document.createElement("button");
+
+    button.type = "button";
+
+    button.classList.add(
+      "awake-build-roll-button"
+    );
+
+    button.textContent =
+      game.i18n.localize(
+        "AWAKE.Conflict.BuildRoll"
+      );
+
+
+    button.addEventListener(
+      "click",
+      () => {
+        openBuildRollSheet({
+          messageId: message.id
+        });
+      }
+    );
+
+
+    card.append(button);
+
+    return;
+  }
+
+
+  /*
+   * Modifiable:
+   * any player may spend Hope.
+   */
+
+  if (conflict.status === "modifiable") {
+    const button =
+      document.createElement("button");
+
+    button.type = "button";
+
+    button.classList.add(
+      "awake-spend-hope-button"
+    );
+
+    button.textContent =
+      game.i18n.localize(
+        "AWAKE.Hope.Spend"
+      );
+
+
+    button.addEventListener(
+      "click",
+      () => {
+        openSpendHopeSheet({
+          messageId: message.id
+        });
+      }
+    );
+
+
+    card.append(button);
+  }
 });
 
 Hooks.once("ready", async () => {
@@ -171,6 +227,14 @@ Hooks.once("ready", async () => {
         "submitConflictRoll"
       ) {
         await handleConflictRollSubmission(
+          submission
+        );
+      }
+      else if (
+        submission?.type ===
+           "spendHope"
+      ) {
+        await handleSpendHopeSubmission(
           submission
         );
       }

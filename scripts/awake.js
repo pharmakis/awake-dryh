@@ -241,6 +241,17 @@ Hooks.on("renderChatMessageHTML", (message, html) => {
 
     button.type = "button";
 
+    const modifierActions =
+      document.createElement("div");
+
+    modifierActions.classList.add(
+      "awake-conflict-modifier-actions"
+    );
+
+    card.append(
+      modifierActions
+    );
+
     button.classList.add(
       "awake-spend-hope-button"
     );
@@ -261,7 +272,9 @@ Hooks.on("renderChatMessageHTML", (message, html) => {
     );
 
 
-    card.append(button);
+    modifierActions.append(
+      button
+    );
 
 
     if (game.user.isGM) {
@@ -291,7 +304,7 @@ Hooks.on("renderChatMessageHTML", (message, html) => {
       );
 
 
-      card.append(
+      modifierActions.append(
         castShadowButton
       );
 

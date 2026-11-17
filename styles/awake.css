@@ -1109,6 +1109,7 @@
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.04em;
+  white-space: nowrap;
 }
 
 .awake-conflict-dominant {
@@ -1123,6 +1124,61 @@
 
 .awake-conflict-outcome.is-failure {
   color: #d9b2a7;
+}
+
+/* Hope / Despair actions inside Conflict */
+
+.awake-conflict-modifier-actions {
+  display: grid;
+
+  grid-template-columns:
+    repeat(
+      auto-fit,
+      minmax(0, 1fr)
+    );
+
+  gap: 0.6rem;
+
+  margin-top: 0.35rem;
+}
+
+
+
+.awake-conflict-modifier-actions:empty {
+  display: none;
+}
+
+
+.awake-conflict-modifier-actions > button {
+  width: 100%;
+  min-width: 0;
+  min-height: 2.35rem;
+
+  margin: 0;
+  padding: 0.45rem 0.55rem;
+
+  border:
+    1px solid rgba(210, 185, 145, 0.55);
+
+  border-radius: 5px;
+
+  background:
+    rgba(255, 255, 255, 0.04);
+
+  color: #eee3d1;
+}
+
+
+.awake-conflict-modifier-actions > button:hover {
+  background:
+    rgba(255, 255, 255, 0.09);
+
+  border-color:
+    rgba(225, 200, 160, 0.8);
+}
+
+.awake-conflict-modifier-actions + button {
+  margin-top: 0.7rem;
 }
 
 /*

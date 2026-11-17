@@ -953,3 +953,145 @@
 .awake-talents.is-disabled .awake-talents-grid {
   opacity: 0.45;
 }
+/* Conflict chat cards */
+
+.chat-message:has(.awake-conflict-card) {
+  background: #0d0d10;
+  border: 1px solid rgba(210, 185, 145, 0.45);
+  border-radius: 6px;
+  color: #e8e2d8;
+}
+
+.chat-message:has(.awake-conflict-card) .message-header {
+  padding: 0.55rem 0.7rem;
+  border-bottom: 1px solid rgba(210, 185, 145, 0.25);
+  color: #cfc6b8;
+}
+
+.chat-message:has(.awake-conflict-card) .message-sender,
+.chat-message:has(.awake-conflict-card) .message-metadata {
+  color: inherit;
+}
+
+.chat-message:has(.awake-conflict-card) .message-content {
+  padding: 0;
+}
+
+
+.awake-conflict-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+
+  padding: 0.9rem 1rem 1rem;
+
+  background:
+    linear-gradient(
+      180deg,
+      rgba(27, 27, 32, 0.98),
+      rgba(12, 12, 15, 0.98)
+    );
+
+  color: #eee8de;
+}
+
+
+.awake-conflict-card h3 {
+  margin: 0 0 0.25rem;
+
+  font-size: 1.45rem;
+  line-height: 1.1;
+
+  color: #f1e5d1;
+}
+
+
+.awake-conflict-card p {
+  margin: 0;
+
+  line-height: 1.4;
+}
+
+
+.awake-conflict-card > h3 + p {
+  margin-bottom: 0.55rem;
+
+  padding-bottom: 0.65rem;
+
+  border-bottom:
+    1px solid rgba(210, 185, 145, 0.25);
+
+  color: #cfc6b8;
+}
+
+
+.awake-conflict-status {
+  margin-top: 0.4rem !important;
+
+  padding-top: 0.6rem;
+
+  border-top:
+    1px solid rgba(210, 185, 145, 0.25);
+
+  color: #cfc6b8;
+
+  font-style: italic;
+}
+
+
+/*
+ * Buttons are appended directly to the Conflict card.
+ * Give every action its own row and breathing room.
+ */
+
+.awake-conflict-card > button {
+  width: 100%;
+  min-height: 2.35rem;
+
+  margin: 0.35rem 0 0;
+  padding: 0.45rem 0.7rem;
+
+  border:
+    1px solid rgba(210, 185, 145, 0.55);
+
+  border-radius: 5px;
+
+  background:
+    rgba(255, 255, 255, 0.04);
+
+  color: #eee3d1;
+}
+
+
+.awake-conflict-card > button + button {
+  margin-top: 0.5rem;
+}
+
+
+.awake-conflict-card > button:hover {
+  background:
+    rgba(255, 255, 255, 0.09);
+
+  border-color:
+    rgba(225, 200, 160, 0.8);
+}
+
+
+/* Crash / Snap notices */
+
+.awake-conflict-card .awake-crash-notice,
+.awake-conflict-card .awake-snap-notice {
+  margin-top: 0.55rem;
+
+  padding: 0.6rem 0.7rem;
+
+  border:
+    1px solid rgba(210, 185, 145, 0.4);
+
+  border-radius: 5px;
+
+  background:
+    rgba(255, 255, 255, 0.04);
+
+  font-weight: 600;
+}

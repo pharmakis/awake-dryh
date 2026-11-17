@@ -6,6 +6,7 @@ import { AwakeGearSheet } from "./sheets/awake-gear-sheet.js";
 import { AwakeExhaustionTalentSheet } from "./sheets/awake-exhaustion-talent-sheet.js";
 import { AwakeMadnessTalentSheet } from "./sheets/awake-madness-talent-sheet.js";
 import { GearData } from "./data/gear.js";
+import {  openStartConflictSheet } from "./sheets/start-conflict-sheet.js";
 
 
 Hooks.once("init", async () => {
@@ -72,7 +73,10 @@ Hooks.once("init", async () => {
     types: ["madnessTalent"],
     makeDefault: true
   }
-);
+  );
+  game.awake ??= {};
+
+  game.awake.startConflict = openStartConflictSheet;
 });
 
 Hooks.on("preCreateItem", (item, data) => {
@@ -92,4 +96,28 @@ Hooks.on("preCreateItem", (item, data) => {
       img: defaultImage
     });
   }
+});
+
+Hooks.once("ready", async () => {
+  if (!game.user.isGM) return;
+
+  const existing = game.macros.find(
+    macro =>
+      macro.name === "Start Conflict" &&
+      macro.flags?.[game.system.id]?.systemMacro === "startConflict"
+  );
+
+  if (existing) return;
+
+  await Macro.create({
+    name: "Start Conflict",
+    type: "script",
+    command: "game.awake.startConflict();",
+
+    flags: {
+      [game.system.id]: {
+        systemMacro: "startConflict"
+      }
+    }
+  });
 });

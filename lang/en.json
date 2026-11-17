@@ -95,6 +95,21 @@
     },
     "Common": {
       "Close": "Close"
+    },
+    
+    "Conflict": {
+      "Title": "Conflict",
+      "StartTitle": "Start Conflict",
+      "Protagonist": "Protagonist",
+      "SelectProtagonist": "Select protagonist",
+      "Pain": "Pain",
+      "Start": "Start Conflict",
+      "WaitingForProtagonist": "Waiting for protagonist...",
+      "FacesPain": "{name} faces Pain {pain}.",
+      "GMOnly": "Only the GM can start a conflict.",
+      "NoActors": "No Awake protagonists found.",
+      "InvalidActor": "The selected protagonist could not be found.",
+      "InvalidPain": "Pain must be a whole number of at least 1."
     }
   },
 

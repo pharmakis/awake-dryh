@@ -1,0 +1,43 @@
+<div class="awake-start-conflict">
+  <div class="form-group">
+    <label for="awake-conflict-actor">
+      {{localize "AWAKE.Conflict.Protagonist"}}
+    </label>
+
+    <select
+      id="awake-conflict-actor"
+      name="actorId"
+      required
+    >
+      <option value="" selected disabled>
+        {{localize "AWAKE.Conflict.SelectProtagonist"}}
+      </option>
+
+      {{#each actors}}
+        <option value="{{id}}">
+          {{name}}
+        </option>
+      {{/each}}
+    </select>
+  </div>
+
+  <div class="form-group">
+    <label for="awake-conflict-pain">
+      {{localize "AWAKE.Conflict.Pain"}}
+    </label>
+
+    <input
+      id="awake-conflict-pain"
+      type="number"
+      name="pain"
+      value="1"
+      min="1"
+      step="1"
+      required
+    />
+  </div>
+
+  <button type="submit">
+    {{localize "AWAKE.Conflict.Start"}}
+  </button>
+</div>

@@ -138,7 +138,8 @@
       "IncreaseExhaustion": "Increase Exhaustion",
       "FailureSnapWarning": "No Responses remain available. Choosing a Response consequence will cause a Snap.",
       "FailureNone": "No Consequence",
-      "ApplyFailureConsequence": "Apply Failure Consequence"
+      "ApplyFailureConsequence": "Apply Failure Consequence",
+      "FailureResponseSnap": "Response → Snap"
     },  
     "Conflict": {
       "Title": "Conflict",

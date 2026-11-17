@@ -1,0 +1,77 @@
+<div class="awake-build-roll">
+
+  <section class="awake-build-roll-summary">
+
+    <div class="awake-build-roll-row">
+      <span>{{localize "AWAKE.Conflict.Protagonist"}}</span>
+      <strong>{{actorName}}</strong>
+    </div>
+
+    <div class="awake-build-roll-row">
+      <span>{{localize "AWAKE.Actor.Discipline"}}</span>
+      <strong>{{discipline}}</strong>
+    </div>
+
+    <div class="awake-build-roll-row">
+      <span>{{localize "AWAKE.Actor.Exhaustion"}}</span>
+      <strong>{{exhaustion}}</strong>
+    </div>
+
+    <div class="awake-build-roll-row">
+      <span>{{localize "AWAKE.Actor.PermanentMadness"}}</span>
+      <strong>{{permanentMadness}}</strong>
+    </div>
+
+    <div class="awake-build-roll-row">
+      <span>{{localize "AWAKE.Conflict.Pain"}}</span>
+      <strong>{{painRating}}</strong>
+    </div>
+
+  </section>
+
+
+  <hr class="awake-divider" />
+
+
+  <section class="awake-build-roll-options">
+
+    <label class="awake-build-roll-option">
+      <span>
+        {{localize "AWAKE.Conflict.TemporaryMadness"}}
+      </span>
+
+      <input
+        type="number"
+        name="temporaryMadness"
+        value="0"
+        min="0"
+        max="6"
+        step="1"
+      />
+    </label>
+
+
+    <label class="awake-build-roll-option awake-build-roll-exhaustion">
+      <input
+        type="checkbox"
+        name="increaseExhaustion"
+        {{#unless canIncreaseExhaustion}}disabled{{/unless}}
+      />
+
+      <span>
+        {{localize "AWAKE.Conflict.IncreaseExhaustion"}}
+      </span>
+    </label>
+
+  </section>
+
+
+  <button
+    type="button"
+    class="awake-build-roll-submit"
+    disabled
+  >
+    {{localize "AWAKE.Conflict.Roll"}}
+  </button>
+
+</div>

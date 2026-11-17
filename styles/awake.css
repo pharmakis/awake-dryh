@@ -355,10 +355,78 @@
 .awake-exhaustion-talent-sheet .window-content,
 .awake-madness-talent-sheet .window-content,
 .awake-gear-sheet .window-content,
-.awake-start-conflict-sheet .window-content {
+.awake-start-conflict-sheet .window-content,
+.awake-build-roll-sheet .window-content{
   background:
     url("../assets/ui/backgrounds/actor-bg.webp")
     center / cover no-repeat;
+}
+
+/* Build Roll sheet */
+
+.awake-build-roll-sheet .window-content {
+  overflow-y: auto;
+  min-height: 0;
+}
+
+.awake-build-roll {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.awake-build-roll-summary {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.awake-build-roll-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 1rem;
+  align-items: center;
+}
+
+.awake-build-roll-row strong {
+  min-width: 2rem;
+  text-align: right;
+}
+
+.awake-build-roll-options {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.awake-build-roll-option {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 4rem;
+  gap: 1rem;
+  align-items: center;
+}
+
+.awake-build-roll-option input[type="number"] {
+  width: 4rem;
+  text-align: center;
+}
+
+.awake-build-roll-exhaustion {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.awake-build-roll-exhaustion input[type="checkbox"] {
+  margin: 0;
+}
+
+.awake-build-roll-submit {
+  margin-top: 0.25rem;
+}
+
+.awake-build-roll-button {
+  margin-top: 0.75rem;
 }
 
 /* About exhaustion and madness sheets */

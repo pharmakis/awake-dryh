@@ -7,6 +7,7 @@ import { AwakeExhaustionTalentSheet } from "./sheets/awake-exhaustion-talent-she
 import { AwakeMadnessTalentSheet } from "./sheets/awake-madness-talent-sheet.js";
 import { GearData } from "./data/gear.js";
 import {  openStartConflictSheet } from "./sheets/start-conflict-sheet.js";
+import { openBuildRollSheet } from "./sheets/build-roll-sheet.js";
 
 
 Hooks.once("init", async () => {
@@ -96,6 +97,64 @@ Hooks.on("preCreateItem", (item, data) => {
       img: defaultImage
     });
   }
+});
+
+Hooks.on("renderChatMessageHTML", (message, html) => {
+  const conflict = message.getFlag(
+    game.system.id,
+    "conflict"
+  );
+
+  if (!conflict) return;
+
+  if (conflict.status !== "awaitingPlayer") {
+    return;
+  }
+
+  const actor = foundry.utils.fromUuidSync(
+    conflict.actorUuid
+  );
+
+  if (
+    !actor ||
+    actor.documentName !== "Actor" ||
+    actor.type !== "awake"
+  ) {
+    return;
+  }
+
+  const canBuildRoll =
+    game.user.isGM ||
+    actor.testUserPermission(
+      game.user,
+      CONST.DOCUMENT_OWNERSHIP_LEVELS.OWNER
+    );
+
+  if (!canBuildRoll) return;
+
+  const card = html.querySelector(
+    ".awake-conflict-card"
+  );
+
+  if (!card) return;
+
+  const button = document.createElement("button");
+
+  button.type = "button";
+  button.classList.add("awake-build-roll-button");
+
+  button.textContent = game.i18n.localize(
+    "AWAKE.Conflict.BuildRoll"
+  );
+
+  button.addEventListener("click", () => {
+    openBuildRollSheet({
+      actorUuid: conflict.actorUuid,
+      painRating: conflict.painRating
+    });
+  });
+
+  card.append(button);
 });
 
 Hooks.once("ready", async () => {

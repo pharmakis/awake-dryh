@@ -96,7 +96,7 @@
     "Common": {
       "Close": "Close"
     },
-    
+
     "Conflict": {
       "Title": "Conflict",
       "StartTitle": "Start Conflict",
@@ -109,7 +109,13 @@
       "GMOnly": "Only the GM can start a conflict.",
       "NoActors": "No Awake protagonists found.",
       "InvalidActor": "The selected protagonist could not be found.",
-      "InvalidPain": "Pain must be a whole number of at least 1."
+      "InvalidPain": "Pain must be a whole number of at least 1.",
+      "BuildRollTitle": "Build Roll — {name}",
+      "TemporaryMadness": "Temporary Madness",
+      "IncreaseExhaustion": "Increase Exhaustion by 1",
+      "Roll": "Roll",
+      "NotYourProtagonist": "You do not own this protagonist.",  
+      "BuildRoll": "Build Roll"
     }
   },
 

@@ -101,23 +101,46 @@ Hooks.on("preCreateItem", (item, data) => {
 Hooks.once("ready", async () => {
   if (!game.user.isGM) return;
 
-  const existing = game.macros.find(
+  let macro = game.macros.find(
     macro =>
-      macro.name === "Start Conflict" &&
-      macro.flags?.[game.system.id]?.systemMacro === "startConflict"
+      macro.getFlag(game.system.id, "systemMacro") === "startConflict"
   );
 
-  if (existing) return;
+  if (!macro) {
+    macro = await Macro.create({
+      name: "Start Conflict",
+      type: "script",
+      command: "game.awake.startConflict();",
 
-  await Macro.create({
-    name: "Start Conflict",
-    type: "script",
-    command: "game.awake.startConflict();",
-
-    flags: {
-      [game.system.id]: {
-        systemMacro: "startConflict"
+      flags: {
+        [game.system.id]: {
+          systemMacro: "startConflict"
+        }
       }
-    }
-  });
+    });
+  }
+
+  const hotbar = game.user.getHotbarMacros(1);
+
+  const alreadyAssigned = hotbar.some(
+    slot => slot.macro?.id === macro.id
+  );
+
+  if (alreadyAssigned) return;
+
+  const emptySlot = hotbar.find(
+    slot => slot.macro === null
+  );
+
+  if (!emptySlot) {
+    ui.notifications.warn(
+      "Awake: no free hotbar slot for Start Conflict."
+    );
+    return;
+  }
+
+  await game.user.assignHotbarMacro(
+    macro,
+    emptySlot.slot
+  );
 });

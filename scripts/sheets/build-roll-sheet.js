@@ -768,9 +768,15 @@ export function buildRollResultContent(
     matchup
   );
 
+  const pools =
+  document.createElement("div");
+
+  pools.classList.add(
+    "awake-conflict-pools"
+  );
 
   appendPool(
-    card,
+    pools,
     game.i18n.localize(
       "AWAKE.Actor.Discipline"
     ),
@@ -779,7 +785,7 @@ export function buildRollResultContent(
 
 
   appendPool(
-    card,
+    pools,
     game.i18n.localize(
       "AWAKE.Actor.Exhaustion"
     ),
@@ -788,7 +794,7 @@ export function buildRollResultContent(
 
 
   appendPool(
-    card,
+    pools,
     game.i18n.localize(
       "AWAKE.Conflict.Madness"
     ),
@@ -797,12 +803,14 @@ export function buildRollResultContent(
 
 
   appendPool(
-    card,
+    pools,
     game.i18n.localize(
       "AWAKE.Conflict.Pain"
     ),
     result.pools.pain
   );
+  
+  card.append(pools);
 
 
   const degree =
@@ -851,6 +859,21 @@ export function buildRollResultContent(
       }
     );
 
+    degree.classList.add(
+      "awake-conflict-degree"
+    );
+
+    outcome.classList.add(
+      "awake-conflict-outcome",
+      result.success
+        ? "is-success"
+        : "is-failure"
+    );
+
+    dominant.classList.add(
+      "awake-conflict-dominant"
+    );
+
 
   const status =
     document.createElement("p");
@@ -871,10 +894,21 @@ export function buildRollResultContent(
         );
 
 
-  card.append(
+  const resultBlock =
+    document.createElement("div");
+
+  resultBlock.classList.add(
+    "awake-conflict-result"
+  );
+
+  resultBlock.append(
     degree,
     outcome,
-    dominant,
+    dominant
+  );
+
+  card.append(
+    resultBlock,
     status
   );
 
@@ -884,25 +918,48 @@ export function buildRollResultContent(
 
 
 function appendPool(
-  card,
+  container,
   label,
   dice
 ) {
   const row =
-    document.createElement("p");
+    document.createElement("div");
+
+  row.classList.add(
+    "awake-conflict-pool"
+  );
 
 
-  const values =
+  const labelElement =
+    document.createElement("span");
+
+  labelElement.classList.add(
+    "awake-conflict-pool-label"
+  );
+
+  labelElement.textContent =
+    label;
+
+
+  const valuesElement =
+    document.createElement("span");
+
+  valuesElement.classList.add(
+    "awake-conflict-pool-values"
+  );
+
+  valuesElement.textContent =
     dice.length > 0
       ? dice.join(", ")
       : "—";
 
 
-  row.textContent =
-    `${label}: ${values}`;
+  row.append(
+    labelElement,
+    valuesElement
+  );
 
-
-  card.append(row);
+  container.append(row);
 }
 
 
@@ -1065,7 +1122,7 @@ export async function finalizeConflict({
     ...conflict,
 
     status: "finalized",
-    
+
     dominanceResolved:
       result.dominant === "pain",
 

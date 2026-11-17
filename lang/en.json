@@ -131,7 +131,14 @@
       "SnapWarning": "Snapping clears all Responses, reduces Discipline by 1, and adds 1 Permanent Madness.",
       "Snap": "Snap",
       "SnapNotice": "SNAP — Responses are cleared, Discipline falls by 1, and Permanent Madness increases by 1.",
-      "NightmareNotice": "SNAP — The protagonist has lost their final Discipline die and becomes a Nightmare."
+      "NightmareNotice": "SNAP — The protagonist has lost their final Discipline die and becomes a Nightmare.",
+      "FailureTitle": "Failure Consequence",
+      "FailureHeading": "Failure",
+      "FailureDescription": "The action failed. The GM may inflict one additional consequence.",
+      "IncreaseExhaustion": "Increase Exhaustion",
+      "FailureSnapWarning": "No Responses remain available. Choosing a Response consequence will cause a Snap.",
+      "FailureNone": "No Consequence",
+      "ApplyFailureConsequence": "Apply Failure Consequence"
     },  
     "Conflict": {
       "Title": "Conflict",

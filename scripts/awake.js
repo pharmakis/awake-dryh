@@ -15,6 +15,7 @@ import { openDisciplineConsequenceSheet, handleDisciplineConsequenceSubmission }
 import { applyExhaustionConsequence, handleExhaustionConsequenceSubmission } from "./rules/exhaustion-consequence.js";
 import { openRestoreFromCrashSheet } from "./sheets/restore-from-crash-sheet.js";
 import { openMadnessConsequenceSheet, handleMadnessConsequenceSubmission } from "./sheets/madness-consequence-sheet.js";
+import { openFailureConsequenceSheet } from "./sheets/failure-consequence-sheet.js";
 
 
 
@@ -519,6 +520,48 @@ Hooks.on("renderChatMessageHTML", (message, html) => {
 
       card.append(
         consequenceButton
+      );
+    }
+    if (
+      game.user.isGM &&
+      conflict.status === "finalized" &&
+      conflict.result?.success === false &&
+      conflict.dominanceResolved &&
+      !conflict.failureResolved &&
+      !conflict.becameNightmare
+    ) {
+      const failureButton =
+        document.createElement(
+          "button"
+        );
+
+
+      failureButton.type =
+        "button";
+
+      failureButton.classList.add(
+        "awake-apply-consequence-button"
+      );
+
+      failureButton.textContent =
+        game.i18n.localize(
+          "AWAKE.Consequences.ApplyFailureConsequence"
+        );
+
+
+      failureButton.addEventListener(
+        "click",
+        () => {
+          openFailureConsequenceSheet({
+            messageId:
+              message.id
+          });
+        }
+      );
+
+
+      card.append(
+        failureButton
       );
     }
 

@@ -1,0 +1,119 @@
+<div class="awake-failure-consequence">
+
+  <header class="awake-consequence-header">
+    <h2>
+      {{localize "AWAKE.Consequences.FailureHeading"}}
+    </h2>
+
+    <p>
+      {{localize "AWAKE.Consequences.FailureDescription"}}
+    </p>
+  </header>
+
+
+  <section class="awake-consequence-state">
+
+    <div class="awake-consequence-state-row">
+      <span>
+        {{localize "AWAKE.Actor.Exhaustion"}}
+      </span>
+
+      <strong>
+        {{exhaustion}}
+      </strong>
+    </div>
+
+
+    <div class="awake-consequence-state-row">
+      <span>
+        {{localize "AWAKE.Actor.Fight"}}
+      </span>
+
+      <strong>
+        {{fightChecked}} / {{fightTotal}}
+      </strong>
+    </div>
+
+
+    <div class="awake-consequence-state-row">
+      <span>
+        {{localize "AWAKE.Actor.Flight"}}
+      </span>
+
+      <strong>
+        {{flightChecked}} / {{flightTotal}}
+      </strong>
+    </div>
+
+  </section>
+
+
+  <section class="awake-consequence-choices">
+
+    {{#if canIncreaseExhaustion}}
+      <button
+        type="button"
+        data-action="applyConsequence"
+        data-consequence="exhaustion"
+      >
+        {{localize "AWAKE.Consequences.IncreaseExhaustion"}}
+      </button>
+    {{/if}}
+
+
+    {{#if responsesAllowed}}
+
+      {{#if willSnap}}
+
+        <div class="awake-snap-warning">
+          {{localize "AWAKE.Consequences.FailureSnapWarning"}}
+        </div>
+
+        <button
+          type="button"
+          data-action="applyConsequence"
+          data-consequence="snap"
+          class="awake-snap-button"
+        >
+          {{localize "AWAKE.Consequences.Snap"}}
+        </button>
+
+      {{else}}
+
+        {{#if canCheckFight}}
+          <button
+            type="button"
+            data-action="applyConsequence"
+            data-consequence="fight"
+          >
+            {{localize "AWAKE.Consequences.CheckFight"}}
+          </button>
+        {{/if}}
+
+
+        {{#if canCheckFlight}}
+          <button
+            type="button"
+            data-action="applyConsequence"
+            data-consequence="flight"
+          >
+            {{localize "AWAKE.Consequences.CheckFlight"}}
+          </button>
+        {{/if}}
+
+      {{/if}}
+
+    {{/if}}
+
+
+    <button
+      type="button"
+      data-action="applyConsequence"
+      data-consequence="none"
+    >
+      {{localize "AWAKE.Consequences.FailureNone"}}
+    </button>
+
+  </section>
+
+</div>

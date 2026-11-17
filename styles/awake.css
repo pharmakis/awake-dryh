@@ -362,6 +362,7 @@
 .awake-discipline-consequence-sheet .window-content,
 .awake-restore-from-crash-sheet .window-content,
 .awake-madness-consequence-sheet .window-content,
+.awake-failure-consequence-sheet .window-content,
 .awake-spend-hope-sheet .window-content{
   background:
     url("../assets/ui/backgrounds/actor-bg.webp")
@@ -539,6 +540,13 @@
   border-radius: 6px;
   font-weight: 600;
   line-height: 1.4;
+}
+
+.awake-failure-consequence {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  padding: 0.75rem;
 }
 
 /* Build Roll sheet */

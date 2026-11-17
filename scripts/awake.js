@@ -101,6 +101,9 @@ Hooks.on("preCreateItem", (item, data) => {
 Hooks.once("ready", async () => {
   if (!game.user.isGM) return;
 
+  const macroImage =
+    "systems/awake-dryh/assets/ui/backgrounds/actor-bg.webp";
+
   let macro = game.macros.find(
     macro =>
       macro.getFlag(game.system.id, "systemMacro") === "startConflict"
@@ -110,6 +113,7 @@ Hooks.once("ready", async () => {
     macro = await Macro.create({
       name: "Start Conflict",
       type: "script",
+      img: macroImage,
       command: "game.awake.startConflict();",
 
       flags: {
@@ -117,6 +121,11 @@ Hooks.once("ready", async () => {
           systemMacro: "startConflict"
         }
       }
+    });
+  }
+  else if (macro.img !== macroImage) {
+    await macro.update({
+      img: macroImage
     });
   }
 

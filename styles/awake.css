@@ -350,6 +350,17 @@
   opacity: 0.7;
 }
 
+/* Shared window background */
+
+.awake-exhaustion-talent-sheet .window-content,
+.awake-madness-talent-sheet .window-content,
+.awake-gear-sheet .window-content,
+.awake-start-conflict-sheet .window-content {
+  background:
+    url("../assets/ui/backgrounds/actor-bg.webp")
+    center / cover no-repeat;
+}
+
 /* About exhaustion and madness sheets */
 
 .awake-exhaustion-talent-sheet .window-content,
@@ -574,4 +585,12 @@
   .awake-madness-level-group > h3 {
     grid-column: 1;
   }
+}
+
+/* Start Conflict */
+
+.awake-start-conflict {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
 }

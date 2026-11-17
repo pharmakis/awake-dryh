@@ -189,7 +189,7 @@ export class CastShadowSheet extends HandlebarsApplicationMixin(ApplicationV2) {
     if (currentDespair < 1) {
       ui.notifications.warn(
         game.i18n.localize(
-          "AWAKE.Despair.NoneAvailable"
+          "AWAKE.Despair.NoDespairAvailable"
         )
       );
 
@@ -412,7 +412,7 @@ export function openCastShadowSheet({
   if (despairAvailable < 1) {
     ui.notifications.warn(
       game.i18n.localize(
-        "AWAKE.Despair.NoneAvailable"
+        "AWAKE.Despair.NoDespairAvailable"
       )
     );
 

@@ -104,7 +104,7 @@
       "Available": "Despair available",
       "AddSix": "Add a 6",
       "RemoveSix": "Remove a 6",
-      "NoneAvailable": "There is no Despair available.",
+      "NoDespairAvailable": "There is no Despair available.",
       "EmptyPool": "A 6 cannot be added to an empty pool.",
       "NoSix": "That pool does not contain a 6.",
       "NoSixesAvailable": "There are no sixes available to remove."
@@ -142,7 +142,9 @@
       "CannotIncreaseExhaustion": "Exhaustion cannot be increased above 6.",
       "InvalidConflict": "The conflict could not be found.",
       "AlreadyRolled": "This conflict has already been rolled.",
-      "NoActiveGM": "No active GM is available to receive the conflict roll."
+      "NoActiveGM": "No active GM is available to receive the conflict roll.",
+      "Finalize": "Finalize",
+      "Finalized": "Result finalized."
     },
 
     "Chalices": {

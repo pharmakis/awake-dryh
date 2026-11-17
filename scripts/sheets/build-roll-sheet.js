@@ -721,7 +721,8 @@ function validateDicePool(
 export function buildRollResultContent(
   actor,
   painRating,
-  result
+  result,
+  phase = "modifiable"
 ) {
   const card =
     document.createElement(
@@ -861,9 +862,13 @@ export function buildRollResultContent(
 
 
   status.textContent =
-    game.i18n.localize(
-      "AWAKE.Conflict.Modifiable"
-    );
+    phase === "finalized"
+      ? game.i18n.localize(
+          "AWAKE.Conflict.Finalized"
+        )
+      : game.i18n.localize(
+          "AWAKE.Conflict.Modifiable"
+        );
 
 
   card.append(
@@ -928,4 +933,173 @@ function getPoolLabel(
     default:
       return "—";
   }
+}
+
+export async function finalizeConflict({
+  messageId
+}) {
+  if (!game.user.isGM) {
+    return;
+  }
+
+
+  const message =
+    game.messages.get(
+      messageId
+    );
+
+  const conflict =
+    message?.getFlag(
+      game.system.id,
+      "conflict"
+    );
+
+
+  if (
+    !message ||
+    !conflict ||
+    conflict.status !== "modifiable"
+  ) {
+    return;
+  }
+
+
+  const actor =
+    await fromUuid(
+      conflict.actorUuid
+    );
+
+
+  if (
+    !actor ||
+    actor.documentName !== "Actor" ||
+    actor.type !== "awake"
+  ) {
+    return;
+  }
+
+
+  /*
+   * Recalculate once more from the final,
+   * already modified dice pools.
+   */
+
+  const result =
+    resolveRoll({
+      discipline:
+        conflict.pools.discipline,
+
+      exhaustion:
+        conflict.pools.exhaustion,
+
+      madness:
+        conflict.pools.madness,
+
+      pain:
+        conflict.pools.pain
+    });
+
+
+  /*
+   * Natural Pain dominance earns one new
+   * Despair coin.
+   *
+   * Pain dominance caused by Cast Shadow
+   * does not.
+   */
+
+  let despairEarned = 0;
+
+  const currentDespair =
+    game.settings.get(
+      game.system.id,
+      "despair"
+    );
+
+
+  if (
+    result.dominant === "pain" &&
+    !conflict.painDominanceCreatedByDespair
+  ) {
+    despairEarned = 1;
+  }
+
+
+  /*
+   * Every Despair coin already spent during
+   * this conflict now moves into Hope.
+   *
+   * This happens only after the roll can no
+   * longer be modified.
+   */
+
+  const spentDespair =
+    conflict.spentDespair ?? 0;
+
+  const currentHope =
+    game.settings.get(
+      game.system.id,
+      "hope"
+    );
+
+
+  if (despairEarned > 0) {
+    await game.settings.set(
+      game.system.id,
+      "despair",
+      currentDespair + despairEarned
+    );
+  }
+
+
+  if (spentDespair > 0) {
+    await game.settings.set(
+      game.system.id,
+      "hope",
+      currentHope + spentDespair
+    );
+  }
+
+
+  const updatedConflict = {
+    ...conflict,
+
+    status: "finalized",
+
+    result: {
+      playerSuccesses:
+        result.playerSuccesses,
+
+      painSuccesses:
+        result.painSuccesses,
+
+      success:
+        result.success,
+
+      dominant:
+        result.dominant
+    },
+
+    despairEarned,
+
+    despairConvertedToHope:
+      spentDespair
+  };
+
+
+  const content =
+    buildRollResultContent(
+      actor,
+      conflict.painRating,
+      result,
+      "finalized"
+    );
+
+
+  await message.update({
+    content,
+
+    [`flags.${game.system.id}.conflict`]:
+      updatedConflict
+  });
 }

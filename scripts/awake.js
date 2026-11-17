@@ -7,7 +7,7 @@ import { AwakeExhaustionTalentSheet } from "./sheets/awake-exhaustion-talent-she
 import { AwakeMadnessTalentSheet } from "./sheets/awake-madness-talent-sheet.js";
 import { GearData } from "./data/gear.js";
 import {  openStartConflictSheet } from "./sheets/start-conflict-sheet.js";
-import { openBuildRollSheet, handleConflictRollSubmission } from "./sheets/build-roll-sheet.js";
+import { openBuildRollSheet, handleConflictRollSubmission, finalizeConflict } from "./sheets/build-roll-sheet.js";
 import { openChalicesSheet } from "./sheets/chalices-sheet.js";
 import { openSpendHopeSheet, handleSpendHopeSubmission } from "./sheets/spend-hope-sheet.js";
 import { openCastShadowSheet } from "./sheets/cast-shadow-sheet.js";
@@ -176,7 +176,6 @@ Hooks.on("renderChatMessageHTML", (message, html) => {
 
     card.append(button);
 
-
     return;
   }
 
@@ -184,6 +183,7 @@ Hooks.on("renderChatMessageHTML", (message, html) => {
   /*
    * Modifiable:
    * any player may spend Hope.
+   * GM may also Cast Shadow or Finalize.
    */
 
   if (conflict.status === "modifiable") {
@@ -214,11 +214,10 @@ Hooks.on("renderChatMessageHTML", (message, html) => {
 
     card.append(button);
 
+
     if (game.user.isGM) {
       const castShadowButton =
-      document.createElement(
-        "button"
-      );
+        document.createElement("button");
 
       castShadowButton.type =
         "button";
@@ -237,17 +236,47 @@ Hooks.on("renderChatMessageHTML", (message, html) => {
         "click",
         () => {
           openCastShadowSheet({
-          messageId: message.id
-        });
+            messageId: message.id
+          });
+        }
+      );
+
+
+      card.append(
+        castShadowButton
+      );
+
+
+      const finalizeButton =
+        document.createElement("button");
+
+      finalizeButton.type =
+        "button";
+
+      finalizeButton.classList.add(
+        "awake-finalize-conflict-button"
+      );
+
+      finalizeButton.textContent =
+        game.i18n.localize(
+          "AWAKE.Conflict.Finalize"
+        );
+
+
+      finalizeButton.addEventListener(
+        "click",
+        async () => {
+          await finalizeConflict({
+            messageId: message.id
+          });
+        }
+      );
+
+
+      card.append(
+        finalizeButton
+      );
     }
-  );
-
-
-  card.append(
-    castShadowButton
-  );
-}
-
   }
 });
 

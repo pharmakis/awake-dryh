@@ -102,7 +102,7 @@ Hooks.once("ready", async () => {
   if (!game.user.isGM) return;
 
   const macroImage =
-    "systems/awake-dryh/assets/ui/backgrounds/actor-bg.webp";
+    "systems/awake-dryh/assets/ui/icons/pain.png";
 
   let macro = game.macros.find(
     macro =>

@@ -8,6 +8,7 @@
     "verified": "14",
     "maximum": "14"
   },
+  "socket": true,
   "esmodules": [
     "scripts/awake.js"
   ],

@@ -115,7 +115,18 @@
       "IncreaseExhaustion": "Increase Exhaustion by 1",
       "Roll": "Roll",
       "NotYourProtagonist": "You do not own this protagonist.",  
-      "BuildRoll": "Build Roll"
+      "BuildRoll": "Build Roll",
+      "Madness": "Madness",
+      "Degrees": "Protagonist: {player} successes — Pain: {pain} successes",
+      "Success": "Success",
+      "Failure": "Failure",
+      "Dominant": "Dominant: {pool}",
+      "Modifiable": "Awaiting Hope / Despair...",
+      "InvalidTemporaryMadness": "Temporary Madness must be a whole number from 0 to 6.",
+      "CannotIncreaseExhaustion": "Exhaustion cannot be increased above 6.",
+      "InvalidConflict": "The conflict could not be found.",
+      "AlreadyRolled": "This conflict has already been rolled.",
+      "NoActiveGM": "No active GM is available to receive the conflict roll."
     }
   },
 

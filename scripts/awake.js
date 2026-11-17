@@ -7,7 +7,7 @@ import { AwakeExhaustionTalentSheet } from "./sheets/awake-exhaustion-talent-she
 import { AwakeMadnessTalentSheet } from "./sheets/awake-madness-talent-sheet.js";
 import { GearData } from "./data/gear.js";
 import {  openStartConflictSheet } from "./sheets/start-conflict-sheet.js";
-import { openBuildRollSheet } from "./sheets/build-roll-sheet.js";
+import { openBuildRollSheet, handleConflictRollSubmission } from "./sheets/build-roll-sheet.js";
 
 
 Hooks.once("init", async () => {
@@ -149,8 +149,7 @@ Hooks.on("renderChatMessageHTML", (message, html) => {
 
   button.addEventListener("click", () => {
     openBuildRollSheet({
-      actorUuid: conflict.actorUuid,
-      painRating: conflict.painRating
+      messageId: message.id
     });
   });
 
@@ -158,6 +157,24 @@ Hooks.on("renderChatMessageHTML", (message, html) => {
 });
 
 Hooks.once("ready", async () => {
+  game.socket.on(
+    `system.${game.system.id}`,
+    async submission => {
+      if (!game.user.isActiveGM) {
+        return;
+      }
+
+      if (
+        submission?.type ===
+        "submitConflictRoll"
+      ) {
+        await handleConflictRollSubmission(
+          submission
+        );
+      }
+    }
+  );
+
   if (!game.user.isGM) return;
 
   const macroImage =

@@ -359,6 +359,7 @@
 .awake-build-roll-sheet .window-content,
 .awake-chalices-sheet .window-content,
 .awake-cast-shadow-sheet .window-content,
+.awake-discipline-consequence-sheet .window-content,
 .awake-spend-hope-sheet .window-content{
   background:
     url("../assets/ui/backgrounds/actor-bg.webp")
@@ -554,6 +555,71 @@
 
 .awake-build-roll-button {
   margin-top: 0.75rem;
+}
+
+/* Discipline consequence sheet */
+
+.awake-discipline-consequence-sheet .window-content {
+  overflow-y: auto;
+  min-height: 0;
+}
+
+.awake-discipline-consequence {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  padding: 0.75rem;
+}
+
+.awake-consequence-header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.awake-consequence-header h2 {
+  margin: 0;
+}
+
+.awake-consequence-header p {
+  margin: 0;
+  line-height: 1.35;
+}
+
+.awake-consequence-state {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 0.75rem;
+  border: 1px solid
+    var(--color-border-light-primary);
+  border-radius: 6px;
+}
+
+.awake-consequence-state-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 1rem;
+  align-items: center;
+}
+
+.awake-consequence-state-row strong {
+  min-width: 2rem;
+  text-align: center;
+}
+
+.awake-consequence-choices {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.awake-consequence-choices button {
+  min-height: 2.5rem;
+}
+
+.awake-consequence-none {
+  margin-top: 0.35rem;
 }
 
 /* About exhaustion and madness sheets */

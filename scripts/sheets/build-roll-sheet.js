@@ -1065,6 +1065,9 @@ export async function finalizeConflict({
     ...conflict,
 
     status: "finalized",
+    
+    dominanceResolved:
+      result.dominant === "pain",
 
     result: {
       playerSuccesses:

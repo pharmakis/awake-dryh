@@ -11,6 +11,8 @@ import { openBuildRollSheet, handleConflictRollSubmission, finalizeConflict } fr
 import { openChalicesSheet } from "./sheets/chalices-sheet.js";
 import { openSpendHopeSheet, handleSpendHopeSubmission } from "./sheets/spend-hope-sheet.js";
 import { openCastShadowSheet } from "./sheets/cast-shadow-sheet.js";
+import { openDisciplineConsequenceSheet, handleDisciplineConsequenceSubmission } from "./sheets/discipline-consequence-sheet.js";
+
 
 
 Hooks.once("init", async () => {
@@ -278,6 +280,71 @@ Hooks.on("renderChatMessageHTML", (message, html) => {
       );
     }
   }
+  if (
+    conflict.status === "finalized" &&
+    conflict.result?.dominant === "discipline" &&
+    !conflict.dominanceResolved
+  ) {
+  const actor =
+    foundry.utils.fromUuidSync(
+      conflict.actorUuid
+    );
+
+
+  if (
+    !actor ||
+    actor.documentName !== "Actor" ||
+    actor.type !== "awake"
+  ) {
+    return;
+  }
+
+
+  const canApply =
+    game.user.isGM ||
+    actor.testUserPermission(
+      game.user,
+      CONST.DOCUMENT_OWNERSHIP_LEVELS.OWNER
+    );
+
+
+  if (!canApply) {
+    return;
+  }
+
+
+  const consequenceButton =
+    document.createElement(
+      "button"
+    );
+
+  consequenceButton.type =
+    "button";
+
+  consequenceButton.classList.add(
+    "awake-apply-consequence-button"
+  );
+
+  consequenceButton.textContent =
+    game.i18n.localize(
+      "AWAKE.Conflict.ApplyConsequences"
+    );
+
+
+  consequenceButton.addEventListener(
+    "click",
+    () => {
+      openDisciplineConsequenceSheet({
+        messageId: message.id
+      });
+    }
+  );
+
+
+  card.append(
+    consequenceButton
+  );
+  }
 });
 
 Hooks.once("ready", async () => {
@@ -301,6 +368,14 @@ Hooks.once("ready", async () => {
            "spendHope"
       ) {
         await handleSpendHopeSubmission(
+          submission
+        );
+      }
+      else if (
+        submission?.type ===
+          "applyDisciplineConsequence"
+      ) {
+        await handleDisciplineConsequenceSubmission(
           submission
         );
       }

@@ -112,7 +112,17 @@
     "Common": {
       "Close": "Close"
     },
-
+    "Consequences": {
+      "DisciplineTitle": "Discipline Consequence",
+      "DisciplineHeading": "Discipline Dominates",
+      "DisciplineDescription": "Choose one benefit of Discipline dominance.",
+      "FightChecked": "Fight responses checked",
+      "FlightChecked": "Flight responses checked",
+      "ReduceExhaustion": "Reduce Exhaustion by 1",
+      "ClearFight": "Clear one Fight Response",
+      "ClearFlight": "Clear one Flight Response",
+      "DoNothing": "Do Nothing"
+    },  
     "Conflict": {
       "Title": "Conflict",
       "StartTitle": "Start Conflict",
@@ -144,7 +154,8 @@
       "AlreadyRolled": "This conflict has already been rolled.",
       "NoActiveGM": "No active GM is available to receive the conflict roll.",
       "Finalize": "Finalize",
-      "Finalized": "Result finalized."
+      "Finalized": "Result finalized.",
+      "ApplyConsequences": "Apply Consequences"
     },
 
     "Chalices": {

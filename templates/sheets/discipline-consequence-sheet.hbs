@@ -1,0 +1,95 @@
+<div class="awake-discipline-consequence">
+
+  <header class="awake-consequence-header">
+    <h2>
+      {{localize "AWAKE.Consequences.DisciplineHeading"}}
+    </h2>
+
+    <p>
+      {{localize "AWAKE.Consequences.DisciplineDescription"}}
+    </p>
+  </header>
+
+
+  <section class="awake-consequence-state">
+
+    <div class="awake-consequence-state-row">
+      <span>
+        {{localize "AWAKE.Actor.Exhaustion"}}
+      </span>
+
+      <strong>
+        {{exhaustion}}
+      </strong>
+    </div>
+
+    <div class="awake-consequence-state-row">
+      <span>
+        {{localize "AWAKE.Consequences.FightChecked"}}
+      </span>
+
+      <strong>
+        {{fightChecked}}
+      </strong>
+    </div>
+
+    <div class="awake-consequence-state-row">
+      <span>
+        {{localize "AWAKE.Consequences.FlightChecked"}}
+      </span>
+
+      <strong>
+        {{flightChecked}}
+      </strong>
+    </div>
+
+  </section>
+
+
+  <section class="awake-consequence-choices">
+
+    {{#if canReduceExhaustion}}
+      <button
+        type="button"
+        data-action="applyConsequence"
+        data-consequence="reduceExhaustion"
+      >
+        {{localize "AWAKE.Consequences.ReduceExhaustion"}}
+      </button>
+    {{/if}}
+
+
+    {{#if canClearFight}}
+      <button
+        type="button"
+        data-action="applyConsequence"
+        data-consequence="clearFight"
+      >
+        {{localize "AWAKE.Consequences.ClearFight"}}
+      </button>
+    {{/if}}
+
+
+    {{#if canClearFlight}}
+      <button
+        type="button"
+        data-action="applyConsequence"
+        data-consequence="clearFlight"
+      >
+        {{localize "AWAKE.Consequences.ClearFlight"}}
+      </button>
+    {{/if}}
+
+
+    <button
+      type="button"
+      data-action="applyConsequence"
+      data-consequence="none"
+      class="awake-consequence-none"
+    >
+      {{localize "AWAKE.Consequences.DoNothing"}}
+    </button>
+
+  </section>
+
+</div>

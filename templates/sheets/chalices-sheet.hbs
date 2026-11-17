@@ -1,0 +1,72 @@
+<div class="awake-chalices-window">
+
+  <section class="awake-chalices-panel">
+
+    <div class="awake-chalice-row">
+      <span class="awake-chalice-name">
+        {{localize "AWAKE.Chalices.Hope"}}
+      </span>
+
+      <div class="awake-chalice-controls">
+        <button
+          type="button"
+          data-action="changeChalice"
+          data-chalice="hope"
+          data-delta="-1"
+          aria-label="{{localize "AWAKE.Chalices.DecreaseHope"}}"
+        >
+          −
+        </button>
+
+        <strong class="awake-chalice-count">
+          {{hope}}
+        </strong>
+
+        <button
+          type="button"
+          data-action="changeChalice"
+          data-chalice="hope"
+          data-delta="1"
+          aria-label="{{localize "AWAKE.Chalices.IncreaseHope"}}"
+        >
+          +
+        </button>
+      </div>
+    </div>
+
+
+    <div class="awake-chalice-row">
+      <span class="awake-chalice-name">
+        {{localize "AWAKE.Chalices.Despair"}}
+      </span>
+
+      <div class="awake-chalice-controls">
+        <button
+          type="button"
+          data-action="changeChalice"
+          data-chalice="despair"
+          data-delta="-1"
+          aria-label="{{localize "AWAKE.Chalices.DecreaseDespair"}}"
+        >
+          −
+        </button>
+
+        <strong class="awake-chalice-count">
+          {{despair}}
+        </strong>
+
+        <button
+          type="button"
+          data-action="changeChalice"
+          data-chalice="despair"
+          data-delta="1"
+          aria-label="{{localize "AWAKE.Chalices.IncreaseDespair"}}"
+        >
+          +
+        </button>
+      </div>
+    </div>
+
+  </section>
+
+</div>

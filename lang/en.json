@@ -127,6 +127,17 @@
       "InvalidConflict": "The conflict could not be found.",
       "AlreadyRolled": "This conflict has already been rolled.",
       "NoActiveGM": "No active GM is available to receive the conflict roll."
+    },
+
+    "Chalices": {
+      "Title": "Hope and Despair Chalices",
+      "Hope": "Hope Chalice",
+      "Despair": "Despair Chalice",
+      "IncreaseHope": "Add Hope",
+      "DecreaseHope": "Remove Hope",
+      "IncreaseDespair": "Add Despair",
+      "DecreaseDespair": "Remove Despair",
+      "GMOnly": "Only the GM can change the Chalices."
     }
   },
 

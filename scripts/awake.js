@@ -8,6 +8,7 @@ import { AwakeMadnessTalentSheet } from "./sheets/awake-madness-talent-sheet.js"
 import { GearData } from "./data/gear.js";
 import {  openStartConflictSheet } from "./sheets/start-conflict-sheet.js";
 import { openBuildRollSheet, handleConflictRollSubmission } from "./sheets/build-roll-sheet.js";
+import { openChalicesSheet } from "./sheets/chalices-sheet.js";
 
 
 Hooks.once("init", async () => {
@@ -78,6 +79,7 @@ Hooks.once("init", async () => {
   game.awake ??= {};
 
   game.awake.startConflict = openStartConflictSheet;
+  game.awake.openChalices = openChalicesSheet;
 });
 
 Hooks.on("preCreateItem", (item, data) => {
@@ -175,57 +177,122 @@ Hooks.once("ready", async () => {
     }
   );
 
+
   if (!game.user.isGM) return;
 
-  const macroImage =
-    "systems/awake-dryh/assets/ui/icons/pain.png";
 
+  await ensureSystemMacro({
+    key: "startConflict",
+    name: "Start Conflict",
+    command:
+      "game.awake.startConflict();",
+    img:
+      "systems/awake-dryh/assets/ui/icons/pain.png"
+  });
+
+
+  await ensureSystemMacro({
+    key: "chalices",
+    name: "Chalices",
+    command:
+      "game.awake.openChalices();",
+    img: "systems/awake-dryh/assets/ui/icons/chalice.png"
+  });
+});
+
+async function ensureSystemMacro({
+  key,
+  name,
+  command,
+  img = null
+}) {
   let macro = game.macros.find(
     macro =>
-      macro.getFlag(game.system.id, "systemMacro") === "startConflict"
+      macro.getFlag(
+        game.system.id,
+        "systemMacro"
+      ) === key
   );
 
+
   if (!macro) {
-    macro = await Macro.create({
-      name: "Start Conflict",
+    const macroData = {
+      name,
       type: "script",
-      img: macroImage,
-      command: "game.awake.startConflict();",
+      command,
 
       flags: {
         [game.system.id]: {
-          systemMacro: "startConflict"
+          systemMacro: key
         }
       }
-    });
+    };
+
+
+    if (img) {
+      macroData.img = img;
+    }
+
+
+    macro =
+      await Macro.create(
+        macroData
+      );
+  } 
+  else {
+    const updates = {};
+
+    if (macro.name !== name) {
+      updates.name = name;
+    }
+
+    if (macro.command !== command) {
+      updates.command = command;
+    }
+
+    if (img && macro.img !== img) {
+      updates.img = img;
+    }
+
+    if (Object.keys(updates).length > 0) {
+      await macro.update(updates);
+    }
   }
-  else if (macro.img !== macroImage) {
-    await macro.update({
-      img: macroImage
-    });
+
+  const hotbar =
+    game.user.getHotbarMacros(1);
+
+
+  const alreadyAssigned =
+    hotbar.some(
+      slot =>
+        slot.macro?.id === macro.id
+    );
+
+
+  if (alreadyAssigned) {
+    return;
   }
 
-  const hotbar = game.user.getHotbarMacros(1);
 
-  const alreadyAssigned = hotbar.some(
-    slot => slot.macro?.id === macro.id
-  );
+  const emptySlot =
+    hotbar.find(
+      slot =>
+        slot.macro === null
+    );
 
-  if (alreadyAssigned) return;
-
-  const emptySlot = hotbar.find(
-    slot => slot.macro === null
-  );
 
   if (!emptySlot) {
     ui.notifications.warn(
-      "Awake: no free hotbar slot for Start Conflict."
+      `Awake: no free hotbar slot for ${name}.`
     );
+
     return;
   }
+
 
   await game.user.assignHotbarMacro(
     macro,
     emptySlot.slot
   );
-});
+}

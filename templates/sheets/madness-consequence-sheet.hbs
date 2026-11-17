@@ -1,0 +1,90 @@
+<div class="awake-madness-consequence">
+
+  <header class="awake-consequence-header">
+    <h2>
+      {{localize "AWAKE.Consequences.MadnessHeading"}}
+    </h2>
+
+    {{#if willSnap}}
+      <p>
+        {{localize "AWAKE.Consequences.SnapDescription"}}
+      </p>
+    {{else}}
+      <p>
+        {{localize "AWAKE.Consequences.MadnessDescription"}}
+      </p>
+    {{/if}}
+  </header>
+
+
+  <section class="awake-consequence-state">
+
+    <div class="awake-consequence-state-row">
+      <span>
+        {{localize "AWAKE.Actor.Fight"}}
+      </span>
+
+      <strong>
+        {{fightChecked}} / {{fightTotal}}
+      </strong>
+    </div>
+
+
+    <div class="awake-consequence-state-row">
+      <span>
+        {{localize "AWAKE.Actor.Flight"}}
+      </span>
+
+      <strong>
+        {{flightChecked}} / {{flightTotal}}
+      </strong>
+    </div>
+
+  </section>
+
+
+  <section class="awake-consequence-choices">
+
+    {{#if willSnap}}
+
+      <div class="awake-snap-warning">
+        {{localize "AWAKE.Consequences.SnapWarning"}}
+      </div>
+
+      <button
+        type="button"
+        data-action="applyConsequence"
+        data-consequence="snap"
+        class="awake-snap-button"
+      >
+        {{localize "AWAKE.Consequences.Snap"}}
+      </button>
+
+    {{else}}
+
+      {{#if canCheckFight}}
+        <button
+          type="button"
+          data-action="applyConsequence"
+          data-consequence="fight"
+        >
+          {{localize "AWAKE.Consequences.CheckFight"}}
+        </button>
+      {{/if}}
+
+
+      {{#if canCheckFlight}}
+        <button
+          type="button"
+          data-action="applyConsequence"
+          data-consequence="flight"
+        >
+          {{localize "AWAKE.Consequences.CheckFlight"}}
+        </button>
+      {{/if}}
+
+    {{/if}}
+
+  </section>
+
+</div>

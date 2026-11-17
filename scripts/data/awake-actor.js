@@ -41,13 +41,13 @@ export class AwakeActorData extends foundry.abstract.TypeDataModel {
             }))
         }
       ),
-      recovery: new fields.SchemaField({
-        active: new fields.BooleanField({
+        recovery: new SchemaField({
+        active: new BooleanField({
           required: true,
           nullable: false,
           initial: false
         }),
-        preCrashDiscipline: new fields.NumberField({
+        preCrashDiscipline: new NumberField({
           required: true,
           nullable: false,
           integer: true,
@@ -76,8 +76,17 @@ export class AwakeActorData extends foundry.abstract.TypeDataModel {
       data.recovery?.active ?? false;
 
 
+   const expectedRecoveryDiscipline =
+    data.recovery.preCrashDiscipline > 0
+    ? 1
+    : 0;
+
+
     if (recoveryActive) {
-      if (data.discipline !== 1) {
+      if (
+        data.discipline !==
+        expectedRecoveryDiscipline
+      ) {
         throw new Error(
           game.i18n.localize(
             "AWAKE.Validation.RecoveryDiscipline"

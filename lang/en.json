@@ -121,7 +121,17 @@
       "ReduceExhaustion": "Reduce Exhaustion by 1",
       "ClearFight": "Clear one Fight Response",
       "ClearFlight": "Clear one Flight Response",
-      "DoNothing": "Do Nothing"
+      "DoNothing": "Do Nothing",
+      "MadnessTitle": "Madness Consequence",
+      "MadnessHeading": "Madness Dominates",
+      "MadnessDescription": "Choose one available Response to check.",
+      "CheckFight": "Check a Fight Response",
+      "CheckFlight": "Check a Flight Response",
+      "SnapDescription": "No Responses remain available. The character must Snap.",
+      "SnapWarning": "Snapping clears all Responses, reduces Discipline by 1, and adds 1 Permanent Madness.",
+      "Snap": "Snap",
+      "SnapNotice": "SNAP — Responses are cleared, Discipline falls by 1, and Permanent Madness increases by 1.",
+      "NightmareNotice": "SNAP — The protagonist has lost their final Discipline die and becomes a Nightmare."
     },  
     "Conflict": {
       "Title": "Conflict",
@@ -166,11 +176,12 @@
       "SelectCharacter": "Select a character",
       "Recovering": "Recovering from Crash",
       "RestoreDiscipline": "Restore Discipline",
+      "RecoveryDiscipline": "Discipline does not match the character's Crash recovery state.",
       "NotRecovering": "This character is not recovering from a Crash.",
       "Restored": "{name} has recovered. Discipline restored to {discipline}.",
       "TalentsUnavailable": "Talents are unavailable while recovering from a Crash.",
       "CrashNotice": "CRASH — Exhaustion is cleared, Responses are reset, Discipline falls to 1, and Talents are unavailable until recovery."
-    }
+    },
 
     "Chalices": {
       "Title": "Hope and Despair Chalices",

@@ -361,6 +361,7 @@
 .awake-cast-shadow-sheet .window-content,
 .awake-discipline-consequence-sheet .window-content,
 .awake-restore-from-crash-sheet .window-content,
+.awake-madness-consequence-sheet .window-content,
 .awake-spend-hope-sheet .window-content{
   background:
     url("../assets/ui/backgrounds/actor-bg.webp")
@@ -531,6 +532,15 @@
   min-height: 2.5rem;
 }
 
+.awake-snap-notice {
+  margin-top: 0.75rem;
+  padding: 0.7rem 0.85rem;
+  border: 1px solid var(--color-border-light-primary);
+  border-radius: 6px;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
 /* Build Roll sheet */
 
 .awake-build-roll-sheet .window-content {
@@ -661,6 +671,32 @@
 
 .awake-consequence-none {
   margin-top: 0.35rem;
+}
+
+/* Madness consequence */
+
+.awake-madness-consequence-sheet .window-content {
+  overflow-y: auto;
+  min-height: 0;
+}
+
+.awake-madness-consequence {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  padding: 0.75rem;
+}
+
+.awake-snap-warning {
+  padding: 0.75rem 0.85rem;
+  border: 1px solid var(--color-border-light-primary);
+  border-radius: 6px;
+  line-height: 1.4;
+  font-weight: 600;
+}
+
+.awake-snap-button {
+  min-height: 2.5rem;
 }
 
 /* About exhaustion and madness sheets */

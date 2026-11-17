@@ -14,6 +14,8 @@ import { openCastShadowSheet } from "./sheets/cast-shadow-sheet.js";
 import { openDisciplineConsequenceSheet, handleDisciplineConsequenceSubmission } from "./sheets/discipline-consequence-sheet.js";
 import { applyExhaustionConsequence, handleExhaustionConsequenceSubmission } from "./rules/exhaustion-consequence.js";
 import { openRestoreFromCrashSheet } from "./sheets/restore-from-crash-sheet.js";
+import { openMadnessConsequenceSheet, handleMadnessConsequenceSubmission } from "./sheets/madness-consequence-sheet.js";
+
 
 
 Hooks.once("init", async () => {
@@ -121,22 +123,46 @@ Hooks.on("renderChatMessageHTML", (message, html) => {
   );
 
   if (conflict.crashed) {
-  const crashNotice =
-    document.createElement("p");
+    const crashNotice =
+      document.createElement("p");
 
-  crashNotice.classList.add(
-    "awake-crash-notice"
-  );
-
-  crashNotice.textContent =
-    game.i18n.localize(
-      "AWAKE.Recovery.CrashNotice"
+    crashNotice.classList.add(
+      "awake-crash-notice"
     );
 
-  card.append(
-    crashNotice
-  );
+    crashNotice.textContent =
+      game.i18n.localize(
+        "AWAKE.Recovery.CrashNotice"
+      );
+
+    card.append(
+      crashNotice
+    );
   }
+  if (conflict.snapped) {
+    const snapNotice =
+      document.createElement("p");
+
+    snapNotice.classList.add(
+      "awake-snap-notice"
+    );
+
+
+    snapNotice.textContent =
+      conflict.becameNightmare
+        ? game.i18n.localize(
+            "AWAKE.Consequences.NightmareNotice"
+          )
+        : game.i18n.localize(
+            "AWAKE.Consequences.SnapNotice"
+          );
+
+
+    card.append(
+      snapNotice
+    );
+  }
+
 
   if (!card) return;
 
@@ -430,6 +456,71 @@ Hooks.on("renderChatMessageHTML", (message, html) => {
       consequenceButton
     );
   }
+  if (
+      conflict.status === "finalized" &&
+      conflict.result?.dominant === "madness" &&
+      !conflict.dominanceResolved
+    ) {
+      const actor =
+        foundry.utils.fromUuidSync(
+          conflict.actorUuid
+        );
+
+
+      if (
+        !actor ||
+        actor.documentName !== "Actor" ||
+        actor.type !== "awake"
+      ) {
+        return;
+      }
+
+
+      const canApply =
+        game.user.isGM ||
+        actor.testUserPermission(
+          game.user,
+          CONST.DOCUMENT_OWNERSHIP_LEVELS.OWNER
+        );
+
+
+      if (!canApply) {
+        return;
+      }
+
+
+      const consequenceButton =
+        document.createElement(
+          "button"
+        );
+
+      consequenceButton.type =
+        "button";
+
+      consequenceButton.classList.add(
+        "awake-apply-consequence-button"
+      );
+
+      consequenceButton.textContent =
+        game.i18n.localize(
+          "AWAKE.Conflict.ApplyConsequences"
+        );
+
+
+      consequenceButton.addEventListener(
+        "click",
+        () => {
+          openMadnessConsequenceSheet({
+            messageId: message.id
+          });
+        }
+      );
+
+
+      card.append(
+        consequenceButton
+      );
+    }
 
 });
 
@@ -470,6 +561,14 @@ Hooks.once("ready", async () => {
           "applyExhaustionConsequence"
       ) {
         await handleExhaustionConsequenceSubmission(
+          submission
+        );
+      }
+      else if (
+        submission?.type ===
+          "applyMadnessConsequence"
+      ) {
+        await handleMadnessConsequenceSubmission(
           submission
         );
       }

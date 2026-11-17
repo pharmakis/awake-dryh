@@ -157,6 +157,20 @@
       "Finalized": "Result finalized.",
       "ApplyConsequences": "Apply Consequences"
     },
+    "Recovery": {
+      "MacroName": "Restore from Crash",
+      "Title": "Restore from Crash",
+      "Heading": "Crash Recovery",
+      "Description": "Restore a character after the required period of sleep and wakefulness has passed.",
+      "Character": "Character",
+      "SelectCharacter": "Select a character",
+      "Recovering": "Recovering from Crash",
+      "RestoreDiscipline": "Restore Discipline",
+      "NotRecovering": "This character is not recovering from a Crash.",
+      "Restored": "{name} has recovered. Discipline restored to {discipline}.",
+      "TalentsUnavailable": "Talents are unavailable while recovering from a Crash.",
+      "CrashNotice": "CRASH — Exhaustion is cleared, Responses are reset, Discipline falls to 1, and Talents are unavailable until recovery."
+    }
 
     "Chalices": {
       "Title": "Hope and Despair Chalices",

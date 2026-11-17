@@ -12,7 +12,8 @@ import { openChalicesSheet } from "./sheets/chalices-sheet.js";
 import { openSpendHopeSheet, handleSpendHopeSubmission } from "./sheets/spend-hope-sheet.js";
 import { openCastShadowSheet } from "./sheets/cast-shadow-sheet.js";
 import { openDisciplineConsequenceSheet, handleDisciplineConsequenceSubmission } from "./sheets/discipline-consequence-sheet.js";
-
+import { applyExhaustionConsequence, handleExhaustionConsequenceSubmission } from "./rules/exhaustion-consequence.js";
+import { openRestoreFromCrashSheet } from "./sheets/restore-from-crash-sheet.js";
 
 
 Hooks.once("init", async () => {
@@ -84,6 +85,7 @@ Hooks.once("init", async () => {
 
   game.awake.startConflict = openStartConflictSheet;
   game.awake.openChalices = openChalicesSheet;
+  game.awake.restoreFromCrash = openRestoreFromCrashSheet;
 });
 
 Hooks.on("preCreateItem", (item, data) => {
@@ -117,6 +119,24 @@ Hooks.on("renderChatMessageHTML", (message, html) => {
   const card = html.querySelector(
     ".awake-conflict-card"
   );
+
+  if (conflict.crashed) {
+  const crashNotice =
+    document.createElement("p");
+
+  crashNotice.classList.add(
+    "awake-crash-notice"
+  );
+
+  crashNotice.textContent =
+    game.i18n.localize(
+      "AWAKE.Recovery.CrashNotice"
+    );
+
+  card.append(
+    crashNotice
+  );
+  }
 
   if (!card) return;
 
@@ -340,11 +360,77 @@ Hooks.on("renderChatMessageHTML", (message, html) => {
     }
   );
 
-
   card.append(
     consequenceButton
   );
   }
+
+  if (
+    conflict.status === "finalized" &&
+    conflict.result?.dominant === "exhaustion" &&
+    !conflict.dominanceResolved
+  ) {
+    const actor =
+      foundry.utils.fromUuidSync(
+        conflict.actorUuid
+      );
+
+
+    if (
+      !actor ||
+      actor.documentName !== "Actor" ||
+      actor.type !== "awake"
+    ) {
+      return;
+    }
+
+
+    const canApply =
+      game.user.isGM ||
+      actor.testUserPermission(
+        game.user,
+        CONST.DOCUMENT_OWNERSHIP_LEVELS.OWNER
+      );
+
+
+    if (!canApply) {
+      return;
+    }
+
+
+    const consequenceButton =
+      document.createElement(
+        "button"
+      );
+
+    consequenceButton.type =
+      "button";
+
+    consequenceButton.classList.add(
+      "awake-apply-consequence-button"
+    );
+
+    consequenceButton.textContent =
+      game.i18n.localize(
+        "AWAKE.Conflict.ApplyConsequences"
+      );
+
+
+    consequenceButton.addEventListener(
+      "click",
+      async () => {
+        await applyExhaustionConsequence({
+          messageId: message.id
+        });
+      }
+    );
+
+
+    card.append(
+      consequenceButton
+    );
+  }
+
 });
 
 Hooks.once("ready", async () => {
@@ -379,6 +465,14 @@ Hooks.once("ready", async () => {
           submission
         );
       }
+      else if (
+        submission?.type ===
+          "applyExhaustionConsequence"
+      ) {
+        await handleExhaustionConsequenceSubmission(
+          submission
+        );
+      }
     }
   );
 
@@ -397,11 +491,26 @@ Hooks.once("ready", async () => {
 
 
   await ensureSystemMacro({
-    key: "chalices",
-    name: "Chalices",
+      key: "chalices",
+      name: "Chalices",
+      command:
+        "game.awake.openChalices();",
+      img: "systems/awake-dryh/assets/ui/icons/chalice.png"
+    });
+    await ensureSystemMacro({
+    key:
+      "restoreFromCrash",
+
+    name:
+      game.i18n.localize(
+        "AWAKE.Recovery.MacroName"
+      ),
+
     command:
-      "game.awake.openChalices();",
-    img: "systems/awake-dryh/assets/ui/icons/chalice.png"
+      "game.awake.restoreFromCrash();",
+
+    img:
+      "systems/awake-dryh/assets/ui/icons/stats.png"
   });
 });
 

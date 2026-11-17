@@ -126,6 +126,12 @@ export class AwakeActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
         (this.responseDraft?.flight ?? flight.total)
     };
 
+    context.recoveryActive =
+      this.actor.system.recovery.active;
+
+    context.preCrashDiscipline =
+      this.actor.system.recovery.preCrashDiscipline;
+
     return context;
   }
   async _onRender(context, options) {

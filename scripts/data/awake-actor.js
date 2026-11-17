@@ -40,7 +40,22 @@ export class AwakeActorData extends foundry.abstract.TypeDataModel {
               transformed: false
             }))
         }
-      )
+      ),
+      recovery: new fields.SchemaField({
+        active: new fields.BooleanField({
+          required: true,
+          nullable: false,
+          initial: false
+        }),
+        preCrashDiscipline: new fields.NumberField({
+          required: true,
+          nullable: false,
+          integer: true,
+          min: 0,
+          max: 3,
+          initial: 3
+        }),
+      }),
     };
   }
 
@@ -57,8 +72,43 @@ export class AwakeActorData extends foundry.abstract.TypeDataModel {
     if (responseError) {
       throw new Error(game.i18n.localize(responseError));
     }
-    if (data.discipline + data.permanentMadness !== 3) {
-      throw new Error(game.i18n.localize("AWAKE.Validation.DisciplineMadnessTotal"));
+    const recoveryActive =
+      data.recovery?.active ?? false;
+
+
+    if (recoveryActive) {
+      if (data.discipline !== 1) {
+        throw new Error(
+          game.i18n.localize(
+            "AWAKE.Validation.RecoveryDiscipline"
+          )
+        );
+      }
+
+
+      if (
+        data.recovery.preCrashDiscipline +
+          data.permanentMadness !==
+        3
+      ) {
+        throw new Error(
+          game.i18n.localize(
+            "AWAKE.Validation.RecoveryDisciplineMadnessTotal"
+          )
+        );
+      }
+    }
+
+    else if (
+      data.discipline +
+        data.permanentMadness !==
+      3
+    ) {
+      throw new Error(
+        game.i18n.localize(
+          "AWAKE.Validation.DisciplineMadnessTotal"
+        )
+      );
     }
   }
 }

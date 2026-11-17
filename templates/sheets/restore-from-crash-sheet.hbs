@@ -1,0 +1,49 @@
+<div class="awake-restore-from-crash">
+
+  <header class="awake-recovery-header">
+    <h2>
+      {{localize "AWAKE.Recovery.Heading"}}
+    </h2>
+
+    <p>
+      {{localize "AWAKE.Recovery.Description"}}
+    </p>
+  </header>
+
+
+  <label class="awake-recovery-character">
+    <span>
+      {{localize "AWAKE.Recovery.Character"}}
+    </span>
+
+    <select name="actorUuid">
+
+      <option value="">
+        {{localize "AWAKE.Recovery.SelectCharacter"}}
+      </option>
+
+      {{#each actors as |actor|}}
+        <option
+          value="{{actor.uuid}}"
+          {{#unless actor.recovering}}disabled{{/unless}}
+        >
+          {{actor.name}}
+          {{#if actor.recovering}}
+            — {{localize "AWAKE.Recovery.Recovering"}}
+          {{/if}}
+        </option>
+      {{/each}}
+
+    </select>
+  </label>
+
+
+  <button
+    type="button"
+    data-action="restore"
+    class="awake-recovery-restore"
+  >
+    {{localize "AWAKE.Recovery.RestoreDiscipline"}}
+  </button>
+
+</div>

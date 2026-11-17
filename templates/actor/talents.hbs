@@ -1,6 +1,12 @@
 <div class="awake-talents-part">
 
-  <section class="awake-talents">
+  <section class="awake-talents {{#if recoveryActive}}is-disabled{{/if}}">
+
+  {{#if recoveryActive}}
+    <div class="awake-recovery-notice">
+      {{localize "AWAKE.Recovery.TalentsUnavailable"}}
+    </div>
+  {{/if}}
 
     <h2>{{localize "AWAKE.Actor.Talents"}}</h2>
 

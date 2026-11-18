@@ -1219,12 +1219,10 @@
 }
 
 
-/* Crash / Snap notices */
+/* Dominance notice */
 
-.awake-conflict-card .awake-crash-notice,
-.awake-conflict-card .awake-snap-notice {
-  margin-top: 0.55rem;
-
+.awake-dominance-notice {
+  margin-top: 0.55rem !important;
   padding: 0.6rem 0.7rem;
 
   border:
@@ -1236,4 +1234,5 @@
     rgba(255, 255, 255, 0.04);
 
   font-weight: 600;
+  line-height: 1.4;
 }

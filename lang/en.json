@@ -139,7 +139,19 @@
       "FailureSnapWarning": "No Responses remain available. Choosing a Response consequence will cause a Snap.",
       "FailureNone": "No Consequence",
       "ApplyFailureConsequence": "Apply Failure Consequence",
-      "FailureResponseSnap": "Response → Snap"
+      "FailureResponseSnap": "Response → Snap",
+      "DisciplineReducedExhaustion": "Discipline dominates — Exhaustion reduced by 1.",
+      "DisciplineClearedFight": "Discipline dominates — one Fight Response cleared.",
+      "DisciplineClearedFlight": "Discipline dominates — one Flight Response cleared.",
+      "DisciplineNoEffect": "Discipline dominates — no recovery taken.",
+
+      "ExhaustionIncreased": "Exhaustion dominates — Exhaustion increased by 1.",
+
+      "MadnessCheckedFight": "Madness dominates — one Fight Response checked.",
+      "MadnessCheckedFlight": "Madness dominates — one Flight Response checked.",
+
+      "PainAddedDespair": "Pain dominates — 1 Despair added.",
+      "PainNoDespair": "Pain dominates — no Despair gained because the dominance was caused by Cast Shadow."
     },  
     "Conflict": {
       "Title": "Conflict",

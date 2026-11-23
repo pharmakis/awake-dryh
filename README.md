@@ -1,68 +1,105 @@
-# Awake — Unofficial Don't Rest Your Head System
+## What is Awake?
 
-An unofficial Foundry VTT game system for **Don't Rest Your Head** by Fred Hicks / Evil Hat Productions.
+Awake is a custom game system for **Foundry Virtual Tabletop v14**.
 
-Awake is intended to provide a lightweight, focused implementation of the core mechanics of Don't Rest Your Head for Foundry VTT, including character sheets, dice pools, Pain, Exhaustion, Madness, Responses, Hope and Despair.
+It provides character management and automation for the main mechanics used during play, reducing manual bookkeeping while keeping the game itself at the table.
 
-## Status
+<p align="center">
+  <img src="docs/screenshots/actor-sheet-overview.png"
+       alt="Awake character sheet in Foundry VTT"
+       width="1100">
+</p>
 
-Early development. The repository contains a minimal system manifest and English localization infrastructure. Sheets, game data models, and mechanics are not implemented yet.
+## Features
 
-The project is currently targeting **Foundry VTT v14**.
+### Character Sheet
 
-## Goals
+A dedicated character sheet includes:
 
-- Provide a clean and usable character sheet for Awake protagonists.
-- Support Discipline, Exhaustion, Madness and Pain dice pools.
-- Automate success counting and dominance resolution.
-- Support Fight / Flight response tracking.
-- Support Hope and Despair as shared game resources.
-- Support Exhaustion Talents and Madness Talents.
-- Provide lightweight NPC / Nightmare support based around Pain.
-- Keep the system small, readable and easy to maintain.
-- Support localization from the beginning.
+- character identity and narrative Questions;
+- Discipline, Exhaustion, and Permanent Madness;
+- Fight and Flight Responses;
+- Hope and Despair;
+- Talents;
+- Gear;
+- Scars.
 
-## Content and Copyright
+Character state is updated automatically when relevant mechanics are resolved.
 
-This project is an **unofficial fan-made implementation** and is not affiliated with or endorsed by Evil Hat Productions.
+<p align="center">
+  <img src="docs/screenshots/actor-sheet-details.png"
+       alt="Talents, Gear, and Scars"
+       width="1100">
+</p>
 
-Don't Rest Your Head and Don't Lose Your Mind are copyrighted works of Evil Hat Productions and their respective authors.
+### Talents
 
-This repository does not include copyrighted text, artwork or other assets taken from the published books.
+Exhaustion and Madness Talents are implemented as separate Foundry Items with dedicated sheets.
 
-Any example characters, talents or other game content included with Awake will be original material created specifically for this project.
+Madness Talents support multiple power levels, Fight and Flight effects, and character transformation fields.
 
-## AI-Assisted Development
+<p align="center">
+  <img src="docs/screenshots/madness-talent-sheet.png"
+       alt="Madness Talent sheet"
+       width="1100">
+</p>
 
-Software development for this project may use AI-assisted tools for coding, debugging, refactoring, testing and technical documentation.
+### Conflict Resolution
 
-The project does not include AI-generated artwork, music or other prepared creative assets in the core package.
+The system supports the complete conflict workflow:
 
-## License
+- starting a conflict and setting Pain;
+- building the protagonist's dice pool;
+- rolling Discipline, Exhaustion, Madness, and Pain;
+- calculating success and dominance;
+- spending Hope and Despair;
+- finalizing the result;
+- applying dominance consequences;
+- applying additional consequences after failed conflicts.
 
-The source code of Awake is released under the MIT License.
+<p align="center">
+  <img src="docs/screenshots/build-roll.png"
+       alt="Building a conflict roll"
+       width="1100">
+</p>
 
-See [LICENSE](LICENSE) for details.
+<p align="center">
+  <img src="docs/screenshots/conflict.png"
+       alt="Resolved conflict in Foundry chat"
+       width="1100">
+</p>
 
-## Development
+### Consequences and Character State
 
-For local installation, copy this repository into your Foundry user data directory as `Data/systems/awake-dryh`, then restart Foundry. The installed folder must be named `awake-dryh` to match the system ID. In Foundry VTT v14, create a world and select **Awake — Unofficial Don't Rest Your Head System**.
+Awake tracks and automates the mechanical effects of conflicts, including:
 
-English localization lives in `lang/en.json` under the `AWAKE` namespace. The manifest targets v14; runtime compatibility has not yet been verified in Foundry.
+- Discipline recovery;
+- Exhaustion increases;
+- Fight and Flight Responses;
+- Crash;
+- Snap;
+- temporary Recovery state;
+- Permanent Madness.
 
-Repository:
+<p align="center">
+  <img src="docs/screenshots/madness-consequence.png"
+       alt="Applying a Madness consequence"
+       width="1100">
+</p>
 
-`awake-dryh`
+### Shared Resources
 
-System ID:
+Hope and Despair are stored as shared world resources and can be accessed from character sheets and conflict controls.
 
-`awake-dryh`
+### Other Features
 
-Primary development language:
+- Gear management
+- Scar tracking
+- Foundry permissions for GM and player actions
+- Multiplayer support
+- English localization
+- Custom sheets, dialogs, and chat cards
 
-English
+## Technical Overview
 
-Planned localization:
-
-- English
-- Russian
+Built with JavaScript for **Foundry VTT v14**, using custom Actor and Item data models, ApplicationV2 sheets, Handlebars templates, localization, and Foundry's multiplayer APIs.

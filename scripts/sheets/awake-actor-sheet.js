@@ -142,7 +142,7 @@ export class AwakeActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
     autoResizeTextareas(this.element);
 
     for (const input of this.element.querySelectorAll(
-      ".awake-scar input.awake-scar-text, .awake-scar input.awake-scar-recalled"
+      ".awake-scar input.awake-scar-text"
     )) {
       input.addEventListener("change", event => this.#onScarChange(event));
     }
@@ -430,14 +430,9 @@ export class AwakeActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
       if (!Number.isInteger(rowIndex)) continue;
 
       const textInput = row.querySelector("input.awake-scar-text");
-      const recalledInput = row.querySelector("input.awake-scar-recalled");
 
       if (textInput) {
         scars[rowIndex].text = textInput.value;
-      }
-
-      if (recalledInput && !scars[rowIndex].transformed) {
-        scars[rowIndex].recalled = recalledInput.checked;
       }
     }
 
@@ -450,11 +445,13 @@ export class AwakeActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
   }
 
   async #onScarChange(event) {
+    if (!this.isEditable) return;
+
     const row = event.currentTarget.closest(".awake-scar");
     if (!row) return;
 
     const index = Number(row.dataset.scarIndex);
-    if (!Number.isInteger(index)) return;
+    if (!Number.isInteger(index) || index < 0 || index > 8) return;
 
     const scars = this.actor.system.scars.map(scar => ({
       text: scar.text,
@@ -463,14 +460,9 @@ export class AwakeActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
     }));
 
     const textInput = row.querySelector("input.awake-scar-text");
-    const recalledInput = row.querySelector("input.awake-scar-recalled");
 
     if (textInput) {
       scars[index].text = textInput.value;
-    }
-
-    if (recalledInput) {
-      scars[index].recalled = recalledInput.checked;
     }
 
     await this.actor.update({

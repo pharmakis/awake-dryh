@@ -47,7 +47,10 @@ function getTransformTarget(actorUuid, scarIndex, user, messageId = null) {
     return null;
   }
 
-  if (!Number.isInteger(scarIndex)) {
+  if (scarIndex !== null && !Number.isInteger(scarIndex)) {
+    return null;
+    }
+
     let message = null;
     let conflict = null;
     let protagonist = null;
@@ -104,7 +107,6 @@ function getTransformTarget(actorUuid, scarIndex, user, messageId = null) {
         protagonist
     };
   }
-}
 
 export function getTransformScarTargets(messageId, user) {
   const conflict = game.messages

@@ -92,8 +92,116 @@ export class BuildRollSheet extends HandlebarsApplicationMixin(ApplicationV2) {
     context.canIncreaseExhaustion =
       this.actor.system.exhaustion < 6;
 
+    context.canUseTalents =
+      !this.actor.system.recovery?.active;
+
     return context;
   }
+
+    async _onRender(context, options) {
+      await super._onRender(context, options);
+
+      const madnessInput =
+        this.element.querySelector(
+          '[name="temporaryMadness"]'
+        );
+
+      const madnessOutput =
+        this.element.querySelector(
+          ".awake-madness-value"
+        );
+
+      const exhaustionInput =
+        this.element.querySelector(
+          '[name="increaseExhaustion"]'
+        );
+
+      const talentSelect =
+        this.element.querySelector(
+          '[name="talentUse"]'
+        );
+
+      const minorOption =
+        talentSelect.querySelector(
+          'option[value="minor"]'
+        );
+
+      const majorOption =
+        talentSelect.querySelector(
+          'option[value="major"]'
+        );
+
+      const currentExhaustion =
+        this.actor.system.exhaustion;
+
+      const recovering =
+        this.actor.system.recovery?.active;
+
+      const syncControls = () => {
+        const effectiveExhaustion =
+          currentExhaustion +
+          (exhaustionInput.checked ? 1 : 0);
+
+        madnessOutput.textContent =
+          madnessInput.value;
+
+        minorOption.disabled =
+          recovering ||
+          effectiveExhaustion < 1;
+
+        majorOption.disabled =
+          recovering ||
+          currentExhaustion >= 6;
+
+        if (
+          talentSelect.value === "minor" &&
+          minorOption.disabled
+        ) {
+          talentSelect.value = "none";
+        }
+
+        if (
+          talentSelect.value === "madness" &&
+          Number(madnessInput.value) === 0
+        ) {
+          talentSelect.value = "none";
+        }
+
+        exhaustionInput.disabled =
+          currentExhaustion >= 6 ||
+          talentSelect.value === "major";
+      };
+
+      madnessInput.addEventListener(
+        "input",
+        syncControls
+      );
+
+      exhaustionInput.addEventListener(
+        "change",
+        syncControls
+      );
+
+      talentSelect.addEventListener(
+        "change",
+        () => {
+          if (talentSelect.value === "major") {
+            exhaustionInput.checked = true;
+          }
+
+          if (
+            talentSelect.value === "madness" &&
+            Number(madnessInput.value) === 0
+          ) {
+            madnessInput.value = "1";
+          }
+
+          syncControls();
+        }
+      );
+
+      syncControls();
+    }
 
 
   static async #onSubmit(
@@ -151,7 +259,11 @@ export class BuildRollSheet extends HandlebarsApplicationMixin(ApplicationV2) {
       );
 
 
+    const talentUse =
+      formData.object.talentUse ?? "none";
+
     const increaseExhaustion =
+      talentUse === "major" ||
       formData.object.increaseExhaustion === true ||
       formData.object.increaseExhaustion === "on";
 
@@ -189,6 +301,22 @@ export class BuildRollSheet extends HandlebarsApplicationMixin(ApplicationV2) {
         game.i18n.localize(
           "AWAKE.Conflict.CannotIncreaseExhaustion"
         )
+      );
+
+      return;
+    }
+
+    const talentError =
+      getTalentValidationError(
+        this.actor,
+        talentUse,
+        temporaryMadness,
+        increaseExhaustion
+      );
+
+    if (talentError) {
+      ui.notifications.error(
+        game.i18n.localize(talentError)
       );
 
       return;
@@ -237,6 +365,8 @@ export class BuildRollSheet extends HandlebarsApplicationMixin(ApplicationV2) {
       temporaryMadness,
 
       increaseExhaustion,
+
+      talentUse,
 
       pools
     };
@@ -398,6 +528,7 @@ async function applyConflictRollSubmission(
       userId,
       temporaryMadness,
       increaseExhaustion,
+      talentUse = "none",
       pools
     } = submission;
 
@@ -489,6 +620,18 @@ async function applyConflictRollSubmission(
       return;
     }
 
+    const talentError =
+      getTalentValidationError(
+        actor,
+        talentUse,
+        temporaryMadness,
+        increaseExhaustion
+      );
+
+    if (talentError) {
+      return;
+    }
+
 
     const expectedExhaustion =
       currentExhaustion +
@@ -527,6 +670,11 @@ async function applyConflictRollSubmission(
       return;
     }
 
+    const talent = {
+      use: talentUse,
+      exhaustion: expectedExhaustion
+    };
+
     const result =
       resolveRoll({
         discipline:
@@ -542,7 +690,9 @@ async function applyConflictRollSubmission(
           pools.pain,
 
         bonusSuccesses:
-          conflict.helper?.successes ?? 0
+          conflict.helper?.successes ?? 0,
+
+        talent
       });
 
 
@@ -596,6 +746,8 @@ async function applyConflictRollSubmission(
       },
 
       temporaryMadness,
+
+      talent,
 
       voluntaryExhaustionIncrease:
         increaseExhaustion,
@@ -707,6 +859,55 @@ async function rollConflictPools({
   return pools;
 }
 
+
+function getTalentValidationError(
+  actor,
+  talentUse,
+  temporaryMadness,
+  increaseExhaustion
+) {
+  if (
+    !["none", "minor", "major", "madness"]
+      .includes(talentUse)
+  ) {
+    return "AWAKE.Conflict.InvalidTalentUse";
+  }
+
+  if (talentUse === "none") {
+    return null;
+  }
+
+  if (actor.system.recovery?.active) {
+    return "AWAKE.Recovery.TalentsUnavailable";
+  }
+
+  const effectiveExhaustion =
+    actor.system.exhaustion +
+    (increaseExhaustion ? 1 : 0);
+
+  if (
+    talentUse === "minor" &&
+    effectiveExhaustion < 1
+  ) {
+    return "AWAKE.Conflict.MinorRequiresExhaustion";
+  }
+
+  if (
+    talentUse === "major" &&
+    !increaseExhaustion
+  ) {
+    return "AWAKE.Conflict.MajorRequiresIncrease";
+  }
+
+  if (
+    talentUse === "madness" &&
+    temporaryMadness < 1
+  ) {
+    return "AWAKE.Conflict.MadnessRequiresDice";
+  }
+
+  return null;
+} 
 
 function validateDicePool(
   dice,
@@ -832,6 +1033,55 @@ export function buildRollResultContent(
   );
   
   card.append(pools);
+
+  if (
+    result.talent &&
+    result.talent.use !== "none"
+  ) {
+    const talentLabels = {
+      minor: "AWAKE.Conflict.ExhaustionMinor",
+      major: "AWAKE.Conflict.ExhaustionMajor",
+      madness: "AWAKE.Conflict.MadnessTalent"
+    };
+
+    const talentElement =
+      document.createElement("p");
+
+    talentElement.classList.add(
+      "awake-conflict-talent"
+    );
+
+    talentElement.textContent =
+      game.i18n.format(
+        "AWAKE.Conflict.TalentUsed",
+        {
+          talent: game.i18n.localize(
+            talentLabels[result.talent.use]
+          )
+        }
+      );
+
+    card.append(talentElement);
+
+    if (result.talentBonus > 0) {
+      const bonusElement =
+        document.createElement("p");
+
+      bonusElement.classList.add(
+        "awake-conflict-talent-bonus"
+      );
+
+      bonusElement.textContent =
+        game.i18n.format(
+          "AWAKE.Conflict.TalentBonus",
+          {
+            bonus: result.talentBonus
+          }
+        );
+
+      card.append(bonusElement);
+    }
+  }
 
 
   const degree =
@@ -1086,7 +1336,9 @@ async function applyFinalizeConflict({
         conflict.pools.pain,
       
       bonusSuccesses:
-        conflict.helper?.successes ?? 0
+        conflict.helper?.successes ?? 0,
+
+      talent: conflict.talent
     });
 
 

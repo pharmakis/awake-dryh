@@ -41,13 +41,15 @@
       </span>
 
       <input
-        type="number"
+        type="range"
         name="temporaryMadness"
         value="0"
         min="0"
         max="6"
         step="1"
       />
+
+      <output class="awake-madness-value">0</output>
     </label>
 
 
@@ -61,6 +63,32 @@
       <span>
         {{localize "AWAKE.Conflict.IncreaseExhaustion"}}
       </span>
+    </label>
+    <label class="awake-build-roll-option">
+      <span>
+        {{localize "AWAKE.Conflict.TalentUse"}}
+      </span>
+
+      <select
+        name="talentUse"
+        {{#unless canUseTalents}}disabled{{/unless}}
+      >
+        <option value="none">
+          {{localize "AWAKE.Conflict.NoTalent"}}
+        </option>
+
+        <option value="minor">
+          {{localize "AWAKE.Conflict.ExhaustionMinor"}}
+        </option>
+
+        <option value="major">
+          {{localize "AWAKE.Conflict.ExhaustionMajor"}}
+        </option>
+
+        <option value="madness">
+          {{localize "AWAKE.Conflict.MadnessTalent"}}
+        </option>
+      </select>
     </label>
 
   </section>

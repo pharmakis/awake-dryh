@@ -901,7 +901,8 @@ async function applyTransformScarSubmission(
         const result = resolveRoll({
             ...pools,
             bonusSuccesses:
-            conflict.helper?.successes ?? 0
+              conflict.helper?.successes ?? 0,
+            talent: conflict.talent
         });
 
         const updatedConflict = {

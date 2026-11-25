@@ -53,7 +53,8 @@ export function resolveRoll({
   exhaustion,
   madness,
   pain,
-  bonusSuccesses = 0
+  bonusSuccesses = 0,
+  talent = null
 }) {
   const pools = [
     {
@@ -74,19 +75,39 @@ export function resolveRoll({
     }
   ];
 
-  const playerSuccesses =
+  const rolledSuccesses =
     countSuccesses(discipline) +
     countSuccesses(exhaustion) +
-    countSuccesses(madness) +
+    countSuccesses(madness);
+
+  let talentBonus = 0;
+
+  if (talent?.use === "minor") {
+    talentBonus = Math.max(
+      0,
+      talent.exhaustion - rolledSuccesses
+    );
+  }
+
+  if (talent?.use === "major") {
+    talentBonus = talent.exhaustion;
+  }
+
+  const playerSuccesses =
+    rolledSuccesses +
+    talentBonus +
     bonusSuccesses;
 
   const painSuccesses = countSuccesses(pain);
 
   const dominant = determineDominantPool(pools);
 
-  return {
+    return {
     playerSuccesses,
     painSuccesses,
+    rolledSuccesses,
+    talentBonus,
+    talent,
 
     success: playerSuccesses >= painSuccesses,
 

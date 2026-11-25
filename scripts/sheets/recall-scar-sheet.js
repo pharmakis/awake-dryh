@@ -183,7 +183,7 @@ async function applyRecallScarSubmission(submission) {
     pools[submission.pool] = dice;
   }
 
-  const result = resolveRoll({ ...pools, bonusSuccesses: helper?.successes ?? 0 });
+  const result = resolveRoll({ ...pools, bonusSuccesses: helper?.successes ?? 0, talent: conflict.talent });
   const updatedConflict = {
     ...conflict,
     pools,

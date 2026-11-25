@@ -241,7 +241,9 @@ export class CastShadowSheet extends HandlebarsApplicationMixin(ApplicationV2) {
           pools.pain,
         
         bonusSuccesses:
-          conflict.helper?.successes ?? 0
+          conflict.helper?.successes ?? 0,
+        
+        talent: conflict.talent
       });
 
 
@@ -299,7 +301,9 @@ export class CastShadowSheet extends HandlebarsApplicationMixin(ApplicationV2) {
           pools.pain,
         
         bonusSuccesses:
-          conflict.helper?.successes ?? 0
+          conflict.helper?.successes ?? 0,
+        
+        talent: conflict.talent
       });
 
 

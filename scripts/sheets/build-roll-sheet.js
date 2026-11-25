@@ -95,6 +95,16 @@ export class BuildRollSheet extends HandlebarsApplicationMixin(ApplicationV2) {
     context.canUseTalents =
       !this.actor.system.recovery?.active;
 
+    context.exhaustionTalentName =
+      this.actor.items.find(
+        item => item.type === "exhaustionTalent"
+      )?.name ?? "";
+
+    context.madnessTalentName =
+      this.actor.items.find(
+        item => item.type === "madnessTalent"
+      )?.name ?? "";
+
     return context;
   }
 
@@ -146,10 +156,12 @@ export class BuildRollSheet extends HandlebarsApplicationMixin(ApplicationV2) {
           madnessInput.value;
 
         minorOption.disabled =
+          minorOption.hidden ||
           recovering ||
           effectiveExhaustion < 1;
 
         majorOption.disabled =
+          majorOption.hidden ||
           recovering ||
           currentExhaustion >= 6;
 

@@ -35,7 +35,7 @@
 
   <section class="awake-build-roll-options">
 
-    <label class="awake-build-roll-option">
+    <label class="awake-build-roll-option awake-build-roll-madness">
       <span>
         {{localize "AWAKE.Conflict.TemporaryMadness"}}
       </span>
@@ -64,7 +64,7 @@
         {{localize "AWAKE.Conflict.IncreaseExhaustion"}}
       </span>
     </label>
-    <label class="awake-build-roll-option">
+    <label class="awake-build-roll-option awake-build-roll-talent">
       <span>
         {{localize "AWAKE.Conflict.TalentUse"}}
       </span>
@@ -77,16 +77,24 @@
           {{localize "AWAKE.Conflict.NoTalent"}}
         </option>
 
-        <option value="minor">
-          {{localize "AWAKE.Conflict.ExhaustionMinor"}}
+        <option value="minor"
+          {{#unless exhaustionTalentName}}hidden disabled{{/unless}}
+        >
+          {{exhaustionTalentName}} —
+          {{localize "AWAKE.ExhaustionTalent.MinorUse"}}
         </option>
 
-        <option value="major">
-          {{localize "AWAKE.Conflict.ExhaustionMajor"}}
+        <option value="major"
+          {{#unless exhaustionTalentName}}hidden disabled{{/unless}}
+        >
+          {{exhaustionTalentName}} —
+          {{localize "AWAKE.ExhaustionTalent.MajorUse"}}
         </option>
 
-        <option value="madness">
-          {{localize "AWAKE.Conflict.MadnessTalent"}}
+        <option value="madness"
+          {{#unless madnessTalentName}}hidden disabled{{/unless}}
+        >
+          {{madnessTalentName}}
         </option>
       </select>
     </label>

@@ -46,8 +46,8 @@ export async function animateDiceRoll(roll) {
 
         outline: "none",
         edge: appearance.background,
-        texture: "none",
-        material: "plastic",
+        texture: "bronze01",
+        material: "metal",
         system: "standard"
       };
     }

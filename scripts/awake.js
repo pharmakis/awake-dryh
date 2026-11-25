@@ -22,6 +22,7 @@ import { NightmareActorData } from "./data/nightmare-actor.js";
 import { NightmareActorSheet } from "./sheets/nightmare-actor-sheet.js";
 import { getRecallScarTargets, openRecallScarSheet, handleRecallScarSubmission } from "./sheets/recall-scar-sheet.js";
 import { handleTransformScarSubmission, getTransformScarTargets, openTransformScarSheet, canPreventCrash } from "./sheets/transform-scar-sheet.js";
+import { endSession } from "./rules/end-session.js";
 
 
 
@@ -100,6 +101,7 @@ Hooks.once("init", async () => {
   game.awake.startConflict = openStartConflictSheet;
   game.awake.openChalices = openChalicesSheet;
   game.awake.restoreFromCrash = openRestoreFromCrashSheet;
+  game.awake.endSession = endSession;
 });
 
 Hooks.on("preCreateItem", (item, data) => {
@@ -1067,6 +1069,20 @@ Hooks.once("ready", async () => {
       "game.awake.startConflict();",
     img:
       "systems/awake-dryh/assets/ui/icons/pain.png"
+  });
+
+  await ensureSystemMacro({
+    key: "endSession",
+
+    name: game.i18n.localize(
+      "AWAKE.Session.Title"
+    ),
+
+    command:
+      "game.awake.endSession();",
+
+    img:
+      "systems/awake-dryh/assets/ui/icons/end-session.png"
   });
 
 

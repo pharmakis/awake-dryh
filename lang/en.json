@@ -57,9 +57,9 @@
       "ImproveSuccess": "Improve Success",
       "TransformConflictNotice": "{name} transformed a Scar, spending {cost} Hope and adding {amount} successes to the roll.",
       "PreventCrash": "Transform Scar — Prevent Crash",
-"PreventFailureCrash": "Increase Exhaustion — Prevent Crash",
-"PreventCrashWarning": "Exhaustion is about to increase to 7. Spend at least 1 Hope to prevent a Crash.",
-"PreventCrashNotice": "{name} prevented a Crash by transforming a Scar. Spent {cost} Hope. Exhaustion is now {exhaustion}."
+      "PreventFailureCrash": "Increase Exhaustion — Prevent Crash",
+      "PreventCrashWarning": "Exhaustion is about to increase to 7. Spend at least 1 Hope to prevent a Crash.",
+      "PreventCrashNotice": "{name} prevented a Crash by transforming a Scar. Spent {cost} Hope. Exhaustion is now {exhaustion}."
     },
 
     "Questionnaire": {
@@ -257,6 +257,15 @@
       "Description": "Description",
       "StartConflict": "Start Conflict",
       "CreationFailed": "Could not create a Nightmare for {name}."
+    },
+    "Session": {
+      "Title": "End Session",
+      "RemainingCoins": "Remaining Hope: {hope}. Remaining Despair: {despair}.",
+      "Warning": "Make sure all conflicts have been resolved and all players have had a chance to spend the remaining Hope. Ending the session will empty both Chalices and reset all recalled Scars. Transformed Scars will remain unavailable.",
+      "ActiveGMOnly": "Only the active GM can end the session.",
+      "CoinsChanged": "The number of coins has changed. Please review the Chalices and try again.",
+      "Completed": "Session ended. Both Chalices have been emptied and recalled Scars have been reset.",
+      "Failed": "Could not complete the session reset. Check the console and try again."
     }
   },
 

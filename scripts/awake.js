@@ -679,48 +679,65 @@ Hooks.on("renderChatMessageHTML", (message, html) => {
 
 
 
-    if (
-      game.user.isGM &&
-      conflict.status === "finalized" &&
-      conflict.result?.success === false &&
-      allDominanceResolved(conflict) &&
-      !conflict.failureResolved &&
-      !conflict.becameNightmare
-    ) {
-      const failureButton =
-        document.createElement(
-          "button"
+  if (
+    game.user.isGM &&
+    conflict.status === "finalized" &&
+    conflict.result?.success === false &&
+    allDominanceResolved(conflict)
+  ) {
+    for (const participant of getDominanceParticipants(conflict)) {
+      if (
+        participant.state.failureResolved ||
+        participant.state.becameNightmare
+      ) {
+        continue;
+      }
+
+      const actor =
+        foundry.utils.fromUuidSync(
+          participant.actorUuid
         );
 
+      if (
+        !actor ||
+        actor.documentName !== "Actor" ||
+        actor.type !== "awake"
+      ) {
+        continue;
+      }
 
-      failureButton.type =
-        "button";
+      const failureButton =
+        document.createElement("button");
+
+      failureButton.type = "button";
 
       failureButton.classList.add(
         "awake-apply-consequence-button"
       );
 
-      failureButton.textContent =
+      const label =
         game.i18n.localize(
           "AWAKE.Consequences.ApplyFailureConsequence"
         );
 
+      failureButton.textContent =
+        conflict.helper
+          ? `${label} — ${actor.name}`
+          : label;
 
       failureButton.addEventListener(
         "click",
         () => {
           openFailureConsequenceSheet({
-            messageId:
-              message.id
+            messageId: message.id,
+            actorUuid: participant.actorUuid
           });
         }
       );
 
-
-      card.append(
-        failureButton
-      );
+      card.append(failureButton);
     }
+  }
 
 });
 

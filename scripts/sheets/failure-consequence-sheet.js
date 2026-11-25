@@ -1,5 +1,7 @@
 import {
-  allDominanceResolved
+  allDominanceResolved,
+  getDominanceParticipant,
+  enqueueHelpingOperation
 } from "../rules/helping.js";
 
 
@@ -146,6 +148,9 @@ export class FailureConsequenceSheet extends HandlebarsApplicationMixin(Applicat
         messageId:
           this.messageId,
 
+        actorUuid:
+          this.actor.uuid,
+
         consequence
       });
 
@@ -158,7 +163,8 @@ export class FailureConsequenceSheet extends HandlebarsApplicationMixin(Applicat
 
 
 export async function openFailureConsequenceSheet({
-  messageId
+  messageId,
+  actorUuid
 }) {
   if (!game.user.isGM) {
     return;
@@ -182,17 +188,29 @@ export async function openFailureConsequenceSheet({
     !conflict ||
     conflict.status !== "finalized" ||
     conflict.result?.success !== false ||
-    !allDominanceResolved(conflict) ||
-    conflict.becameNightmare ||
-    conflict.failureResolved
+    !allDominanceResolved(conflict)
   ) {
     return;
   }
 
 
+  const participant =
+    getDominanceParticipant(
+      conflict,
+      actorUuid
+    );
+
+  if (
+    !participant ||
+    participant.state.becameNightmare ||
+    participant.state.failureResolved
+  ) {
+    return;
+  }
+
   const actor =
     await fromUuid(
-      conflict.actorUuid
+      participant.actorUuid
     );
 
 
@@ -208,14 +226,24 @@ export async function openFailureConsequenceSheet({
   new FailureConsequenceSheet({
     actor,
     messageId
+  }, {
+    id: `awake-failure-consequence-${messageId}-${actor.id}`
   }).render({
     force: true
   });
 }
 
 
-async function applyFailureConsequence({
+function applyFailureConsequence(submission) {
+  return enqueueHelpingOperation(
+    () => applyFailureConsequenceForParticipant(submission)
+  );
+}
+
+
+async function applyFailureConsequenceForParticipant({
   messageId,
+  actorUuid,
   consequence
 }) {
   if (!game.user.isGM) {
@@ -254,17 +282,29 @@ async function applyFailureConsequence({
     !conflict ||
     conflict.status !== "finalized" ||
     conflict.result?.success !== false ||
-    !allDominanceResolved(conflict) ||
-    conflict.becameNightmare ||
-    conflict.failureResolved
+    !allDominanceResolved(conflict)
   ) {
     return false;
   }
 
 
+  const participant =
+    getDominanceParticipant(
+      conflict,
+      actorUuid
+    );
+
+  if (
+    !participant ||
+    participant.state.becameNightmare ||
+    participant.state.failureResolved
+  ) {
+    return false;
+  }
+
   const actor =
     await fromUuid(
-      conflict.actorUuid
+      participant.actorUuid
     );
 
 
@@ -290,20 +330,10 @@ async function applyFailureConsequence({
    * GM chooses leniency.
    */
   if (consequence === "none") {
-    const updatedConflict = {
-      ...conflict,
-
-      failureResolved:
-        true,
-
-      failureConsequence:
-        "none"
-    };
-
-
     await message.update({
-      [`flags.${game.system.id}.conflict`]:
-        updatedConflict
+      [`${participant.flagPath}.failureResolved`]: true,
+
+      [`${participant.flagPath}.failureConsequence`]: "none"
     });
 
 
@@ -524,42 +554,23 @@ async function applyFailureConsequence({
   }
 
 
-  const updatedConflict = {
-    ...conflict,
-
-    failureResolved:
-      true,
-
-    failureConsequence:
-      consequence,
-
-    /*
-     * Reuse the notices already used by
-     * dominance consequences.
-     */
-    crashed:
-      conflict.crashed ||
-      crashed,
-
-    snapped:
-      conflict.snapped ||
-      snapped,
-
-    becameNightmare:
-      conflict.becameNightmare ||
-      becameNightmare,
-
-    failureCrashed:
-      crashed,
-
-    failureSnapped:
-      snapped
-  };
-
-
   await message.update({
-    [`flags.${game.system.id}.conflict`]:
-      updatedConflict
+    [`${participant.flagPath}.failureResolved`]: true,
+
+    [`${participant.flagPath}.failureConsequence`]: consequence,
+
+    [`${participant.flagPath}.crashed`]:
+      Boolean(participant.state.crashed || crashed),
+
+    [`${participant.flagPath}.snapped`]:
+      Boolean(participant.state.snapped || snapped),
+
+    [`${participant.flagPath}.becameNightmare`]:
+      Boolean(participant.state.becameNightmare || becameNightmare),
+
+    [`${participant.flagPath}.failureCrashed`]: crashed,
+
+    [`${participant.flagPath}.failureSnapped`]: snapped
   });
 
 

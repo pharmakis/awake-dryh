@@ -2,6 +2,9 @@ import {
   getDominanceParticipant,
   enqueueHelpingOperation
 } from "../rules/helping.js";
+import {
+  createNightmareFromSnap
+} from "../rules/nightmare.js";
 
 
 const {
@@ -518,4 +521,11 @@ async function applyMadnessConsequenceSubmission(
     [`${participant.flagPath}.becameNightmare`]:
       becameNightmare
   });
+  if (becameNightmare) {
+    await createNightmareFromSnap({
+      actor,
+      conflict,
+      participant
+    });
+  }
 }

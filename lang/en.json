@@ -230,7 +230,8 @@
     },
     "Nightmare": {
       "Description": "Description",
-      "StartConflict": "Start Conflict"
+      "StartConflict": "Start Conflict",
+      "CreationFailed": "Could not create a Nightmare for {name}."
     }
   },
 

@@ -71,11 +71,11 @@ export class NightmareActorSheet
   }
 
 
-  static async #onStartConflict(event, target) {
+  static #onStartConflict(event, target) {
     if (!game.user.isGM) return;
 
-    await openStartConflictSheet({
-      painRating: this.actor.system.pain
+    openStartConflictSheet({
+        painRating: this.actor.system.pain
     });
   }
 }

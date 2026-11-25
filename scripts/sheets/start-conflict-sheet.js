@@ -44,7 +44,10 @@ export class StartConflictSheet extends HandlebarsApplicationMixin(ApplicationV2
     const context = await super._prepareContext(options);
 
     context.actors = game.actors
-      .filter(actor => actor.type === "awake")
+      .filter(actor =>
+        actor.type === "awake" &&
+        actor.system.discipline > 0
+      )
       .sort((a, b) => a.name.localeCompare(b.name))
       .map(actor => ({
         id: actor.id,
@@ -74,10 +77,14 @@ export class StartConflictSheet extends HandlebarsApplicationMixin(ApplicationV2
     const actor = game.actors.get(actorId);
     const painRating = Number(pain);
 
-    if (!actor || actor.type !== "awake") {
-      ui.notifications.error(
-        game.i18n.localize("AWAKE.Conflict.InvalidActor")
-      );
+    if (
+        !actor ||
+        actor.type !== "awake" ||
+        actor.system.discipline <= 0
+      ) {
+        ui.notifications.error(
+          game.i18n.localize("AWAKE.Conflict.InvalidActor")
+        );
 
       return null;
     }
@@ -130,7 +137,9 @@ export function openStartConflictSheet({
   }
 
   const hasActors = game.actors.some(
-    actor => actor.type === "awake"
+    actor =>
+      actor.type === "awake" &&
+      actor.system.discipline > 0
   );
 
   if (!hasActors) {

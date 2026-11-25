@@ -67,7 +67,7 @@ export class ActorHopeSheet extends
       title: "AWAKE.Hope.SpendHope",
       resizable: false
     },
-    
+
     actions: {
          spend: ActorHopeSheet.#onSpend
     }
@@ -168,4 +168,147 @@ export class ActorHopeSheet extends
         this._spendingHope = false;
     }
   }
+}
+let actorHopeQueue = Promise.resolve();
+
+export function handleActorHopeSubmission(submission) {
+  const request = actorHopeQueue.then(
+    () => applyActorHope(submission)
+  );
+
+  actorHopeQueue = request.catch(error => {
+    console.error(error);
+  });
+
+  return request;
+}
+
+
+async function applyActorHope(submission) {
+  if (game.users.activeGM?.id !== game.user.id) {
+    return false;
+  }
+
+  const actor = await fromUuid(
+    submission.actorUuid
+  );
+
+  const user = game.users.get(
+    submission.userId
+  );
+
+  if (
+    !actor ||
+    actor.documentName !== "Actor" ||
+    actor.type !== "awake" ||
+    !user
+  ) {
+    return false;
+  }
+
+  if (
+    !user.isGM &&
+    !actor.testUserPermission(user, "OWNER")
+  ) {
+    return false;
+  }
+
+  if (actor.system.discipline === 0) {
+    return false;
+  }
+
+  const option = getHopeActions(actor).find(
+    option => option.id === submission.action
+  );
+
+  if (!option?.available) {
+    ui.notifications.warn(
+      game.i18n.localize(
+        "AWAKE.Hope.ActionUnavailable"
+      )
+    );
+
+    return false;
+  }
+
+  const system = actor.system;
+
+  let updates = {};
+
+  switch (option.id) {
+    case "reduceExhaustion":
+      updates = {
+        "system.exhaustion":
+          system.exhaustion - 1
+      };
+      break;
+
+    case "clearFight":
+      updates = {
+        "system.responses.fight.checked":
+          system.responses.fight.checked - 1
+      };
+      break;
+
+    case "clearFlight":
+      updates = {
+        "system.responses.flight.checked":
+          system.responses.flight.checked - 1
+      };
+      break;
+
+    case "restoreDiscipline":
+      updates = {
+        "system.discipline":
+          system.discipline + 1,
+
+        "system.permanentMadness":
+          system.permanentMadness - 1
+      };
+      break;
+
+    default:
+      return false;
+  }
+
+  const hope = game.settings.get(
+    game.system.id,
+    "hope"
+  );
+
+  if (hope < option.cost) {
+    ui.notifications.warn(
+      game.i18n.localize(
+        "AWAKE.Hope.NotEnough"
+      )
+    );
+
+    return false;
+  }
+
+  await game.settings.set(
+    game.system.id,
+    "hope",
+    hope - option.cost
+  );
+
+  try {
+    await actor.update(updates);
+  }
+  catch (error) {
+    const currentHope = game.settings.get(
+      game.system.id,
+      "hope"
+    );
+
+    await game.settings.set(
+      game.system.id,
+      "hope",
+      currentHope + option.cost
+    );
+
+    throw error;
+  }
+
+  return true;
 }

@@ -1240,9 +1240,16 @@
 /* Conflict helping */
 
 .awake-conflict-card .awake-helper-notice {
-  padding: 0.4rem 0;
+  margin: 0.5rem 0;
+  padding: 0.5rem 0;
+  border-top: 1px solid #514a41;
+  border-bottom: 1px solid #514a41;
   color: #cfc6b8;
-  font-weight: 600;
+}
+
+.awake-helper-notice strong {
+  display: block;
+  margin-bottom: 0.2rem;
 }
 
 .awake-conflict-card .awake-helper-select {

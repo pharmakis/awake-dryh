@@ -1,12 +1,8 @@
 import {
-  resolveRoll
-} from "../rules/roll.js";
-import {
   enqueueHelpingOperation
 } from "../rules/helping.js";
 import {
-  resolveRoll,
-  countSuccesses
+  resolveRoll
 } from "../rules/roll.js";
 
 
@@ -528,50 +524,6 @@ async function applyConflictRollSubmission(
       return;
     }
 
-    let helper = conflict.helper ?? null;
-
-    if (helper) {
-      const helperActor =
-        await fromUuid(helper.actorUuid);
-
-      if (
-        !helperActor ||
-        helperActor.documentName !== "Actor" ||
-        helperActor.type !== "awake" ||
-        helperActor.system.discipline <= 0
-      ) {
-        ui.notifications.warn(
-          game.i18n.localize(
-            "AWAKE.Conflict.InvalidActor"
-          )
-        );
-
-        return;
-      }
-
-      const helperPools =
-        await rollConflictPools({
-          discipline:
-            helperActor.system.discipline,
-
-          exhaustion: 0,
-          madness: 0,
-          pain: 0
-        });
-
-      helper = {
-        ...helper,
-
-        dice:
-          helperPools.discipline,
-
-        successes:
-          countSuccesses(
-            helperPools.discipline
-          )
-      };
-    }
-
     const result =
       resolveRoll({
         discipline:
@@ -587,7 +539,7 @@ async function applyConflictRollSubmission(
           pools.pain,
 
         bonusSuccesses:
-          helper?.successes ?? 0
+          conflict.helper?.successes ?? 0
       });
 
 
@@ -609,8 +561,6 @@ async function applyConflictRollSubmission(
 
       status:
         "modifiable",
-        
-        helper,
 
         helpClosed: true,
 

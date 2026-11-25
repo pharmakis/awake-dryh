@@ -1,3 +1,7 @@
+import {
+  countSuccesses
+} from "./roll.js";
+
 let helpingQueue = Promise.resolve();
 
 
@@ -164,15 +168,30 @@ async function applyHelpingSubmission(submission) {
 
   if (!helper) return false;
 
-  await message.update({
+  const roll =
+    await new foundry.dice.Roll(
+        `${helper.system.discipline}d6[discipline]`
+    ).evaluate({
+        allowInteractive: false
+    });
+
+    const dice =
+    [...roll.dice[0].values];
+
+    await message.update({
     [`flags.${game.system.id}.conflict.helper`]: {
-      actorUuid: helper.uuid,
-      actorName: helper.name
+        actorUuid: helper.uuid,
+        actorName: helper.name,
+
+        dice,
+
+        successes:
+        countSuccesses(dice)
     },
 
     [`flags.${game.system.id}.conflict.helpClosed`]:
-      true
-  });
+        true
+    });
 
   return true;
 }

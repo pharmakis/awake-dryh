@@ -193,7 +193,9 @@
       "ApplyConsequences": "Apply Consequences",
       "Help": "Help",
       "IsHelping": "{name} is helping.",
-      "HelpingResult": "{name} is helping — Discipline: {dice} (+{successes} successes)."
+      "HelpingResult": "{name} is helping — Discipline: {dice} (+{successes} successes).",
+      "HelperName": "Helper: {name}",
+      "HelperRoll": "Discipline: {dice} (+{successes} successes)"
     },
     "Recovery": {
       "MacroName": "Restore from Crash",

@@ -17,7 +17,6 @@ import { openRestoreFromCrashSheet } from "./sheets/restore-from-crash-sheet.js"
 import { openMadnessConsequenceSheet, handleMadnessConsequenceSubmission } from "./sheets/madness-consequence-sheet.js";
 import { openFailureConsequenceSheet } from "./sheets/failure-consequence-sheet.js";
 import { handleActorHopeSubmission } from "./sheets/actor-hope-sheet.js";
-import { getEligibleHelpers, requestHelpingAction, handleHelpingSubmission } from "./rules/helping.js";
 import { getEligibleHelpers, requestHelpingAction, handleHelpingSubmission, getDominanceParticipants, allDominanceResolved } from "./rules/helping.js";
 
 
@@ -124,180 +123,213 @@ Hooks.on("renderChatMessageHTML", (message, html) => {
 
   if (conflict.helper) {
     const helperNotice =
-      document.createElement("p");
+      document.createElement("div");
 
     helperNotice.classList.add(
       "awake-helper-notice"
     );
 
-    helperNotice.textContent =
-      Array.isArray(conflict.helper.dice)
-        ? game.i18n.format(
-            "AWAKE.Conflict.HelpingResult",
-            {
-              name:
-                conflict.helper.actorName,
+    const helperName =
+      document.createElement("strong");
 
-              dice:
-                conflict.helper.dice.join(", "),
+    helperName.textContent =
+      game.i18n.format(
+        "AWAKE.Conflict.HelperName",
+        {
+          name: conflict.helper.actorName
+        }
+      );
 
-              successes:
-                conflict.helper.successes
-            }
-          )
-        : game.i18n.format(
-            "AWAKE.Conflict.IsHelping",
-            {
-              name:
-                conflict.helper.actorName
-            }
-          );
+    helperNotice.append(helperName);
 
-    card.append(helperNotice);
+    if (Array.isArray(conflict.helper.dice)) {
+      const helperResult =
+        document.createElement("div");
+
+      helperResult.textContent =
+        game.i18n.format(
+          "AWAKE.Conflict.HelperRoll",
+          {
+            dice: conflict.helper.dice.join(", "),
+            successes: conflict.helper.successes
+          }
+        );
+
+      helperNotice.append(helperResult);
+    }
+
+    const resultBlock =
+      card.querySelector(
+        ".awake-conflict-result"
+      );
+
+    if (resultBlock) {
+      resultBlock.before(helperNotice);
+    } else {
+      card.append(helperNotice);
+    }
   } 
 
-  const dominanceNotice =
-    document.createElement("p");
+  for (const participant of getDominanceParticipants(conflict)) {
+    const state = participant.state;
 
-  dominanceNotice.classList.add(
-    "awake-dominance-notice"
-  );
+    if (!state.dominanceResolved) continue;
 
-
-  let dominanceText = null;
-
-
-  /*
-  * Discipline dominance
-  */
-  if (
-    conflict.dominanceResolved &&
-    conflict.result?.dominant === "discipline"
-  ) {
-    switch (
-      conflict.disciplineConsequence
-    ) {
-      case "reduceExhaustion":
-        dominanceText =
-          game.i18n.localize(
-            "AWAKE.Consequences.DisciplineReducedExhaustion"
-          );
-        break;
-
-      case "clearFight":
-        dominanceText =
-          game.i18n.localize(
-            "AWAKE.Consequences.DisciplineClearedFight"
-          );
-        break;
-
-      case "clearFlight":
-        dominanceText =
-          game.i18n.localize(
-            "AWAKE.Consequences.DisciplineClearedFlight"
-          );
-        break;
-
-      case "doNothing":
-        dominanceText =
-          game.i18n.localize(
-            "AWAKE.Consequences.DisciplineNoEffect"
-          );
-        break;
-    }
-  }
-
-
-  /*
-  * Exhaustion dominance
-  */
-  else if (
-    conflict.dominanceResolved &&
-    conflict.result?.dominant === "exhaustion"
-  ) {
-    dominanceText =
-      conflict.crashed
-        ? game.i18n.localize(
-            "AWAKE.Recovery.CrashNotice"
-          )
-        : game.i18n.localize(
-            "AWAKE.Consequences.ExhaustionIncreased"
-          );
-  }
-
-
-  /*
-  * Madness dominance
-  */
-  else if (
-    conflict.dominanceResolved &&
-    conflict.result?.dominant === "madness"
-  ) {
     if (
-      conflict.becameNightmare
+      conflict.result?.dominant === "pain" &&
+      participant.actorUuid !== conflict.actorUuid
     ) {
-      dominanceText =
-        game.i18n.localize(
-          "AWAKE.Consequences.NightmareNotice"
-        );
+      continue;
     }
 
-    else if (
-      conflict.snapped
-    ) {
-      dominanceText =
-        game.i18n.localize(
-          "AWAKE.Consequences.SnapNotice"
-        );
-    }
+    const dominanceNotice =
+      document.createElement("p");
 
-    else if (
-      conflict.madnessConsequence === "fight"
-    ) {
-      dominanceText =
-        game.i18n.localize(
-          "AWAKE.Consequences.MadnessCheckedFight"
-        );
-    }
-
-    else if (
-      conflict.madnessConsequence === "flight"
-    ) {
-      dominanceText =
-        game.i18n.localize(
-          "AWAKE.Consequences.MadnessCheckedFlight"
-        );
-    }
-  }
-
-
-  /*
-  * Pain dominance
-  */
-  else if (
-    conflict.dominanceResolved &&
-    conflict.result?.dominant === "pain"
-  ) {
-    dominanceText =
-      conflict.despairEarned > 0
-        ? game.i18n.localize(
-            "AWAKE.Consequences.PainAddedDespair"
-          )
-        : game.i18n.localize(
-            "AWAKE.Consequences.PainNoDespair"
-          );
-  }
-
-
-  if (dominanceText) {
-    dominanceNotice.textContent =
-      dominanceText;
-
-    card.append(
-      dominanceNotice
+    dominanceNotice.classList.add(
+      "awake-dominance-notice"
     );
-  }
 
+
+    let dominanceText = null;
+
+
+    /*
+    * Discipline dominance
+    */
+    if (
+      conflict.result?.dominant === "discipline"
+    ) {
+      switch (
+        state.disciplineConsequence
+      ) {
+        case "reduceExhaustion":
+          dominanceText =
+            game.i18n.localize(
+              "AWAKE.Consequences.DisciplineReducedExhaustion"
+            );
+          break;
+
+        case "clearFight":
+          dominanceText =
+            game.i18n.localize(
+              "AWAKE.Consequences.DisciplineClearedFight"
+            );
+          break;
+
+        case "clearFlight":
+          dominanceText =
+            game.i18n.localize(
+              "AWAKE.Consequences.DisciplineClearedFlight"
+            );
+          break;
+
+        case "none":
+        case "doNothing":
+          dominanceText =
+            game.i18n.localize(
+              "AWAKE.Consequences.DisciplineNoEffect"
+            );
+          break;
+      }
+    }
+
+
+    /*
+    * Exhaustion dominance
+    */
+    else if (
+      conflict.result?.dominant === "exhaustion"
+    ) {
+      dominanceText =
+        (state.exhaustionConsequence === "crash" ||
+          (state.exhaustionConsequence == null && state.crashed))
+          ? game.i18n.localize(
+              "AWAKE.Recovery.CrashNotice"
+            )
+          : game.i18n.localize(
+              "AWAKE.Consequences.ExhaustionIncreased"
+            );
+    }
+
+
+    /*
+    * Madness dominance
+    */
+    else if (
+      conflict.result?.dominant === "madness"
+    ) {
+      if (
+        state.becameNightmare
+      ) {
+        dominanceText =
+          game.i18n.localize(
+            "AWAKE.Consequences.NightmareNotice"
+          );
+      }
+
+      else if (
+        state.snapped
+      ) {
+        dominanceText =
+          game.i18n.localize(
+            "AWAKE.Consequences.SnapNotice"
+          );
+      }
+
+      else if (
+        state.madnessConsequence === "fight"
+      ) {
+        dominanceText =
+          game.i18n.localize(
+            "AWAKE.Consequences.MadnessCheckedFight"
+          );
+      }
+
+      else if (
+        state.madnessConsequence === "flight"
+      ) {
+        dominanceText =
+          game.i18n.localize(
+            "AWAKE.Consequences.MadnessCheckedFlight"
+          );
+      }
+    }
+
+
+    /*
+    * Pain dominance
+    */
+    else if (
+      conflict.result?.dominant === "pain"
+    ) {
+      dominanceText =
+        conflict.despairEarned > 0
+          ? game.i18n.localize(
+              "AWAKE.Consequences.PainAddedDespair"
+            )
+          : game.i18n.localize(
+              "AWAKE.Consequences.PainNoDespair"
+            );
+    }
+
+
+    if (dominanceText) {
+      const actor =
+        foundry.utils.fromUuidSync(participant.actorUuid);
+
+      const actorName =
+        actor?.name ?? state.actorName ?? participant.actorUuid;
+
+      dominanceNotice.textContent =
+        conflict.helper && conflict.result?.dominant !== "pain"
+          ? `${actorName}: ${dominanceText}`
+          : dominanceText;
+
+      card.append(
+        dominanceNotice
+      );
+    }
+  }
 
 
   /*

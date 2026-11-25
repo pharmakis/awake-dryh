@@ -4,6 +4,12 @@
 
     <h3>{{actorName}}</h3>
 
+    {{#if preventCrash}}
+    <p class="awake-transform-crash-warning">
+        {{localize "AWAKE.Scars.PreventCrashWarning"}}
+    </p>
+    {{/if}}
+
     {{#if inConflict}}
 
   <div class="form-group">
@@ -34,17 +40,23 @@
         </label>
 
         <select name="effect">
+
             <option value="hope">
                 {{localize "AWAKE.Scars.TransformHope"}}
             </option>
 
-            <option value="madnessTalent">
-                {{localize "AWAKE.Scars.TransformMadnessTalent"}}
-            </option>
+            {{#unless preventCrash}}
 
-            <option value="exhaustionTalent">
+                <option value="madnessTalent">
+                {{localize "AWAKE.Scars.TransformMadnessTalent"}}
+                </option>
+
+                <option value="exhaustionTalent">
                 {{localize "AWAKE.Scars.TransformExhaustionTalent"}}
-            </option>
+                </option>
+
+            {{/unless}}
+
         </select>
     </div>
 
@@ -72,22 +84,24 @@
             </strong>
         </div>
         {{#if inConflict}}
-  <div class="form-group">
-    <label>
-      {{localize "AWAKE.Scars.ImproveSuccess"}}
-    </label>
+            {{#unless preventCrash}}
+            <div class="form-group">
+                <label>
+                {{localize "AWAKE.Scars.ImproveSuccess"}}
+                </label>
 
-    <input
-      type="number"
-      name="improveSuccess"
-      value="0"
-      min="0"
-      max="5"
-      step="1"
-      required
-    />
-  </div>
-{{/if}}
+                <input
+                type="number"
+                name="improveSuccess"
+                value="0"
+                min="0"
+                max="5"
+                step="1"
+                required
+                />
+            </div>
+            {{/unless}}
+        {{/if}}
 
         <div class="form-group">
         <label>
@@ -97,8 +111,8 @@
         <input
             type="number"
             name="exhaustion"
-            value="0"
-            min="0"
+            value="{{#if preventCrash}}1{{else}}0{{/if}}"
+            min="{{#if preventCrash}}1{{else}}0{{/if}}"
             max="{{maxExhaustion}}"
             step="1"
             required

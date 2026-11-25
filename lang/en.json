@@ -55,7 +55,11 @@
       "TransformTalentNotice": "{name} has transformed a Scar.",
       "TransformSelectScar": "Select Scar",
       "ImproveSuccess": "Improve Success",
-      "TransformConflictNotice": "{name} transformed a Scar, spending {cost} Hope and adding {amount} successes to the roll."
+      "TransformConflictNotice": "{name} transformed a Scar, spending {cost} Hope and adding {amount} successes to the roll.",
+      "PreventCrash": "Transform Scar — Prevent Crash",
+"PreventFailureCrash": "Increase Exhaustion — Prevent Crash",
+"PreventCrashWarning": "Exhaustion is about to increase to 7. Spend at least 1 Hope to prevent a Crash.",
+"PreventCrashNotice": "{name} prevented a Crash by transforming a Scar. Spent {cost} Hope. Exhaustion is now {exhaustion}."
     },
 
     "Questionnaire": {

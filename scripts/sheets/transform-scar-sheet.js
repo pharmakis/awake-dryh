@@ -1,5 +1,7 @@
 import {
-  enqueueHelpingOperation
+  enqueueHelpingOperation,
+  getDominanceParticipants,
+  allDominanceResolved
 } from "../rules/helping.js";
 import { resolveRoll } from "../rules/roll.js";
 import { buildRollResultContent } from "./build-roll-sheet.js";
@@ -24,7 +26,13 @@ const TALENT_EFFECTS = new Map([
   ]
 ]);
 
-function getTransformTarget(actorUuid, scarIndex, user, messageId = null) {
+function getTransformTarget(
+  actorUuid,
+  scarIndex,
+  user,
+  messageId = null,
+  crashSource = null
+) {
   const actor =
     foundry.utils.fromUuidSync(actorUuid);
 
@@ -47,66 +55,151 @@ function getTransformTarget(actorUuid, scarIndex, user, messageId = null) {
     return null;
   }
 
-  if (scarIndex !== null && !Number.isInteger(scarIndex)) {
+  if (
+    scarIndex !== null &&
+    !Number.isInteger(scarIndex)
+  ) {
     return null;
-    }
-
-    let message = null;
-    let conflict = null;
-    let protagonist = null;
-
-    if (messageId !== null) {
-        message = game.messages.get(messageId);
-
-        conflict = message?.getFlag(
-        game.system.id,
-        "conflict"
-        );
-
-        if (
-        conflict?.status !== "modifiable" ||
-        !conflict.pools
-        ) return null;
-
-        if (
-        actorUuid !== conflict.actorUuid &&
-        actorUuid !== conflict.helper?.actorUuid
-        ) return null;
-
-        protagonist = foundry.utils.fromUuidSync(
-        conflict.actorUuid
-        );
-
-        if (!protagonist || protagonist.type !== "awake") {
-        return null;
-        }
-    }
-
-    const scars = actor.system.scars
-        .map((scar, index) => ({
-        index,
-        text: scar.text,
-        transformed: scar.transformed
-        }))
-        .filter(scar =>
-        scar.text?.trim() && !scar.transformed
-        );
-
-    const scar = scarIndex == null
-        ? scars[0]
-        : scars.find(scar => scar.index === scarIndex);
-
-    if (!scar) return null;
-
-    return {
-        actor,
-        scar,
-        scars,
-        message,
-        conflict,
-        protagonist
-    };
   }
+
+  if (
+    crashSource !== null &&
+    messageId === null
+  ) {
+    return null;
+  }
+
+  let message = null;
+  let conflict = null;
+  let protagonist = null;
+
+  if (messageId !== null) {
+    message = game.messages.get(messageId);
+
+    conflict = message?.getFlag(
+      game.system.id,
+      "conflict"
+    );
+
+    if (!conflict?.pools) return null;
+
+    if (
+      actorUuid !== conflict.actorUuid &&
+      actorUuid !== conflict.helper?.actorUuid
+    ) {
+      return null;
+    }
+
+    if (crashSource === null) {
+      if (conflict.status !== "modifiable") {
+        return null;
+      }
+    }
+
+    else {
+      if (
+        conflict.status !== "finalized" ||
+        actor.system.exhaustion !== 6
+      ) {
+        return null;
+      }
+
+      const participant =
+        getDominanceParticipants(conflict)
+          .find(p => p.actorUuid === actorUuid);
+
+      if (
+        !participant ||
+        participant.state.becameNightmare
+      ) {
+        return null;
+      }
+
+      if (crashSource === "dominance") {
+        if (
+          conflict.result?.dominant !== "exhaustion" ||
+          participant.state.dominanceResolved
+        ) {
+          return null;
+        }
+      }
+
+      else if (crashSource === "failure") {
+        if (
+          !user.isGM ||
+          conflict.result?.success !== false ||
+          conflict.result?.dominant === "exhaustion" ||
+          !allDominanceResolved(conflict) ||
+          participant.state.failureResolved
+        ) {
+          return null;
+        }
+      }
+
+      else {
+        return null;
+      }
+    }
+
+    protagonist =
+      foundry.utils.fromUuidSync(
+        conflict.actorUuid
+      );
+
+    if (
+      !protagonist ||
+      protagonist.type !== "awake"
+    ) {
+      return null;
+    }
+  }
+
+  const scars = actor.system.scars
+    .map((scar, index) => ({
+      index,
+      text: scar.text,
+      transformed: scar.transformed
+    }))
+    .filter(scar =>
+      scar.text?.trim() &&
+      !scar.transformed
+    );
+
+  const scar = scarIndex === null
+    ? scars[0]
+    : scars.find(scar =>
+        scar.index === scarIndex
+      );
+
+  if (!scar) return null;
+
+  return {
+    actor,
+    scar,
+    scars,
+    message,
+    conflict,
+    protagonist,
+    crashSource
+  };
+}
+
+export function canPreventCrash({
+  actorUuid,
+  messageId,
+  crashSource
+}, user = game.user) {
+  return Boolean(
+    getTransformTarget(
+      actorUuid,
+      null,
+      user,
+      messageId,
+      crashSource
+    )
+  );
+}
+
 
 export function getTransformScarTargets(messageId, user) {
   const conflict = game.messages
@@ -136,6 +229,13 @@ export function getTransformScarTargets(messageId, user) {
 function getHopePlan(actor, amounts, conflict = null) {
   const system = actor.system;
 
+  const preventingCrash =
+  conflict?.status === "finalized";
+
+  const effectiveExhaustion =
+    system.exhaustion +
+    (preventingCrash ? 1 : 0);
+
   const {
     exhaustion,
     fight,
@@ -159,11 +259,15 @@ function getHopePlan(actor, amounts, conflict = null) {
     }
 
   if (
-        exhaustion > system.exhaustion ||
+        exhaustion > effectiveExhaustion ||
+        (preventingCrash && exhaustion < 1) ||
         fight > system.responses.fight.checked ||
         flight > system.responses.flight.checked ||
         restoreDiscipline > 1 ||
-        (improveSuccess > 0 && !conflict)
+        (
+          improveSuccess > 0 &&
+          conflict?.status !== "modifiable"
+        )
     ) {
         return null;
     }
@@ -197,7 +301,7 @@ function getHopePlan(actor, amounts, conflict = null) {
 
   if (exhaustion) {
     updates["system.exhaustion"] =
-      system.exhaustion - exhaustion;
+        effectiveExhaustion - exhaustion;
   }
 
   if (fight) {
@@ -226,12 +330,15 @@ function getTransformPlan(actor, effect, amounts, conflict = null) {
     return getHopePlan(actor, amounts, conflict);
   }
 
-  if (TALENT_EFFECTS.has(effect)) {
-    return {
-      cost: 0,
-      updates: {}
-    };
-  }
+  if (
+    conflict?.status !== "finalized" &&
+    TALENT_EFFECTS.has(effect)
+    ) {
+        return {
+        cost: 0,
+        updates: {}
+        };
+    }
 
   return null;
 }
@@ -274,13 +381,15 @@ export class TransformScarSheet extends
   constructor({
         actorUuid,
         scarIndex = null,
-        messageId = null
+        messageId = null,
+        crashSource = null
     }, options = {}) {
         super(options);
 
         this.actorUuid = actorUuid;
         this.scarIndex = scarIndex;
         this.messageId = messageId;
+        this.crashSource = crashSource;
     }
 
 
@@ -299,7 +408,8 @@ export class TransformScarSheet extends
         this.actorUuid,
         this.scarIndex,
         game.user,
-        this.messageId
+        this.messageId,
+        this.crashSource
     );
 
     context.available = Boolean(target);
@@ -313,6 +423,7 @@ export class TransformScarSheet extends
     context.actorName = target.actor.name;
     context.scarText = target.scar.text;
     context.inConflict = Boolean(target.conflict);
+    context.preventCrash = target.crashSource !== null;
     context.scars = target.scars;
 
     context.maxExhaustion =
@@ -406,9 +517,13 @@ async _onRender(context, options) {
     );
 
     submit.disabled =
-      !Number.isFinite(spent) ||
-      spent <= 0 ||
-      spent > HOPE_LIMIT;
+        !Number.isFinite(spent) ||
+        spent <= 0 ||
+        spent > HOPE_LIMIT ||
+        (
+            context.preventCrash &&
+            getAmount("exhaustion") < 1
+        );
   };
 
   for (const field of this.element.querySelectorAll(
@@ -440,7 +555,8 @@ async _onRender(context, options) {
         this.actorUuid,
         scarIndex,
         game.user,
-        this.messageId
+        this.messageId,
+        this.crashSource
     );
 
     if (!target) return;
@@ -488,6 +604,7 @@ async _onRender(context, options) {
       actorUuid: this.actorUuid,
       scarIndex,
       messageId: this.messageId,
+      crashSource: this.crashSource,
       scarText: target.scar.text,
       userId: game.user.id,
 
@@ -537,13 +654,15 @@ async _onRender(context, options) {
 export function openTransformScarSheet({
   actorUuid,
   scarIndex = null,
-  messageId = null
+  messageId = null,
+  crashSource = null
 }) {
   const target = getTransformTarget(
     actorUuid,
     scarIndex,
     game.user,
-    messageId
+    messageId,
+    crashSource
   );
 
   if (!target) {
@@ -559,7 +678,8 @@ export function openTransformScarSheet({
   new TransformScarSheet({
     actorUuid,
     scarIndex,
-    messageId
+    messageId,
+    crashSource
   }).render({
     force: true
   });
@@ -578,7 +698,8 @@ function validateSubmission(submission) {
     submission.actorUuid,
     submission.scarIndex,
     user,
-    submission.messageId ?? null
+    submission.messageId ?? null,
+    submission.crashSource ?? null
   );
 
   if (
@@ -715,7 +836,58 @@ async function applyTransformScarSubmission(
 
     let conflictUpdate = null;
 
-    if (conflict && submission.effect === "hope") {
+    if (request.crashSource !== null) {
+        const root =
+            `flags.${game.system.id}.conflict`;
+
+        const path =
+            actor.uuid === conflict.actorUuid
+            ? root
+            : `${root}.helper`;
+
+        const history = [
+            ...(conflict.crashPreventionHistory ?? []),
+            {
+                actorName: actor.name,
+
+                exhaustion:
+                plan.updates["system.exhaustion"],
+
+                cost: plan.cost
+            }
+        ];
+
+        conflictUpdate = {
+            [`${root}.crashPreventionHistory`]:
+            history
+        };
+
+        if (request.crashSource === "dominance") {
+            conflictUpdate[
+            `${path}.dominanceResolved`
+            ] = true;
+
+            conflictUpdate[
+            `${path}.exhaustionConsequence`
+            ] = "crashPrevented";
+        }
+
+        else {
+            conflictUpdate[
+            `${path}.failureResolved`
+            ] = true;
+
+            conflictUpdate[
+            `${path}.failureConsequence`
+            ] = "exhaustion";
+
+            conflictUpdate[
+            `${path}.failureCrashed`
+            ] = false;
+        }
+    }
+
+    else if (conflict && submission.effect === "hope") {
         const amount =
             submission.amounts.improveSuccess ?? 0;
 

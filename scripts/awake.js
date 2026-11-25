@@ -21,7 +21,7 @@ import { getEligibleHelpers, requestHelpingAction, handleHelpingSubmission, getD
 import { NightmareActorData } from "./data/nightmare-actor.js";
 import { NightmareActorSheet } from "./sheets/nightmare-actor-sheet.js";
 import { getRecallScarTargets, openRecallScarSheet, handleRecallScarSubmission } from "./sheets/recall-scar-sheet.js";
-import { handleTransformScarSubmission, getTransformScarTargets, openTransformScarSheet } from "./sheets/transform-scar-sheet.js";
+import { handleTransformScarSubmission, getTransformScarTargets, openTransformScarSheet, canPreventCrash } from "./sheets/transform-scar-sheet.js";
 
 
 
@@ -287,6 +287,11 @@ Hooks.on("renderChatMessageHTML", (message, html) => {
     else if (
       conflict.result?.dominant === "exhaustion"
     ) {
+      if (
+        state.exhaustionConsequence === "crashPrevented"
+      ) {
+        continue;
+      }
       dominanceText =
         (state.exhaustionConsequence === "crash" ||
           (state.exhaustionConsequence == null && state.crashed))
@@ -556,6 +561,29 @@ Hooks.on("renderChatMessageHTML", (message, html) => {
     card.append(notice);
   }
 
+  for (
+    const entry of conflict.crashPreventionHistory ?? []
+  ) {
+    const notice =
+      document.createElement("p");
+
+    notice.classList.add(
+      "awake-crash-prevented-notice"
+    );
+
+    notice.textContent =
+      game.i18n.format(
+        "AWAKE.Scars.PreventCrashNotice",
+        {
+          name: entry.actorName,
+          exhaustion: entry.exhaustion,
+          cost: entry.cost
+        }
+      );
+
+    card.append(notice);
+  }
+
 
   /*
    * Modifiable:
@@ -739,6 +767,47 @@ Hooks.on("renderChatMessageHTML", (message, html) => {
       );
     }
   }
+  const appendPreventCrashButton = (
+    actor,
+    crashSource
+  ) => {
+    const options = {
+      messageId: message.id,
+      actorUuid: actor.uuid,
+      crashSource
+    };
+
+    if (!canPreventCrash(options)) return;
+
+    const button =
+      document.createElement("button");
+
+    button.type = "button";
+
+    button.classList.add(
+      "awake-transform-scar-button"
+    );
+
+    const label = game.i18n.localize(
+      crashSource === "failure"
+        ? "AWAKE.Scars.PreventFailureCrash"
+        : "AWAKE.Scars.PreventCrash"
+    );
+
+    button.textContent = conflict.helper
+      ? `${label} — ${actor.name}`
+      : label;
+
+    button.addEventListener(
+      "click",
+      () => {
+        openTransformScarSheet(options);
+      }
+    );
+
+    card.append(button);
+  };
+
   if (
     conflict.status === "finalized" &&
     [
@@ -831,6 +900,10 @@ Hooks.on("renderChatMessageHTML", (message, html) => {
       );
 
       card.append(consequenceButton);
+        appendPreventCrashButton(
+          actor,
+          "dominance"
+      );
     }
   }
 
@@ -893,6 +966,10 @@ Hooks.on("renderChatMessageHTML", (message, html) => {
       );
 
       card.append(failureButton);
+      appendPreventCrashButton(
+        actor,
+        "failure"
+      );
     }
   }
 

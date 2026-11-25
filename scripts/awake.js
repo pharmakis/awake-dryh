@@ -16,6 +16,7 @@ import { applyExhaustionConsequence, handleExhaustionConsequenceSubmission } fro
 import { openRestoreFromCrashSheet } from "./sheets/restore-from-crash-sheet.js";
 import { openMadnessConsequenceSheet, handleMadnessConsequenceSubmission } from "./sheets/madness-consequence-sheet.js";
 import { openFailureConsequenceSheet } from "./sheets/failure-consequence-sheet.js";
+import { handleActorHopeSubmission } from "./sheets/actor-hope-sheet.js";
 
 
 
@@ -24,12 +25,7 @@ Hooks.once("init", async () => {
   CONFIG.Item.dataModels.exhaustionTalent = ExhaustionTalentData;
   CONFIG.Item.dataModels.madnessTalent = MadnessTalentData;
   CONFIG.Item.dataModels.gear = GearData;
-  
-  await loadTemplates([
-    "systems/awake-dryh/templates/shared/gear-fields.hbs",
-    "systems/awake-dryh/templates/shared/exhaustion-talent-fields.hbs",
-    "systems/awake-dryh/templates/shared/madness-talent-fields.hbs"
-  ]);
+
 
   game.settings.register(game.system.id, "hope", {
     scope: "world",
@@ -727,6 +723,13 @@ Hooks.once("ready", async () => {
         await handleMadnessConsequenceSubmission(
           submission
         );
+      }
+      else if (submission.type === "spendActorHope") {
+        await handleActorHopeSubmission(
+          submission
+        );
+
+        return;
       }
     }
   );

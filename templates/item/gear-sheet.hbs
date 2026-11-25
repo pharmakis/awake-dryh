@@ -1,3 +1,55 @@
-<section class="awake-item-sheet awake-gear-sheet-content">
-  {{> "systems/awake-dryh/templates/shared/gear-fields.hbs"}}
-</section>
+<div class="awake-gear-fields">
+
+  <div class="awake-gear-header">
+
+    <img
+      class="awake-gear-image"
+      src="{{item.img}}"
+      alt="{{item.name}}"
+      data-edit="img"
+      data-action="editImage"
+    />
+
+    <div class="awake-gear-main-fields">
+
+      <label class="awake-field">
+        <span>{{localize "AWAKE.Items.Name"}}</span>
+
+        <input
+          type="text"
+          name="name"
+          value="{{item.name}}"
+          {{#unless editable}}disabled{{/unless}}
+        />
+      </label>
+
+      <label class="awake-field">
+        <span>{{localize "AWAKE.Gear.Quantity"}}</span>
+
+        <input
+          type="number"
+          name="system.quantity"
+          value="{{system.quantity}}"
+          min="0"
+          step="1"
+          {{#unless editable}}disabled{{/unless}}
+        />
+      </label>
+
+    </div>
+
+  </div>
+
+  <hr class="awake-divider">
+
+  <label class="awake-gear-description">
+    <span>{{localize "AWAKE.Items.Description"}}</span>
+
+    <textarea
+      name="system.description"
+      rows="6"
+      {{#unless editable}}disabled{{/unless}}
+    >{{system.description}}</textarea>
+  </label>
+
+</div>

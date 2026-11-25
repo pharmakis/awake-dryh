@@ -57,7 +57,7 @@ export class SpendHopeSheet extends HandlebarsApplicationMixin(ApplicationV2) {
 
   get title() {
     return game.i18n.localize(
-      "AWAKE.Hope.SpendTitle"
+      "AWAKE.Hope.SpendHope"
     );
   }
 

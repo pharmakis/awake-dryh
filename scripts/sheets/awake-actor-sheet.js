@@ -1,4 +1,6 @@
 import { validateResponseAllocation } from "../rules/responses.js";
+import { autoResizeTextareas } from "./auto-resize-textareas.js";
+import { ActorHopeSheet } from "./actor-hope-sheet.js";
 const { HandlebarsApplicationMixin } = foundry.applications.api;
 const { ActorSheetV2 } = foundry.applications.sheets;
 
@@ -136,6 +138,8 @@ export class AwakeActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
   }
   async _onRender(context, options) {
     await super._onRender(context, options);
+    
+    autoResizeTextareas(this.element);
 
     for (const input of this.element.querySelectorAll(
       ".awake-scar input.awake-scar-text, .awake-scar input.awake-scar-recalled"
@@ -480,22 +484,10 @@ export class AwakeActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
   static async #onSpendHope(event, target) {
     if (!this.isEditable) return;
 
-    await foundry.applications.api.DialogV2.wait({
-      window: {
-        title: game.i18n.localize("AWAKE.Hope.SpendTitle")
-      },
-
-      content: `
-        <p>${game.i18n.localize("AWAKE.Hope.SpendPlaceholder")}</p>
-      `,
-
-      buttons: [
-        {
-          action: "close",
-          label: game.i18n.localize("AWAKE.Common.Close"),
-          default: true
-        }
-      ]
+    await new ActorHopeSheet(
+      this.actor
+    ).render({
+      force: true
     });
   }
 }

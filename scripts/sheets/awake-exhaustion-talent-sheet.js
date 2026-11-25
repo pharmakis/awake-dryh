@@ -1,3 +1,4 @@
+import { autoResizeTextareas } from "./auto-resize-textareas.js";
 const {
   ItemSheetV2
 } = foundry.applications.sheets;
@@ -40,5 +41,11 @@ export class AwakeExhaustionTalentSheet extends HandlebarsApplicationMixin(ItemS
     context.editable = this.isEditable;
 
     return context;
+  }
+
+  async _onRender(context, options) {
+    await super._onRender(context, options);
+
+    autoResizeTextareas(this.element);
   }
 }

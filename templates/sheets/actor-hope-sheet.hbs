@@ -1,0 +1,34 @@
+<section class="awake-actor-hope-content">
+
+  <h3 class="awake-actor-hope-balance">
+    {{localize "AWAKE.Hope.Chalice"}}: {{hope}}
+  </h3>
+
+  <div class="awake-actor-hope-actions">
+
+    {{#each hopeActions as |option|}}
+
+      <button
+        type="button"
+        data-action="spend"
+        data-hope-action="{{option.id}}"
+        {{#unless option.available}}disabled{{/unless}}
+      >
+        <span>
+          {{localize option.label}}
+        </span>
+
+        <span>
+          {{option.cost}}
+        </span>
+      </button>
+
+    {{/each}}
+
+  </div>
+
+  <p class="awake-actor-hope-hint">
+    {{localize "AWAKE.Hope.RecoveryHint"}}
+  </p>
+
+</section>

@@ -87,15 +87,20 @@
     "Hope": {
       "Chalice": "Hope Chalice",
       "Spend": "Spend",
-      "SpendTitle": "Spend Hope",
       "SpendHope": "Spend Hope",
-      "SpendPlaceholder": "Hope spending options will be available here.",
       "SpendDescription": "Each Hope coin adds a 1 to the protagonist's Discipline pool.",
       "Available": "Hope available",
       "Amount": "Hope to spend",
       "NoneAvailable": "There is no Hope available.",
       "InvalidAmount": "Choose at least one Hope coin.",
-      "NotEnough": "There is not enough Hope in the Chalice."
+      "NotEnough": "There is not enough Hope in the Chalice.",
+      "ReduceExhaustion": "Reduce Exhaustion",
+      "ClearFight": "Clear Fight Response",
+      "ClearFlight": "Clear Flight Response",
+      "RestoreDiscipline": "Restore Discipline",
+      "RecoveryHint": "Spend Hope outside of conflicts. Restoring Discipline normally requires several hours of calm reflection.",
+      "ActionUnavailable": "This Hope action is no longer available.",
+      "NoActiveGM": "There is no active GM."
     },
     "Despair": {
       "Chalice": "Despair Chalice",

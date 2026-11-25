@@ -20,6 +20,7 @@ import { handleActorHopeSubmission } from "./sheets/actor-hope-sheet.js";
 import { getEligibleHelpers, requestHelpingAction, handleHelpingSubmission, getDominanceParticipants, allDominanceResolved } from "./rules/helping.js";
 import { NightmareActorData } from "./data/nightmare-actor.js";
 import { NightmareActorSheet } from "./sheets/nightmare-actor-sheet.js";
+import { getRecallScarTargets, openRecallScarSheet, handleRecallScarSubmission } from "./sheets/recall-scar-sheet.js";
 
 
 
@@ -515,6 +516,29 @@ Hooks.on("renderChatMessageHTML", (message, html) => {
     return;
   }
 
+  for (const recall of conflict.recallHistory ?? []) {
+    const notice =
+      document.createElement("p");
+
+    notice.classList.add(
+      "awake-recall-notice"
+    );
+
+    notice.textContent =
+      game.i18n.format(
+        "AWAKE.Scars.RecallNotice",
+        {
+          name: recall.actorName,
+
+          pool: game.i18n.localize(
+            `AWAKE.DicePools.${recall.pool}`
+          )
+        }
+      );
+
+    card.append(notice);
+  }
+
 
   /*
    * Modifiable:
@@ -562,6 +586,44 @@ Hooks.on("renderChatMessageHTML", (message, html) => {
     modifierActions.append(
       button
     );
+    const recallTargets =
+      getRecallScarTargets(
+        conflict,
+        game.user
+      );
+
+    for (const target of recallTargets) {
+      const recallButton =
+        document.createElement("button");
+
+      recallButton.type = "button";
+
+      recallButton.classList.add(
+        "awake-recall-scar-button"
+      );
+
+      const label =
+        game.i18n.localize(
+          "AWAKE.Scars.Recall"
+        );
+
+      recallButton.textContent =
+        conflict.helper
+          ? `${label} — ${target.actor.name}`
+          : label;
+
+      recallButton.addEventListener(
+        "click",
+        () => {
+          openRecallScarSheet({
+            messageId: message.id,
+            actorUuid: target.actorUuid
+          });
+        }
+      );
+
+      card.append(recallButton);
+    }
 
 
     if (game.user.isGM) {
@@ -847,6 +909,13 @@ Hooks.once("ready", async () => {
         submission?.type === "closeHelping"
       ) {
         await handleHelpingSubmission(
+          submission
+        );
+      }
+      else if (
+        submission?.type === "recallScar"
+      ) {
+        await handleRecallScarSubmission(
           submission
         );
       }

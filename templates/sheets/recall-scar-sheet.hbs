@@ -1,0 +1,24 @@
+<div class="awake-recall-scar">
+  {{#if available}}
+    <h3>{{actorName}}</h3>
+    <div class="form-group">
+      <label for="awake-recall-scar-index">{{localize "AWAKE.Scars.SelectScar"}}</label>
+      <select id="awake-recall-scar-index" name="scarIndex" required>
+        {{#each scars}}
+          <option value="{{index}}">{{text}}</option>
+        {{/each}}
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="awake-recall-scar-pool">{{localize "AWAKE.Scars.SelectPool"}}</label>
+      <select id="awake-recall-scar-pool" name="pool" required>
+        {{#each pools}}
+          <option value="{{key}}">{{label}} ({{count}}d6)</option>
+        {{/each}}
+      </select>
+    </div>
+    <button type="submit">{{localize "AWAKE.Scars.Recall"}}</button>
+  {{else}}
+    <p>{{localize "AWAKE.Scars.RecallUnavailable"}}</p>
+  {{/if}}
+</div>

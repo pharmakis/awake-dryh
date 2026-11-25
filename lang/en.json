@@ -34,7 +34,13 @@
       "TransformWarning": "A transformed Scar is permanently crossed out and can never be recalled or transformed again.",
       "TransformReminder": "When you transform a Scar, choose one: change your Madness Talent, change your Exhaustion Talent, or gain the equivalent of 5 Hope.",
       "TransformConfirm": "Transform",
-      "Cancel": "Cancel"
+      "Cancel": "Cancel",
+      "Recall": "Recall Scar",
+      "SelectScar": "Scar",
+      "SelectPool": "Reroll Dice Pool",
+      "RecallUnavailable": "No scars or dice pools are available.",
+      "RecallApproval": "{name} wants to recall the scar “{scar}” and reroll {pool}. Allow it?",
+      "RecallNotice": "{name} recalled a scar and rerolled {pool}."
     },
 
     "Questionnaire": {

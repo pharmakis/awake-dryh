@@ -1315,3 +1315,16 @@
   width: 100%;
   min-height: 160px;
 }
+
+.awake-conflict-card .awake-recall-notice {
+  color: #cfc6b8;
+  font-style: italic;
+  margin: 0.4rem 0;
+}
+
+.awake-recall-scar-sheet
+.awake-recall-scar {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}

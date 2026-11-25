@@ -19,10 +19,8 @@
         <input
           class="awake-scar-recalled"
           type="checkbox"
-          name="system.scars.{{index}}.recalled"
           {{checked scar.recalled}}
-          {{#if scar.transformed}}disabled{{/if}}
-          {{#unless ../editable}}disabled{{/unless}}
+          disabled
           title="{{localize "AWAKE.Scars.Recalled"}}"
         />
 

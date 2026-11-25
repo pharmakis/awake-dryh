@@ -119,6 +119,39 @@ Hooks.on("preCreateItem", (item, data) => {
   }
 });
 
+Hooks.on("preCreateActor", (actor, data) => {
+  if (actor.type !== "nightmare") return;
+
+  const defaultImage =
+    "systems/awake-dryh/assets/ui/icons/nightmare.png";
+
+  const currentImage =
+    data.img ?? actor.img;
+
+  if (
+    !currentImage ||
+    currentImage === "icons/svg/mystery-man.svg"
+  ) {
+    const updates = {
+      img: defaultImage
+    };
+
+    const tokenImage =
+      data.prototypeToken?.texture?.src ??
+      actor.prototypeToken?.texture?.src;
+
+    if (
+      !tokenImage ||
+      tokenImage === "icons/svg/mystery-man.svg"
+    ) {
+      updates["prototypeToken.texture.src"] =
+        defaultImage;
+    }
+
+    actor.updateSource(updates);
+  }
+});
+
 Hooks.on("renderChatMessageHTML", (message, html) => {
   const conflict = message.getFlag(
     game.system.id,

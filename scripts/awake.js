@@ -724,13 +724,14 @@ Hooks.once("ready", async () => {
           submission
         );
       }
-      else if (submission.type === "spendActorHope") {
-        await handleActorHopeSubmission(
-          submission
-        );
-
-        return;
-      }
+      else if (
+          submission?.type === 
+            "spendActorHope"
+        ) {
+          await handleActorHopeSubmission(
+            submission
+          );
+        }
     }
   );
 

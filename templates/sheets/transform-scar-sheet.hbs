@@ -4,9 +4,29 @@
 
     <h3>{{actorName}}</h3>
 
-    <p class="awake-transform-scar-text">
-      {{scarText}}
-    </p>
+    {{#if inConflict}}
+
+  <div class="form-group">
+    <label>
+      {{localize "AWAKE.Scars.TransformSelectScar"}}
+    </label>
+
+    <select name="scarIndex" required>
+      {{#each scars}}
+        <option value="{{index}}">
+          {{text}}
+        </option>
+      {{/each}}
+    </select>
+  </div>
+
+{{else}}
+
+  <p class="awake-transform-scar-text">
+    {{scarText}}
+  </p>
+
+{{/if}}
 
     <div class="form-group">
         <label>
@@ -51,6 +71,23 @@
                 5 / 5
             </strong>
         </div>
+        {{#if inConflict}}
+  <div class="form-group">
+    <label>
+      {{localize "AWAKE.Scars.ImproveSuccess"}}
+    </label>
+
+    <input
+      type="number"
+      name="improveSuccess"
+      value="0"
+      min="0"
+      max="5"
+      step="1"
+      required
+    />
+  </div>
+{{/if}}
 
         <div class="form-group">
         <label>

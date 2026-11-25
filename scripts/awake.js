@@ -6,7 +6,7 @@ import { AwakeGearSheet } from "./sheets/awake-gear-sheet.js";
 import { AwakeExhaustionTalentSheet } from "./sheets/awake-exhaustion-talent-sheet.js";
 import { AwakeMadnessTalentSheet } from "./sheets/awake-madness-talent-sheet.js";
 import { GearData } from "./data/gear.js";
-import {  openStartConflictSheet } from "./sheets/start-conflict-sheet.js";
+import { openStartConflictSheet } from "./sheets/start-conflict-sheet.js";
 import { openBuildRollSheet, handleConflictRollSubmission, finalizeConflict } from "./sheets/build-roll-sheet.js";
 import { openChalicesSheet } from "./sheets/chalices-sheet.js";
 import { openSpendHopeSheet, handleSpendHopeSubmission } from "./sheets/spend-hope-sheet.js";
@@ -21,7 +21,7 @@ import { getEligibleHelpers, requestHelpingAction, handleHelpingSubmission, getD
 import { NightmareActorData } from "./data/nightmare-actor.js";
 import { NightmareActorSheet } from "./sheets/nightmare-actor-sheet.js";
 import { getRecallScarTargets, openRecallScarSheet, handleRecallScarSubmission } from "./sheets/recall-scar-sheet.js";
-import { handleTransformScarSubmission } from "./sheets/transform-scar-sheet.js";
+import { handleTransformScarSubmission, getTransformScarTargets, openTransformScarSheet } from "./sheets/transform-scar-sheet.js";
 
 
 
@@ -539,6 +539,22 @@ Hooks.on("renderChatMessageHTML", (message, html) => {
 
     card.append(notice);
   }
+  for (const transform of conflict.transformHistory ?? []) {
+    const notice = document.createElement("p");
+
+    notice.classList.add("awake-recall-notice");
+
+    notice.textContent = game.i18n.format(
+      "AWAKE.Scars.TransformConflictNotice",
+      {
+        name: transform.actorName,
+        cost: transform.cost,
+        amount: transform.improveSuccess
+      }
+    );
+
+    card.append(notice);
+  }
 
 
   /*
@@ -625,7 +641,40 @@ Hooks.on("renderChatMessageHTML", (message, html) => {
 
       card.append(recallButton);
     }
+    for (const target of getTransformScarTargets(
+      message.id,
+      game.user
+    )) {
+      const transformButton =
+        document.createElement("button");
 
+      transformButton.type = "button";
+
+      transformButton.classList.add(
+        "awake-transform-scar-button"
+      );
+
+      const label = game.i18n.localize(
+        "AWAKE.Scars.TransformTitle"
+      );
+
+      transformButton.textContent =
+        conflict.helper
+          ? `${label} — ${target.actor.name}`
+          : label;
+
+      transformButton.addEventListener(
+        "click",
+        () => {
+          openTransformScarSheet({
+            messageId: message.id,
+            actorUuid: target.actor.uuid
+          });
+        }
+      );
+
+      card.append(transformButton);
+    }
 
     if (game.user.isActiveGM) {
       const castShadowButton =

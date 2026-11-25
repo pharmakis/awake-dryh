@@ -1,6 +1,8 @@
 import {
   enqueueHelpingOperation
 } from "../rules/helping.js";
+import { resolveRoll } from "../rules/roll.js";
+import { buildRollResultContent } from "./build-roll-sheet.js";
 
 
 const {
@@ -21,7 +23,8 @@ const TALENT_EFFECTS = new Map([
     "AWAKE.Scars.TransformExhaustionTalent"
   ]
 ]);
-function getTransformTarget(actorUuid, scarIndex, user) {
+
+function getTransformTarget(actorUuid, scarIndex, user, messageId = null) {
   const actor =
     foundry.utils.fromUuidSync(actorUuid);
 
@@ -45,55 +48,123 @@ function getTransformTarget(actorUuid, scarIndex, user) {
   }
 
   if (!Number.isInteger(scarIndex)) {
-    return null;
+    let message = null;
+    let conflict = null;
+    let protagonist = null;
+
+    if (messageId !== null) {
+        message = game.messages.get(messageId);
+
+        conflict = message?.getFlag(
+        game.system.id,
+        "conflict"
+        );
+
+        if (
+        conflict?.status !== "modifiable" ||
+        !conflict.pools
+        ) return null;
+
+        if (
+        actorUuid !== conflict.actorUuid &&
+        actorUuid !== conflict.helper?.actorUuid
+        ) return null;
+
+        protagonist = foundry.utils.fromUuidSync(
+        conflict.actorUuid
+        );
+
+        if (!protagonist || protagonist.type !== "awake") {
+        return null;
+        }
+    }
+
+    const scars = actor.system.scars
+        .map((scar, index) => ({
+        index,
+        text: scar.text,
+        transformed: scar.transformed
+        }))
+        .filter(scar =>
+        scar.text?.trim() && !scar.transformed
+        );
+
+    const scar = scarIndex == null
+        ? scars[0]
+        : scars.find(scar => scar.index === scarIndex);
+
+    if (!scar) return null;
+
+    return {
+        actor,
+        scar,
+        scars,
+        message,
+        conflict,
+        protagonist
+    };
   }
-
-  const scar =
-    actor.system.scars[scarIndex];
-
-  if (
-    !scar ||
-    !scar.text?.trim() ||
-    scar.transformed
-  ) {
-    return null;
-  }
-
-  return { actor, scar };
 }
 
+export function getTransformScarTargets(messageId, user) {
+  const conflict = game.messages
+    .get(messageId)
+    ?.getFlag(game.system.id, "conflict");
 
-function getHopePlan(actor, amounts) {
+  if (conflict?.status !== "modifiable") {
+    return [];
+  }
+
+  return [
+    conflict.actorUuid,
+    conflict.helper?.actorUuid
+  ]
+    .filter(Boolean)
+    .map(actorUuid =>
+      getTransformTarget(
+        actorUuid,
+        null,
+        user,
+        messageId
+      )
+    )
+    .filter(Boolean);
+}
+
+function getHopePlan(actor, amounts, conflict = null) {
   const system = actor.system;
 
   const {
     exhaustion,
     fight,
     flight,
-    restoreDiscipline
+    restoreDiscipline,
+    improveSuccess = 0
   } = amounts;
 
   if (
     ![
-      exhaustion,
-      fight,
-      flight,
-      restoreDiscipline
+        exhaustion,
+        fight,
+        flight,
+        restoreDiscipline,
+        improveSuccess
     ].every(value =>
-      Number.isInteger(value) && value >= 0
+        Number.isInteger(value) && value >= 0
     )
-  ) {
-    return null;
-  }
+    ) {
+        return null;
+    }
 
   if (
-    exhaustion > system.exhaustion ||
-    fight > system.responses.fight.checked ||
-    flight > system.responses.flight.checked ||
-    restoreDiscipline > 1
-  ) {
-    return null;
-  }
+        exhaustion > system.exhaustion ||
+        fight > system.responses.fight.checked ||
+        flight > system.responses.flight.checked ||
+        restoreDiscipline > 1 ||
+        (improveSuccess > 0 && !conflict)
+    ) {
+        return null;
+    }
 
   if (
     restoreDiscipline &&
@@ -113,7 +184,8 @@ function getHopePlan(actor, amounts) {
     exhaustion +
     fight +
     flight +
-    restoreDiscipline * restoreCost;
+    restoreDiscipline * restoreCost +
+    improveSuccess;
 
   if (cost < 1 || cost > HOPE_LIMIT) {
     return null;
@@ -147,9 +219,9 @@ function getHopePlan(actor, amounts) {
   return { cost, updates };
 }
 
-function getTransformPlan(actor, effect, amounts) {
+function getTransformPlan(actor, effect, amounts, conflict = null) {
   if (effect === "hope") {
-    return getHopePlan(actor, amounts);
+    return getHopePlan(actor, amounts, conflict);
   }
 
   if (TALENT_EFFECTS.has(effect)) {
@@ -197,12 +269,17 @@ export class TransformScarSheet extends
   };
 
 
-  constructor({ actorUuid, scarIndex }, options = {}) {
-    super(options);
+  constructor({
+        actorUuid,
+        scarIndex = null,
+        messageId = null
+    }, options = {}) {
+        super(options);
 
-    this.actorUuid = actorUuid;
-    this.scarIndex = scarIndex;
-  }
+        this.actorUuid = actorUuid;
+        this.scarIndex = scarIndex;
+        this.messageId = messageId;
+    }
 
 
   get title() {
@@ -217,9 +294,10 @@ export class TransformScarSheet extends
       await super._prepareContext(options);
 
     const target = getTransformTarget(
-      this.actorUuid,
-      this.scarIndex,
-      game.user
+        this.actorUuid,
+        this.scarIndex,
+        game.user,
+        this.messageId
     );
 
     context.available = Boolean(target);
@@ -232,6 +310,8 @@ export class TransformScarSheet extends
 
     context.actorName = target.actor.name;
     context.scarText = target.scar.text;
+    context.inConflict = Boolean(target.conflict);
+    context.scars = target.scars;
 
     context.maxExhaustion =
       Math.min(HOPE_LIMIT, system.exhaustion);
@@ -308,6 +388,7 @@ async _onRender(context, options) {
       );
 
     const spent =
+      getAmount("improveSuccess") +
       getAmount("exhaustion") +
       getAmount("fight") +
       getAmount("flight") +
@@ -347,10 +428,17 @@ async _onRender(context, options) {
   static async #onSubmit(event, form, formData) {
     if (this._submitting) return;
 
+    const scarIndex = this.messageId === null
+        ? this.scarIndex
+        : Number(formData.object.scarIndex);
+
+    if (!Number.isInteger(scarIndex)) return;
+
     const target = getTransformTarget(
-      this.actorUuid,
-      this.scarIndex,
-      game.user
+        this.actorUuid,
+        scarIndex,
+        game.user,
+        this.messageId
     );
 
     if (!target) return;
@@ -358,6 +446,9 @@ async _onRender(context, options) {
     const effect = formData.object.effect;
 
     const amounts = {
+      improveSuccess:
+        Number(formData.object.improveSuccess ?? 0),
+
       exhaustion:
         Number(formData.object.exhaustion ?? 0),
 
@@ -371,12 +462,12 @@ async _onRender(context, options) {
         Number(formData.object.restoreDiscipline ?? 0)
     };
 
-    const plan =
-        getTransformPlan(
-            target.actor,
-            effect,
-            amounts
-        );
+    const plan = getTransformPlan(
+        target.actor,
+        effect,
+        amounts,
+        target.conflict
+    );
 
     if (!plan) {
       ui.notifications.warn(
@@ -393,7 +484,8 @@ async _onRender(context, options) {
             effect,
 
       actorUuid: this.actorUuid,
-      scarIndex: this.scarIndex,
+      scarIndex,
+      messageId: this.messageId,
       scarText: target.scar.text,
       userId: game.user.id,
 
@@ -442,12 +534,14 @@ async _onRender(context, options) {
 
 export function openTransformScarSheet({
   actorUuid,
-  scarIndex
+  scarIndex = null,
+  messageId = null
 }) {
   const target = getTransformTarget(
     actorUuid,
     scarIndex,
-    game.user
+    game.user,
+    messageId
   );
 
   if (!target) {
@@ -462,7 +556,8 @@ export function openTransformScarSheet({
 
   new TransformScarSheet({
     actorUuid,
-    scarIndex
+    scarIndex,
+    messageId
   }).render({
     force: true
   });
@@ -470,13 +565,18 @@ export function openTransformScarSheet({
 
 
 function validateSubmission(submission) {
+  if (!Number.isInteger(submission.scarIndex)) {
+    return null;
+  }
+
   const user =
     game.users.get(submission.userId);
 
   const target = getTransformTarget(
     submission.actorUuid,
     submission.scarIndex,
-    user
+    user,
+    submission.messageId ?? null
   );
 
   if (
@@ -486,11 +586,11 @@ function validateSubmission(submission) {
     return null;
   }
 
-  const plan =
-  getTransformPlan(
+  const plan = getTransformPlan(
     target.actor,
     submission.effect,
-    submission.amounts ?? {}
+    submission.amounts ?? {},
+    target.conflict
   );
 
   if (!plan || plan.cost !== submission.cost) {
@@ -534,6 +634,7 @@ export async function handleTransformScarSubmission(
         document.createElement("ul");
 
     const labels = {
+        improveSuccess: "AWAKE.Scars.ImproveSuccess",
         exhaustion: "AWAKE.Hope.ReduceExhaustion",
         fight: "AWAKE.Hope.ClearFight",
         flight: "AWAKE.Hope.ClearFlight",
@@ -573,42 +674,16 @@ export async function handleTransformScarSubmission(
     content.append(description);
     }
 
-  const effects =
-    document.createElement("ul");
+    const approved =
+        await DialogV2.confirm({
+        window: {
+            title: game.i18n.localize(
+            "AWAKE.Scars.TransformTitle"
+            )
+        },
 
-  const labels = {
-    exhaustion: "AWAKE.Hope.ReduceExhaustion",
-    fight: "AWAKE.Hope.ClearFight",
-    flight: "AWAKE.Hope.ClearFlight",
-    restoreDiscipline: "AWAKE.Hope.RestoreDiscipline"
-  };
-
-  for (const [key, label] of Object.entries(labels)) {
-    const amount = submission.amounts[key];
-
-    if (!amount) continue;
-
-    const effect =
-      document.createElement("li");
-
-    effect.textContent =
-      `${game.i18n.localize(label)} × ${amount}`;
-
-    effects.append(effect);
-  }
-
-  content.append(effects);
-
-  const approved =
-    await DialogV2.confirm({
-      window: {
-        title: game.i18n.localize(
-          "AWAKE.Scars.TransformTitle"
-        )
-      },
-
-      content: content.outerHTML
-    });
+        content: content.outerHTML
+        });
 
   if (!approved) return false;
 
@@ -628,7 +703,70 @@ async function applyTransformScarSubmission(
 
   if (!request) return false;
 
-  const { actor, plan } = request;
+  const {
+        actor,
+        plan,
+        message,
+        conflict,
+        protagonist
+    } = request;
+
+    let conflictUpdate = null;
+
+    if (conflict && submission.effect === "hope") {
+        const amount =
+            submission.amounts.improveSuccess ?? 0;
+
+        const pools =
+            foundry.utils.deepClone(conflict.pools);
+
+        pools.discipline.push(
+            ...Array(amount).fill(1)
+        );
+
+        const result = resolveRoll({
+            ...pools,
+            bonusSuccesses:
+            conflict.helper?.successes ?? 0
+        });
+
+        const updatedConflict = {
+            ...conflict,
+
+            pools,
+
+            result: {
+            playerSuccesses: result.playerSuccesses,
+            painSuccesses: result.painSuccesses,
+            success: result.success,
+            dominant: result.dominant
+            },
+
+            painDominanceCreatedByDespair:
+            result.dominant === "pain" &&
+            conflict.painDominanceCreatedByDespair === true,
+
+            transformHistory: [
+            ...(conflict.transformHistory ?? []),
+            {
+                actorName: actor.name,
+                cost: plan.cost,
+                improveSuccess: amount
+            }
+            ]
+        };
+
+        conflictUpdate = {
+            content: buildRollResultContent(
+            protagonist,
+            conflict.painRating,
+            result
+            ),
+
+            [`flags.${game.system.id}.conflict`]:
+            updatedConflict
+        };
+    }
 
   const scars =
     actor.system.scars.map(scar => ({
@@ -640,11 +778,56 @@ async function applyTransformScarSubmission(
   scars[submission.scarIndex].transformed = true;
   scars[submission.scarIndex].recalled = false;
 
-  await actor.update({
-    ...plan.updates,
+  const previousScar = {
+  text: request.scar.text,
+  recalled:
+    actor.system.scars[submission.scarIndex].recalled,
+  transformed:
+    actor.system.scars[submission.scarIndex].transformed
+};
 
-    "system.scars": scars
-    });
+const previousValues = Object.fromEntries(
+  Object.keys(plan.updates).map(key => [
+    key,
+    foundry.utils.getProperty(actor, key)
+  ])
+);
+
+await actor.update({
+  ...plan.updates,
+  "system.scars": scars
+});
+
+if (conflictUpdate) {
+  try {
+    await message.update(conflictUpdate);
+  } catch (error) {
+    const currentScars =
+      actor.system.scars.map(scar => ({
+        text: scar.text,
+        recalled: scar.recalled,
+        transformed: scar.transformed
+      }));
+
+    const current =
+      currentScars[submission.scarIndex];
+
+    if (
+      current?.text === previousScar.text &&
+      current.transformed
+    ) {
+      currentScars[submission.scarIndex] =
+        previousScar;
+
+      previousValues["system.scars"] =
+        currentScars;
+    }
+
+    await actor.update(previousValues);
+
+    throw error;
+  }
+}
 
     if (TALENT_EFFECTS.has(submission.effect)) {
         const card = document.createElement("section");

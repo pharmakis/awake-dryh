@@ -52,7 +52,10 @@
       "TransformExhaustionTalent": "Change Exhaustion Talent",
       "TransformTalentReminder": "Agree on the new Talent and its duration with the GM. Edit the Talent manually if necessary.",
       "TransformTalentApproval": "{name} wants to transform the scar “{scar}”. Effect: {effect}. Allow it?",
-      "TransformTalentNotice": "{name} has transformed a Scar."
+      "TransformTalentNotice": "{name} has transformed a Scar.",
+      "TransformSelectScar": "Select Scar",
+      "ImproveSuccess": "Improve Success",
+      "TransformConflictNotice": "{name} transformed a Scar, spending {cost} Hope and adding {amount} successes to the roll."
     },
 
     "Questionnaire": {

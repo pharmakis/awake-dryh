@@ -28,6 +28,12 @@ export class StartConflictSheet extends HandlebarsApplicationMixin(ApplicationV2
     }
   };
 
+  constructor({ painRating = 1 } = {}) {
+    super();
+
+    this.painRating = painRating;
+  }
+
 
   get title() {
     return game.i18n.localize("AWAKE.Conflict.StartTitle");
@@ -44,7 +50,9 @@ export class StartConflictSheet extends HandlebarsApplicationMixin(ApplicationV2
         id: actor.id,
         name: actor.name
       }));
-
+    
+    context.painRating = this.painRating;
+    
     return context;
   }
 
@@ -110,7 +118,9 @@ export class StartConflictSheet extends HandlebarsApplicationMixin(ApplicationV2
 }
 
 
-export function openStartConflictSheet() {
+export function openStartConflictSheet({
+  painRating = 1
+} = {}) {
   if (!game.user.isGM) {
     ui.notifications.warn(
       game.i18n.localize("AWAKE.Conflict.GMOnly")
@@ -131,7 +141,9 @@ export function openStartConflictSheet() {
     return;
   }
 
-  new StartConflictSheet().render({
+  new StartConflictSheet({
+    painRating
+  }).render({
     force: true
   });
 }

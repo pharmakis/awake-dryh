@@ -1256,3 +1256,62 @@
   width: 100%;
   margin-top: 0.35rem;
 }
+
+/* Nightmare Actor Sheet */
+
+.awake-nightmare-sheet .window-content {
+  overflow-y: auto;
+  min-height: 0;
+}
+
+.awake-nightmare {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.awake-nightmare-header {
+  display: grid;
+  grid-template-columns: 120px minmax(0, 1fr);
+  gap: 1rem;
+  align-items: start;
+}
+
+.awake-nightmare-portrait {
+  display: block;
+  width: 120px;
+  height: 150px;
+  object-fit: cover;
+}
+
+.awake-nightmare-main {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  min-width: 0;
+}
+
+.awake-nightmare-main .awake-field {
+  grid-template-columns: auto minmax(0, 1fr);
+}
+
+.awake-nightmare-pain {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.awake-nightmare-pain button {
+  flex: 1;
+}
+
+.awake-nightmare-description {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.awake-nightmare-description textarea {
+  width: 100%;
+  min-height: 160px;
+}

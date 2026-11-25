@@ -1,0 +1,70 @@
+<section class="awake-nightmare">
+
+  <div class="awake-nightmare-header">
+
+    <img
+      class="awake-nightmare-portrait"
+      src="{{actor.img}}"
+      alt="{{actor.name}}"
+      data-action="editImage"
+      data-edit="img"
+    />
+
+    <div class="awake-nightmare-main">
+
+      <label class="awake-field">
+        <span>{{localize "AWAKE.Actor.Name"}}</span>
+
+        <input
+          type="text"
+          name="name"
+          value="{{actor.name}}"
+          {{#unless editable}}disabled{{/unless}}
+        />
+      </label>
+
+      <div class="awake-nightmare-pain">
+
+        <label class="awake-stat">
+          <span>{{localize "AWAKE.Conflict.Pain"}}</span>
+
+          <input
+            type="number"
+            name="system.pain"
+            value="{{system.pain}}"
+            min="1"
+            step="1"
+            {{#unless editable}}disabled{{/unless}}
+          />
+        </label>
+
+        {{#if isGM}}
+          <button
+            type="button"
+            data-action="startConflict"
+          >
+            <i class="fa-solid fa-dice-d6"></i>
+            {{localize "AWAKE.Nightmare.StartConflict"}}
+          </button>
+        {{/if}}
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <label class="awake-nightmare-description">
+
+    <span>
+      {{localize "AWAKE.Nightmare.Description"}}
+    </span>
+
+    <textarea
+      name="system.description"
+      {{#unless editable}}disabled{{/unless}}
+    >{{system.description}}</textarea>
+
+  </label>
+
+</section>

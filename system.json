@@ -25,7 +25,8 @@
   ],
   "documentTypes": {
     "Actor": {
-      "awake": {}
+      "awake": {},
+       "nightmare": {}
     },
     "Item": {
       "exhaustionTalent": {},

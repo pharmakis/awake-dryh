@@ -18,11 +18,14 @@ import { openMadnessConsequenceSheet, handleMadnessConsequenceSubmission } from 
 import { openFailureConsequenceSheet } from "./sheets/failure-consequence-sheet.js";
 import { handleActorHopeSubmission } from "./sheets/actor-hope-sheet.js";
 import { getEligibleHelpers, requestHelpingAction, handleHelpingSubmission, getDominanceParticipants, allDominanceResolved } from "./rules/helping.js";
+import { NightmareActorData } from "./data/nightmare-actor.js";
+import { NightmareActorSheet } from "./sheets/nightmare-actor-sheet.js";
 
 
 
 Hooks.once("init", async () => {
   CONFIG.Actor.dataModels.awake = AwakeActorData;
+  CONFIG.Actor.dataModels.nightmare = NightmareActorData;
   CONFIG.Item.dataModels.exhaustionTalent = ExhaustionTalentData;
   CONFIG.Item.dataModels.madnessTalent = MadnessTalentData;
   CONFIG.Item.dataModels.gear = GearData;
@@ -51,6 +54,15 @@ Hooks.once("init", async () => {
     AwakeActorSheet,
     {
       types: ["awake"],
+      makeDefault: true
+    }
+  );
+  DocumentSheetConfig.registerSheet(
+    foundry.documents.Actor,
+    game.system.id,
+    NightmareActorSheet,
+    {
+      types: ["nightmare"],
       makeDefault: true
     }
   );

@@ -212,7 +212,6 @@
       "TalentsUnavailable": "Talents are unavailable while recovering from a Crash.",
       "CrashNotice": "CRASH — Exhaustion is cleared, Responses are reset, Discipline falls to 1, and Talents are unavailable until recovery."
     },
-
     "Chalices": {
       "Title": "Hope and Despair Chalices",
       "Hope": "Hope Chalice",
@@ -228,12 +227,17 @@
       "exhaustion": "Exhaustion",
       "madness": "Madness",
       "pain": "Pain"
+    },
+    "Nightmare": {
+      "Description": "Description",
+      "StartConflict": "Start Conflict"
     }
   },
 
   "TYPES": {
     "Actor": {
-      "awake": "Awake"
+      "awake": "Awake",
+      "nightmare": "Nightmare"
     },
     "Item": {
       "exhaustionTalent": "Exhaustion Talent",

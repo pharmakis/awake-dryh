@@ -8,85 +8,113 @@
       {{scarText}}
     </p>
 
-    <h3>
-      {{localize "AWAKE.Scars.TransformHope"}}
-    </h3>
-
-    <p>
-      {{localize "AWAKE.Scars.TransformHopeReminder"}}
-    </p>
-
-    <div class="awake-transform-hope-budget">
-        <span>
-            {{localize "AWAKE.Scars.AvailableHope"}}
-        </span>
-
-        <strong data-transform-hope-budget>
-            5 / 5
-        </strong>
-    </div>
-
     <div class="form-group">
-      <label>
-        {{localize "AWAKE.Hope.ReduceExhaustion"}}
-      </label>
-
-      <input
-        type="number"
-        name="exhaustion"
-        value="0"
-        min="0"
-        max="{{maxExhaustion}}"
-        step="1"
-        required
-      />
-    </div>
-
-    <div class="form-group">
-      <label>
-        {{localize "AWAKE.Hope.ClearFight"}}
-      </label>
-
-      <input
-        type="number"
-        name="fight"
-        value="0"
-        min="0"
-        max="{{maxFight}}"
-        step="1"
-        required
-      />
-    </div>
-
-    <div class="form-group">
-      <label>
-        {{localize "AWAKE.Hope.ClearFlight"}}
-      </label>
-
-      <input
-        type="number"
-        name="flight"
-        value="0"
-        min="0"
-        max="{{maxFlight}}"
-        step="1"
-        required
-      />
-    </div>
-
-    {{#if canRestoreDiscipline}}
-      <div class="form-group">
         <label>
-          {{localize "AWAKE.Hope.RestoreDiscipline"}}
-          ({{restoreCost}} Hope)
+            {{localize "AWAKE.Scars.TransformEffect"}}
         </label>
 
-        <select name="restoreDiscipline">
-          <option value="0">0</option>
-          <option value="1">1</option>
+        <select name="effect">
+            <option value="hope">
+                {{localize "AWAKE.Scars.TransformHope"}}
+            </option>
+
+            <option value="madnessTalent">
+                {{localize "AWAKE.Scars.TransformMadnessTalent"}}
+            </option>
+
+            <option value="exhaustionTalent">
+                {{localize "AWAKE.Scars.TransformExhaustionTalent"}}
+            </option>
         </select>
-      </div>
-    {{/if}}
+    </div>
+
+    <p data-transform-talent-note hidden>
+        {{localize "AWAKE.Scars.TransformTalentReminder"}}
+    </p>
+
+    <fieldset class="awake-transform-hope-fields"
+          data-transform-hope-fields>
+        <h3>
+        {{localize "AWAKE.Scars.TransformHope"}}
+        </h3>
+
+        <p>
+        {{localize "AWAKE.Scars.TransformHopeReminder"}}
+        </p>
+
+        <div class="awake-transform-hope-budget">
+            <span>
+                {{localize "AWAKE.Scars.AvailableHope"}}
+            </span>
+
+            <strong data-transform-hope-budget>
+                5 / 5
+            </strong>
+        </div>
+
+        <div class="form-group">
+        <label>
+            {{localize "AWAKE.Hope.ReduceExhaustion"}}
+        </label>
+
+        <input
+            type="number"
+            name="exhaustion"
+            value="0"
+            min="0"
+            max="{{maxExhaustion}}"
+            step="1"
+            required
+        />
+        </div>
+
+        <div class="form-group">
+        <label>
+            {{localize "AWAKE.Hope.ClearFight"}}
+        </label>
+
+        <input
+            type="number"
+            name="fight"
+            value="0"
+            min="0"
+            max="{{maxFight}}"
+            step="1"
+            required
+        />
+        </div>
+
+        <div class="form-group">
+        <label>
+            {{localize "AWAKE.Hope.ClearFlight"}}
+        </label>
+
+        <input
+            type="number"
+            name="flight"
+            value="0"
+            min="0"
+            max="{{maxFlight}}"
+            step="1"
+            required
+        />
+        </div>
+
+        {{#if canRestoreDiscipline}}
+        <div class="form-group">
+            <label>
+            {{localize "AWAKE.Hope.RestoreDiscipline"}}
+            ({{restoreCost}} Hope)
+            </label>
+
+            <select name="restoreDiscipline">
+            <option value="0">0</option>
+            <option value="1">1</option>
+            </select>
+        </div>
+        {{/if}}
+
+    </fieldset>
 
     <p class="awake-transform-warning">
       {{localize "AWAKE.Scars.TransformWarning"}}

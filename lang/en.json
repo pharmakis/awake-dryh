@@ -46,7 +46,13 @@
       "InvalidTransformHope": "You cannot spend more than 5 Hope when transforming a Scar.",
       "TransformUnavailable": "This scar cannot be transformed.",
       "TransformApproval": "{name} wants to transform the scar “{scar}” and immediately spend {cost} Hope. Allow it?",
-      "AvailableHope": "Available Hope"
+      "AvailableHope": "Available Hope",
+      "TransformEffect": "Transform Effect",
+      "TransformMadnessTalent": "Change Madness Talent",
+      "TransformExhaustionTalent": "Change Exhaustion Talent",
+      "TransformTalentReminder": "Agree on the new Talent and its duration with the GM. Edit the Talent manually if necessary.",
+      "TransformTalentApproval": "{name} wants to transform the scar “{scar}”. Effect: {effect}. Allow it?",
+      "TransformTalentNotice": "{name} has transformed a Scar. Effect: {effect}."
     },
 
     "Questionnaire": {

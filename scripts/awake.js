@@ -921,7 +921,7 @@ Hooks.once("ready", async () => {
         );
       }
       else if (
-        submission?.type === "transformScarHope"
+        submission?.type === "transformScar"
       ) {
         await handleTransformScarSubmission(
           submission

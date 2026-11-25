@@ -11,7 +11,16 @@ const {
 
 const HOPE_LIMIT = 5;
 
-
+const TALENT_EFFECTS = new Map([
+  [
+    "madnessTalent",
+    "AWAKE.Scars.TransformMadnessTalent"
+  ],
+  [
+    "exhaustionTalent",
+    "AWAKE.Scars.TransformExhaustionTalent"
+  ]
+]);
 function getTransformTarget(actorUuid, scarIndex, user) {
   const actor =
     foundry.utils.fromUuidSync(actorUuid);
@@ -138,6 +147,20 @@ function getHopePlan(actor, amounts) {
   return { cost, updates };
 }
 
+function getTransformPlan(actor, effect, amounts) {
+  if (effect === "hope") {
+    return getHopePlan(actor, amounts);
+  }
+
+  if (TALENT_EFFECTS.has(effect)) {
+    return {
+      cost: 0,
+      updates: {}
+    };
+  }
+
+  return null;
+}
 
 export class TransformScarSheet extends
   HandlebarsApplicationMixin(ApplicationV2) {
@@ -230,55 +253,90 @@ export class TransformScarSheet extends
     return context;
   }
 
-  async _onRender(context, options) {
-    await super._onRender(context, options);
+async _onRender(context, options) {
+  await super._onRender(context, options);
 
-    const budget = this.element.querySelector(
-        "[data-transform-hope-budget]"
-    );
+  const budget = this.element.querySelector(
+    "[data-transform-hope-budget]"
+  );
 
-    const submit = this.element.querySelector(
-        'button[type="submit"]'
-    );
+  const effect = this.element.querySelector(
+    '[name="effect"]'
+  );
 
-    if (!budget || !submit) return;
+  const hopeFields = this.element.querySelector(
+    "[data-transform-hope-fields]"
+  );
 
-    const updateBudget = () => {
-        const getAmount = name =>
-        Number(
-            this.element.querySelector(
-            `[name="${name}"]`
-            )?.value ?? 0
-        );
+  const talentNote = this.element.querySelector(
+    "[data-transform-talent-note]"
+  );
 
-        const spent =
-        getAmount("exhaustion") +
-        getAmount("fight") +
-        getAmount("flight") +
-        getAmount("restoreDiscipline") *
-            context.restoreCost;
+  const submit = this.element.querySelector(
+    'button[type="submit"]'
+  );
 
-        budget.textContent =
-        `${HOPE_LIMIT - spent} / ${HOPE_LIMIT}`;
+  if (
+    !budget ||
+    !effect ||
+    !hopeFields ||
+    !talentNote ||
+    !submit
+  ) {
+    return;
+  }
 
-        budget.classList.toggle(
-        "over-budget",
-        spent > HOPE_LIMIT
-        );
+  const updateForm = () => {
+    const isHope = effect.value === "hope";
 
-        submit.disabled =
-        spent <= 0 || spent > HOPE_LIMIT;
-    };
+    hopeFields.hidden = !isHope;
+    hopeFields.disabled = !isHope;
+    talentNote.hidden = isHope;
 
-    for (const field of this.element.querySelectorAll(
-        "input[type='number'], select"
-    )) {
-        field.addEventListener("input", updateBudget);
-        field.addEventListener("change", updateBudget);
+    if (!isHope) {
+      submit.disabled =
+        !TALENT_EFFECTS.has(effect.value);
+
+      return;
     }
 
-    updateBudget();
-    }
+    const getAmount = name =>
+      Number(
+        this.element.querySelector(
+          `[name="${name}"]`
+        )?.value ?? 0
+      );
+
+    const spent =
+      getAmount("exhaustion") +
+      getAmount("fight") +
+      getAmount("flight") +
+      getAmount("restoreDiscipline") *
+        context.restoreCost;
+
+    budget.textContent =
+      `${HOPE_LIMIT - spent} / ${HOPE_LIMIT}`;
+
+    budget.classList.toggle(
+      "over-budget",
+      spent > HOPE_LIMIT
+    );
+
+    submit.disabled =
+      !Number.isFinite(spent) ||
+      spent <= 0 ||
+      spent > HOPE_LIMIT;
+  };
+
+  for (const field of this.element.querySelectorAll(
+    "input[type='number'], select"
+  )) {
+    field.addEventListener("input", updateForm);
+    field.addEventListener("change", updateForm);
+  }
+
+  updateForm();
+}
 
 
   static #onCancel() {
@@ -297,6 +355,8 @@ export class TransformScarSheet extends
 
     if (!target) return;
 
+    const effect = formData.object.effect;
+
     const amounts = {
       exhaustion:
         Number(formData.object.exhaustion ?? 0),
@@ -312,7 +372,11 @@ export class TransformScarSheet extends
     };
 
     const plan =
-      getHopePlan(target.actor, amounts);
+        getTransformPlan(
+            target.actor,
+            effect,
+            amounts
+        );
 
     if (!plan) {
       ui.notifications.warn(
@@ -325,7 +389,8 @@ export class TransformScarSheet extends
     }
 
     const submission = {
-      type: "transformScarHope",
+      type: "transformScar",
+            effect,
 
       actorUuid: this.actorUuid,
       scarIndex: this.scarIndex,
@@ -422,10 +487,11 @@ function validateSubmission(submission) {
   }
 
   const plan =
-    getHopePlan(
-      target.actor,
-      submission.amounts ?? {}
-    );
+  getTransformPlan(
+    target.actor,
+    submission.effect,
+    submission.amounts ?? {}
+  );
 
   if (!plan || plan.cost !== submission.cost) {
     return null;
@@ -451,17 +517,61 @@ export async function handleTransformScarSubmission(
   const description =
     document.createElement("p");
 
-  description.textContent =
-    game.i18n.format(
-      "AWAKE.Scars.TransformApproval",
-      {
-        name: request.actor.name,
-        scar: request.scar.text,
-        cost: request.plan.cost
-      }
-    );
+  if (submission.effect === "hope") {
+    description.textContent =
+        game.i18n.format(
+        "AWAKE.Scars.TransformApproval",
+        {
+            name: request.actor.name,
+            scar: request.scar.text,
+            cost: request.plan.cost
+        }
+        );
 
-  content.append(description);
+    content.append(description);
+
+    const effects =
+        document.createElement("ul");
+
+    const labels = {
+        exhaustion: "AWAKE.Hope.ReduceExhaustion",
+        fight: "AWAKE.Hope.ClearFight",
+        flight: "AWAKE.Hope.ClearFlight",
+        restoreDiscipline: "AWAKE.Hope.RestoreDiscipline"
+    };
+
+    for (const [key, label] of Object.entries(labels)) {
+        const amount = submission.amounts[key];
+
+        if (!amount) continue;
+
+        const effect =
+        document.createElement("li");
+
+        effect.textContent =
+        `${game.i18n.localize(label)} × ${amount}`;
+
+        effects.append(effect);
+    }
+
+    content.append(effects);
+    }
+
+    else {
+    description.textContent =
+        game.i18n.format(
+        "AWAKE.Scars.TransformTalentApproval",
+        {
+            name: request.actor.name,
+            scar: request.scar.text,
+            effect: game.i18n.localize(
+            TALENT_EFFECTS.get(submission.effect)
+            )
+        }
+        );
+
+    content.append(description);
+    }
 
   const effects =
     document.createElement("ul");
@@ -534,7 +644,27 @@ async function applyTransformScarSubmission(
     ...plan.updates,
 
     "system.scars": scars
-  });
+    });
 
-  return true;
+    if (TALENT_EFFECTS.has(submission.effect)) {
+    const notice = document.createElement("p");
+
+    notice.textContent =
+        game.i18n.format(
+        "AWAKE.Scars.TransformTalentNotice",
+        {
+            name: actor.name,
+            effect: game.i18n.localize(
+            TALENT_EFFECTS.get(submission.effect)
+            )
+        }
+        );
+
+    await ChatMessage.create({
+        speaker: ChatMessage.getSpeaker({ actor }),
+        content: notice.outerHTML
+    });
+    }
+
+    return true;
 }

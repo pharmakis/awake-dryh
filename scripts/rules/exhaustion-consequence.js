@@ -1,5 +1,12 @@
+import {
+  getDominanceParticipant,
+  enqueueHelpingOperation
+} from "./helping.js";
+
+
 export async function applyExhaustionConsequence({
-  messageId
+  messageId,
+  actorUuid
 }) {
   const message =
     game.messages.get(messageId);
@@ -16,8 +23,22 @@ export async function applyExhaustionConsequence({
     !message ||
     !conflict ||
     conflict.status !== "finalized" ||
-    conflict.result?.dominant !== "exhaustion" ||
-    conflict.dominanceResolved
+    conflict.result?.dominant !== "exhaustion"
+  ) {
+    return;
+  }
+
+
+  const participant =
+    getDominanceParticipant(
+      conflict,
+      actorUuid
+    );
+
+
+  if (
+    !participant ||
+    participant.state.dominanceResolved
   ) {
     return;
   }
@@ -25,7 +46,7 @@ export async function applyExhaustionConsequence({
 
   const actor =
     await fromUuid(
-      conflict.actorUuid
+      participant.actorUuid
     );
 
 
@@ -56,6 +77,8 @@ export async function applyExhaustionConsequence({
       "applyExhaustionConsequence",
 
     messageId,
+
+    actorUuid: participant.actorUuid,
 
     userId:
       game.user.id
@@ -89,7 +112,16 @@ export async function applyExhaustionConsequence({
 }
 
 
-export async function handleExhaustionConsequenceSubmission(
+export function handleExhaustionConsequenceSubmission(
+  submission
+) {
+  return enqueueHelpingOperation(
+    () => applyExhaustionConsequenceSubmission(submission)
+  );
+}
+
+
+async function applyExhaustionConsequenceSubmission(
   submission
 ) {
   if (!game.user.isActiveGM) {
@@ -99,6 +131,7 @@ export async function handleExhaustionConsequenceSubmission(
 
   const {
     messageId,
+    actorUuid,
     userId
   } = submission;
 
@@ -118,8 +151,22 @@ export async function handleExhaustionConsequenceSubmission(
     !message ||
     !conflict ||
     conflict.status !== "finalized" ||
-    conflict.result?.dominant !== "exhaustion" ||
-    conflict.dominanceResolved
+    conflict.result?.dominant !== "exhaustion"
+  ) {
+    return;
+  }
+
+
+  const participant =
+    getDominanceParticipant(
+      conflict,
+      actorUuid
+    );
+
+
+  if (
+    !participant ||
+    participant.state.dominanceResolved
   ) {
     return;
   }
@@ -127,7 +174,7 @@ export async function handleExhaustionConsequenceSubmission(
 
   const actor =
     await fromUuid(
-      conflict.actorUuid
+      participant.actorUuid
     );
 
 
@@ -174,7 +221,9 @@ export async function handleExhaustionConsequenceSubmission(
 
 
     const preCrashDiscipline =
-      actor.system.discipline;
+      actor.system.recovery.active
+        ? actor.system.recovery.preCrashDiscipline
+        : actor.system.discipline;
 
 
     await actor.update({
@@ -206,23 +255,15 @@ export async function handleExhaustionConsequenceSubmission(
   }
 
 
-  const updatedConflict = {
-    ...conflict,
+  await message.update({
+    [`${participant.flagPath}.dominanceResolved`]: true,
 
-    dominanceResolved:
-      true,
-
-    exhaustionConsequence:
+    [`${participant.flagPath}.exhaustionConsequence`]:
       crashed
         ? "crash"
         : "increaseExhaustion",
 
-    crashed
-  };
-
-
-  await message.update({
-    [`flags.${game.system.id}.conflict`]:
-      updatedConflict
+    [`${participant.flagPath}.crashed`]:
+      crashed
   });
 }

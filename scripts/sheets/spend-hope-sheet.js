@@ -302,7 +302,10 @@ export async function handleSpendHopeSubmission(
         pools.madness,
 
       pain:
-        pools.pain
+        pools.pain,
+
+      bonusSuccesses:
+        conflict.helper?.successes ?? 0
     });
 
 

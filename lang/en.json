@@ -190,7 +190,10 @@
       "NoActiveGM": "No active GM is available to receive the conflict roll.",
       "Finalize": "Finalize",
       "Finalized": "Result finalized.",
-      "ApplyConsequences": "Apply Consequences"
+      "ApplyConsequences": "Apply Consequences",
+      "Help": "Help",
+      "IsHelping": "{name} is helping.",
+      "HelpingResult": "{name} is helping — Discipline: {dice} (+{successes} successes)."
     },
     "Recovery": {
       "MacroName": "Restore from Crash",

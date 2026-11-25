@@ -1,3 +1,9 @@
+import {
+  getDominanceParticipant,
+  enqueueHelpingOperation
+} from "../rules/helping.js";
+
+
 const {
   ApplicationV2,
   HandlebarsApplicationMixin
@@ -110,6 +116,9 @@ export class DisciplineConsequenceSheet extends HandlebarsApplicationMixin(Appli
       messageId:
         this.messageId,
 
+      actorUuid:
+        this.actor.uuid,
+
       userId:
         game.user.id,
 
@@ -150,7 +159,8 @@ export class DisciplineConsequenceSheet extends HandlebarsApplicationMixin(Appli
 
 
 export async function openDisciplineConsequenceSheet({
-  messageId
+  messageId,
+  actorUuid
 }) {
   const message =
     game.messages.get(messageId);
@@ -167,8 +177,22 @@ export async function openDisciplineConsequenceSheet({
     !message ||
     !conflict ||
     conflict.status !== "finalized" ||
-    conflict.result?.dominant !== "discipline" ||
-    conflict.dominanceResolved
+    conflict.result?.dominant !== "discipline"
+  ) {
+    return;
+  }
+
+
+  const participant =
+    getDominanceParticipant(
+      conflict,
+      actorUuid
+    );
+
+
+  if (
+    !participant ||
+    participant.state.dominanceResolved
   ) {
     return;
   }
@@ -176,7 +200,7 @@ export async function openDisciplineConsequenceSheet({
 
   const actor =
     await fromUuid(
-      conflict.actorUuid
+      participant.actorUuid
     );
 
 
@@ -211,7 +235,16 @@ export async function openDisciplineConsequenceSheet({
 }
 
 
-export async function handleDisciplineConsequenceSubmission(
+export function handleDisciplineConsequenceSubmission(
+  submission
+) {
+  return enqueueHelpingOperation(
+    () => applyDisciplineConsequenceSubmission(submission)
+  );
+}
+
+
+async function applyDisciplineConsequenceSubmission(
   submission
 ) {
   if (!game.user.isActiveGM) {
@@ -221,6 +254,7 @@ export async function handleDisciplineConsequenceSubmission(
 
   const {
     messageId,
+    actorUuid,
     userId,
     consequence
   } = submission;
@@ -254,8 +288,22 @@ export async function handleDisciplineConsequenceSubmission(
     !message ||
     !conflict ||
     conflict.status !== "finalized" ||
-    conflict.result?.dominant !== "discipline" ||
-    conflict.dominanceResolved
+    conflict.result?.dominant !== "discipline"
+  ) {
+    return;
+  }
+
+
+  const participant =
+    getDominanceParticipant(
+      conflict,
+      actorUuid
+    );
+
+
+  if (
+    !participant ||
+    participant.state.dominanceResolved
   ) {
     return;
   }
@@ -263,7 +311,7 @@ export async function handleDisciplineConsequenceSubmission(
 
   const actor =
     await fromUuid(
-      conflict.actorUuid
+      participant.actorUuid
     );
 
 
@@ -349,18 +397,10 @@ export async function handleDisciplineConsequenceSubmission(
   }
 
 
-  const updatedConflict = {
-    ...conflict,
-
-    dominanceResolved: true,
-
-    disciplineConsequence:
-      consequence
-  };
-
-
   await message.update({
-    [`flags.${game.system.id}.conflict`]:
-      updatedConflict
+    [`${participant.flagPath}.dominanceResolved`]: true,
+
+    [`${participant.flagPath}.disciplineConsequence`]:
+      consequence
   });
 }

@@ -228,7 +228,10 @@ export class CastShadowSheet extends HandlebarsApplicationMixin(ApplicationV2) {
           pools.madness,
 
         pain:
-          pools.pain
+          pools.pain,
+        
+        bonusSuccesses:
+          conflict.helper?.successes ?? 0
       });
 
 
@@ -283,7 +286,10 @@ export class CastShadowSheet extends HandlebarsApplicationMixin(ApplicationV2) {
           pools.madness,
 
         pain:
-          pools.pain
+          pools.pain,
+        
+        bonusSuccesses:
+          conflict.helper?.successes ?? 0
       });
 
 

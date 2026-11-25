@@ -1236,3 +1236,16 @@
   font-weight: 600;
   line-height: 1.4;
 }
+
+/* Conflict helping */
+
+.awake-conflict-card .awake-helper-notice {
+  padding: 0.4rem 0;
+  color: #cfc6b8;
+  font-weight: 600;
+}
+
+.awake-conflict-card .awake-helper-select {
+  width: 100%;
+  margin-top: 0.35rem;
+}

@@ -1,6 +1,14 @@
 import {
   resolveRoll
 } from "../rules/roll.js";
+import {
+  enqueueHelpingOperation
+} from "../rules/helping.js";
+import {
+  resolveRoll,
+  countSuccesses
+} from "../rules/roll.js";
+
 
 
 const {
@@ -368,244 +376,303 @@ export async function openBuildRollSheet({
 export async function handleConflictRollSubmission(
   submission
 ) {
+  return enqueueHelpingOperation(
+    () => applyConflictRollSubmission(submission)
+  );
+}
   /*
    * Only the active GM applies the submitted roll
    * to the shared conflict.
    */
-  if (!game.user.isActiveGM) {
-    return;
-  }
+  
+async function applyConflictRollSubmission(
+    submission
+) {
+  
+    if (!game.user.isActiveGM) {
+      return;
+    }
 
 
-  const {
-    messageId,
-    userId,
-    temporaryMadness,
-    increaseExhaustion,
-    pools
-  } = submission;
-
-
-  const message =
-    game.messages.get(messageId);
-
-
-  const conflict =
-    message?.getFlag(
-      game.system.id,
-      "conflict"
-    );
-
-
-  if (
-    !message ||
-    !conflict ||
-    conflict.status !== "awaitingPlayer"
-  ) {
-    return;
-  }
-
-
-  const actor =
-    await fromUuid(
-      conflict.actorUuid
-    );
-
-
-  if (
-    !actor ||
-    actor.documentName !== "Actor" ||
-    actor.type !== "awake"
-  ) {
-    return;
-  }
-
-
-  const user =
-    game.users.get(userId);
-
-
-  if (!user) {
-    return;
-  }
-
-
-  /*
-   * Validate that the person who sent the roll
-   * is actually allowed to roll for this Actor.
-   */
-  const canBuildRoll =
-    user.isGM ||
-    actor.testUserPermission(
-      user,
-      CONST.DOCUMENT_OWNERSHIP_LEVELS.OWNER
-    );
-
-
-  if (!canBuildRoll) {
-    return;
-  }
-
-
-  if (
-    !Number.isInteger(temporaryMadness) ||
-    temporaryMadness < 0 ||
-    temporaryMadness > 6
-  ) {
-    return;
-  }
-
-
-  const disciplineRating =
-    actor.system.discipline;
-
-  const currentExhaustion =
-    actor.system.exhaustion;
-
-  const permanentMadnessRating =
-    actor.system.permanentMadness;
-
-
-  if (
-    increaseExhaustion &&
-    currentExhaustion >= 6
-  ) {
-    return;
-  }
-
-
-  const expectedExhaustion =
-    currentExhaustion +
-    (increaseExhaustion ? 1 : 0);
-
-
-  const expectedMadness =
-    permanentMadnessRating +
-    temporaryMadness;
-
-
-  /*
-   * The GM does not reroll anything.
-   *
-   * We only verify that the submitted arrays have
-   * exactly the sizes the Actor and conflict require.
-   */
-  if (
-    !validateDicePool(
-      pools?.discipline,
-      disciplineRating
-    ) ||
-    !validateDicePool(
-      pools?.exhaustion,
-      expectedExhaustion
-    ) ||
-    !validateDicePool(
-      pools?.madness,
-      expectedMadness
-    ) ||
-    !validateDicePool(
-      pools?.pain,
-      conflict.painRating
-    )
-  ) {
-    return;
-  }
-
-
-  const result =
-    resolveRoll({
-      discipline:
-        pools.discipline,
-
-      exhaustion:
-        pools.exhaustion,
-
-      madness:
-        pools.madness,
-
-      pain:
-        pools.pain
-    });
-
-
-  /*
-   * Voluntary Exhaustion is persistent,
-   * so now that the submitted roll is validated,
-   * apply it to the Actor.
-   */
-  if (increaseExhaustion) {
-    await actor.update({
-      "system.exhaustion":
-        expectedExhaustion
-    });
-  }
-
-
-  const updatedConflict = {
-    ...conflict,
-
-    status:
-      "modifiable",
-
-    pools: {
-      discipline:
-        [...pools.discipline],
-
-      exhaustion:
-        [...pools.exhaustion],
-
-      madness:
-        [...pools.madness],
-
-      pain:
-        [...pools.pain]
-    },
-
-    result: {
-      playerSuccesses:
-        result.playerSuccesses,
-
-      painSuccesses:
-        result.painSuccesses,
-
-      success:
-        result.success,
-
-      dominant:
-        result.dominant
-    },
-
-    temporaryMadness,
-
-    voluntaryExhaustionIncrease:
+    const {
+      messageId,
+      userId,
+      temporaryMadness,
       increaseExhaustion,
-
-    spentHope: 0,
-
-    spentDespair: 0,
-
-    painDominanceCreatedByDespair:
-      false,
-
-    rolledBy:
-      user.id
-  };
+      pools
+    } = submission;
 
 
-  const content =
-    buildRollResultContent(
-      actor,
-      conflict.painRating,
-      result
-    );
+    const message =
+      game.messages.get(messageId);
 
 
-  await message.update({
-    content,
+    const conflict =
+      message?.getFlag(
+        game.system.id,
+        "conflict"
+      );
 
-    [`flags.${game.system.id}.conflict`]:
-      updatedConflict
-  });
+
+    if (
+      !message ||
+      !conflict ||
+      conflict.status !== "awaitingPlayer"
+    ) {
+      return;
+    }
+
+
+    const actor =
+      await fromUuid(
+        conflict.actorUuid
+      );
+
+
+    if (
+      !actor ||
+      actor.documentName !== "Actor" ||
+      actor.type !== "awake"
+    ) {
+      return;
+    }
+
+
+    const user =
+      game.users.get(userId);
+
+
+    if (!user) {
+      return;
+    }
+
+
+    /*
+    * Validate that the person who sent the roll
+    * is actually allowed to roll for this Actor.
+    */
+    const canBuildRoll =
+      user.isGM ||
+      actor.testUserPermission(
+        user,
+        CONST.DOCUMENT_OWNERSHIP_LEVELS.OWNER
+      );
+
+
+    if (!canBuildRoll) {
+      return;
+    }
+
+
+    if (
+      !Number.isInteger(temporaryMadness) ||
+      temporaryMadness < 0 ||
+      temporaryMadness > 6
+    ) {
+      return;
+    }
+
+
+    const disciplineRating =
+      actor.system.discipline;
+
+    const currentExhaustion =
+      actor.system.exhaustion;
+
+    const permanentMadnessRating =
+      actor.system.permanentMadness;
+
+
+    if (
+      increaseExhaustion &&
+      currentExhaustion >= 6
+    ) {
+      return;
+    }
+
+
+    const expectedExhaustion =
+      currentExhaustion +
+      (increaseExhaustion ? 1 : 0);
+
+
+    const expectedMadness =
+      permanentMadnessRating +
+      temporaryMadness;
+
+
+    /*
+    * The GM does not reroll anything.
+    *
+    * We only verify that the submitted arrays have
+    * exactly the sizes the Actor and conflict require.
+    */
+    if (
+      !validateDicePool(
+        pools?.discipline,
+        disciplineRating
+      ) ||
+      !validateDicePool(
+        pools?.exhaustion,
+        expectedExhaustion
+      ) ||
+      !validateDicePool(
+        pools?.madness,
+        expectedMadness
+      ) ||
+      !validateDicePool(
+        pools?.pain,
+        conflict.painRating
+      )
+    ) {
+      return;
+    }
+
+    let helper = conflict.helper ?? null;
+
+    if (helper) {
+      const helperActor =
+        await fromUuid(helper.actorUuid);
+
+      if (
+        !helperActor ||
+        helperActor.documentName !== "Actor" ||
+        helperActor.type !== "awake" ||
+        helperActor.system.discipline <= 0
+      ) {
+        ui.notifications.warn(
+          game.i18n.localize(
+            "AWAKE.Conflict.InvalidActor"
+          )
+        );
+
+        return;
+      }
+
+      const helperPools =
+        await rollConflictPools({
+          discipline:
+            helperActor.system.discipline,
+
+          exhaustion: 0,
+          madness: 0,
+          pain: 0
+        });
+
+      helper = {
+        ...helper,
+
+        dice:
+          helperPools.discipline,
+
+        successes:
+          countSuccesses(
+            helperPools.discipline
+          )
+      };
+    }
+
+    const result =
+      resolveRoll({
+        discipline:
+          pools.discipline,
+
+        exhaustion:
+          pools.exhaustion,
+
+        madness:
+          pools.madness,
+
+        pain:
+          pools.pain,
+
+        bonusSuccesses:
+          helper?.successes ?? 0
+      });
+
+
+    /*
+    * Voluntary Exhaustion is persistent,
+    * so now that the submitted roll is validated,
+    * apply it to the Actor.
+    */
+    if (increaseExhaustion) {
+      await actor.update({
+        "system.exhaustion":
+          expectedExhaustion
+      });
+    }
+
+
+    const updatedConflict = {
+      ...conflict,
+
+      status:
+        "modifiable",
+        
+        helper,
+
+        helpClosed: true,
+
+      pools: {
+        discipline:
+          [...pools.discipline],
+
+        exhaustion:
+          [...pools.exhaustion],
+
+        madness:
+          [...pools.madness],
+
+        pain:
+          [...pools.pain]
+      },
+
+      result: {
+        playerSuccesses:
+          result.playerSuccesses,
+
+        painSuccesses:
+          result.painSuccesses,
+
+        success:
+          result.success,
+
+        dominant:
+          result.dominant
+      },
+
+      temporaryMadness,
+
+      voluntaryExhaustionIncrease:
+        increaseExhaustion,
+
+      spentHope: 0,
+
+      spentDespair: 0,
+
+      painDominanceCreatedByDespair:
+        false,
+
+      rolledBy:
+        user.id
+    };
+
+
+    const content =
+      buildRollResultContent(
+        actor,
+        conflict.painRating,
+        result
+      );
+
+
+    await message.update({
+      content,
+
+      [`flags.${game.system.id}.conflict`]:
+        updatedConflict
+    });
 }
 
 
@@ -1053,7 +1120,10 @@ export async function finalizeConflict({
         conflict.pools.madness,
 
       pain:
-        conflict.pools.pain
+        conflict.pools.pain,
+      
+      bonusSuccesses:
+        conflict.helper?.successes ?? 0
     });
 
 
@@ -1125,6 +1195,15 @@ export async function finalizeConflict({
 
     dominanceResolved:
       result.dominant === "pain",
+    
+    helper: conflict.helper
+      ? {
+          ...conflict.helper,
+
+          dominanceResolved:
+            result.dominant === "pain"
+        }
+      : null,
 
     result: {
       playerSuccesses:

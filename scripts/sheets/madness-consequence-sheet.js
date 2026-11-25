@@ -1,3 +1,9 @@
+import {
+  getDominanceParticipant,
+  enqueueHelpingOperation
+} from "../rules/helping.js";
+
+
 const {
   ApplicationV2,
   HandlebarsApplicationMixin
@@ -122,6 +128,9 @@ export class MadnessConsequenceSheet extends HandlebarsApplicationMixin(Applicat
       messageId:
         this.messageId,
 
+      actorUuid:
+        this.actor.uuid,
+
       userId:
         game.user.id,
 
@@ -162,7 +171,8 @@ export class MadnessConsequenceSheet extends HandlebarsApplicationMixin(Applicat
 
 
 export async function openMadnessConsequenceSheet({
-  messageId
+  messageId,
+  actorUuid
 }) {
   const message =
     game.messages.get(messageId);
@@ -179,8 +189,22 @@ export async function openMadnessConsequenceSheet({
     !message ||
     !conflict ||
     conflict.status !== "finalized" ||
-    conflict.result?.dominant !== "madness" ||
-    conflict.dominanceResolved
+    conflict.result?.dominant !== "madness"
+  ) {
+    return;
+  }
+
+
+  const participant =
+    getDominanceParticipant(
+      conflict,
+      actorUuid
+    );
+
+
+  if (
+    !participant ||
+    participant.state.dominanceResolved
   ) {
     return;
   }
@@ -188,7 +212,7 @@ export async function openMadnessConsequenceSheet({
 
   const actor =
     await fromUuid(
-      conflict.actorUuid
+      participant.actorUuid
     );
 
 
@@ -223,7 +247,16 @@ export async function openMadnessConsequenceSheet({
 }
 
 
-export async function handleMadnessConsequenceSubmission(
+export function handleMadnessConsequenceSubmission(
+  submission
+) {
+  return enqueueHelpingOperation(
+    () => applyMadnessConsequenceSubmission(submission)
+  );
+}
+
+
+async function applyMadnessConsequenceSubmission(
   submission
 ) {
   if (!game.user.isActiveGM) {
@@ -233,6 +266,7 @@ export async function handleMadnessConsequenceSubmission(
 
   const {
     messageId,
+    actorUuid,
     userId,
     consequence
   } = submission;
@@ -265,8 +299,22 @@ export async function handleMadnessConsequenceSubmission(
     !message ||
     !conflict ||
     conflict.status !== "finalized" ||
-    conflict.result?.dominant !== "madness" ||
-    conflict.dominanceResolved
+    conflict.result?.dominant !== "madness"
+  ) {
+    return;
+  }
+
+
+  const participant =
+    getDominanceParticipant(
+      conflict,
+      actorUuid
+    );
+
+
+  if (
+    !participant ||
+    participant.state.dominanceResolved
   ) {
     return;
   }
@@ -274,7 +322,7 @@ export async function handleMadnessConsequenceSubmission(
 
   const actor =
     await fromUuid(
-      conflict.actorUuid
+      participant.actorUuid
     );
 
 
@@ -458,23 +506,16 @@ export async function handleMadnessConsequenceSubmission(
   }
 
 
-  const updatedConflict = {
-    ...conflict,
+  await message.update({
+    [`${participant.flagPath}.dominanceResolved`]: true,
 
-    dominanceResolved:
-      true,
-
-    madnessConsequence:
+    [`${participant.flagPath}.madnessConsequence`]:
       consequence,
 
-    snapped,
+    [`${participant.flagPath}.snapped`]:
+      snapped,
 
-    becameNightmare
-  };
-
-
-  await message.update({
-    [`flags.${game.system.id}.conflict`]:
-      updatedConflict
+    [`${participant.flagPath}.becameNightmare`]:
+      becameNightmare
   });
 }

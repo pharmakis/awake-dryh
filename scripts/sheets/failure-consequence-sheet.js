@@ -1,3 +1,8 @@
+import {
+  allDominanceResolved
+} from "../rules/helping.js";
+
+
 const {
   ApplicationV2,
   HandlebarsApplicationMixin
@@ -177,7 +182,8 @@ export async function openFailureConsequenceSheet({
     !conflict ||
     conflict.status !== "finalized" ||
     conflict.result?.success !== false ||
-    !conflict.dominanceResolved ||
+    !allDominanceResolved(conflict) ||
+    conflict.becameNightmare ||
     conflict.failureResolved
   ) {
     return;
@@ -248,7 +254,8 @@ async function applyFailureConsequence({
     !conflict ||
     conflict.status !== "finalized" ||
     conflict.result?.success !== false ||
-    !conflict.dominanceResolved ||
+    !allDominanceResolved(conflict) ||
+    conflict.becameNightmare ||
     conflict.failureResolved
   ) {
     return false;

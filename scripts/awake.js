@@ -17,6 +17,8 @@ import { openRestoreFromCrashSheet } from "./sheets/restore-from-crash-sheet.js"
 import { openMadnessConsequenceSheet, handleMadnessConsequenceSubmission } from "./sheets/madness-consequence-sheet.js";
 import { openFailureConsequenceSheet } from "./sheets/failure-consequence-sheet.js";
 import { handleActorHopeSubmission } from "./sheets/actor-hope-sheet.js";
+import { getEligibleHelpers, requestHelpingAction, handleHelpingSubmission } from "./rules/helping.js";
+import { getEligibleHelpers, requestHelpingAction, handleHelpingSubmission, getDominanceParticipants, allDominanceResolved } from "./rules/helping.js";
 
 
 
@@ -119,6 +121,40 @@ Hooks.on("renderChatMessageHTML", (message, html) => {
   );
 
    if (!card) return;
+
+  if (conflict.helper) {
+    const helperNotice =
+      document.createElement("p");
+
+    helperNotice.classList.add(
+      "awake-helper-notice"
+    );
+
+    helperNotice.textContent =
+      Array.isArray(conflict.helper.dice)
+        ? game.i18n.format(
+            "AWAKE.Conflict.HelpingResult",
+            {
+              name:
+                conflict.helper.actorName,
+
+              dice:
+                conflict.helper.dice.join(", "),
+
+              successes:
+                conflict.helper.successes
+            }
+          )
+        : game.i18n.format(
+            "AWAKE.Conflict.IsHelping",
+            {
+              name:
+                conflict.helper.actorName
+            }
+          );
+
+    card.append(helperNotice);
+  } 
 
   const dominanceNotice =
     document.createElement("p");
@@ -290,6 +326,76 @@ Hooks.on("renderChatMessageHTML", (message, html) => {
         CONST.DOCUMENT_OWNERSHIP_LEVELS.OWNER
       );
 
+    const eligibleHelpers =
+      getEligibleHelpers(
+        conflict,
+        game.user
+      );
+
+    if (eligibleHelpers.length > 0) {
+      let helperSelect = null;
+
+      if (eligibleHelpers.length > 1) {
+        helperSelect =
+          document.createElement("select");
+
+        helperSelect.classList.add(
+          "awake-helper-select"
+        );
+
+        for (const helper of eligibleHelpers) {
+          const option =
+            document.createElement("option");
+
+          option.value = helper.uuid;
+          option.textContent = helper.name;
+
+          helperSelect.append(option);
+        }
+
+        card.append(helperSelect);
+      }
+
+
+      const helpButton =
+        document.createElement("button");
+
+      helpButton.type = "button";
+
+      helpButton.classList.add(
+        "awake-help-button"
+      );
+
+      helpButton.textContent =
+        game.i18n.localize(
+          "AWAKE.Conflict.Help"
+        );
+
+
+      helpButton.addEventListener(
+        "click",
+        async () => {
+          helpButton.disabled = true;
+
+          try {
+            await requestHelpingAction({
+              type: "joinAsHelper",
+
+              messageId: message.id,
+
+              actorUuid:
+                helperSelect?.value ??
+                eligibleHelpers[0].uuid
+            });
+          }
+          finally {
+            helpButton.disabled = false;
+          }
+        }
+      );
+
+      card.append(helpButton);
+    }
 
     if (!canBuildRoll) return;
 
@@ -311,8 +417,16 @@ Hooks.on("renderChatMessageHTML", (message, html) => {
 
     button.addEventListener(
       "click",
-      () => {
-        openBuildRollSheet({
+      async () => {
+        const accepted =
+          await requestHelpingAction({
+            type: "closeHelping",
+            messageId: message.id
+          });
+
+        if (!accepted) return;
+
+        await openBuildRollSheet({
           messageId: message.id
         });
       }
@@ -438,153 +552,32 @@ Hooks.on("renderChatMessageHTML", (message, html) => {
   }
   if (
     conflict.status === "finalized" &&
-    conflict.result?.dominant === "discipline" &&
-    !conflict.dominanceResolved
+    [
+      "discipline",
+      "exhaustion",
+      "madness"
+    ].includes(conflict.result?.dominant)
   ) {
-  const actor =
-    foundry.utils.fromUuidSync(
-      conflict.actorUuid
-    );
+    const participants =
+      getDominanceParticipants(conflict);
 
-
-  if (
-    !actor ||
-    actor.documentName !== "Actor" ||
-    actor.type !== "awake"
-  ) {
-    return;
-  }
-
-
-  const canApply =
-    game.user.isGM ||
-    actor.testUserPermission(
-      game.user,
-      CONST.DOCUMENT_OWNERSHIP_LEVELS.OWNER
-    );
-
-
-  if (!canApply) {
-    return;
-  }
-
-
-  const consequenceButton =
-    document.createElement(
-      "button"
-    );
-
-  consequenceButton.type =
-    "button";
-
-  consequenceButton.classList.add(
-    "awake-apply-consequence-button"
-  );
-
-  consequenceButton.textContent =
-    game.i18n.localize(
-      "AWAKE.Conflict.ApplyConsequences"
-    );
-
-
-  consequenceButton.addEventListener(
-    "click",
-    () => {
-      openDisciplineConsequenceSheet({
-        messageId: message.id
-      });
-    }
-  );
-
-  card.append(
-    consequenceButton
-  );
-  }
-
-  if (
-    conflict.status === "finalized" &&
-    conflict.result?.dominant === "exhaustion" &&
-    !conflict.dominanceResolved
-  ) {
-    const actor =
-      foundry.utils.fromUuidSync(
-        conflict.actorUuid
-      );
-
-
-    if (
-      !actor ||
-      actor.documentName !== "Actor" ||
-      actor.type !== "awake"
-    ) {
-      return;
-    }
-
-
-    const canApply =
-      game.user.isGM ||
-      actor.testUserPermission(
-        game.user,
-        CONST.DOCUMENT_OWNERSHIP_LEVELS.OWNER
-      );
-
-
-    if (!canApply) {
-      return;
-    }
-
-
-    const consequenceButton =
-      document.createElement(
-        "button"
-      );
-
-    consequenceButton.type =
-      "button";
-
-    consequenceButton.classList.add(
-      "awake-apply-consequence-button"
-    );
-
-    consequenceButton.textContent =
-      game.i18n.localize(
-        "AWAKE.Conflict.ApplyConsequences"
-      );
-
-
-    consequenceButton.addEventListener(
-      "click",
-      async () => {
-        await applyExhaustionConsequence({
-          messageId: message.id
-        });
+    for (const participant of participants) {
+      if (participant.state.dominanceResolved) {
+        continue;
       }
-    );
 
-
-    card.append(
-      consequenceButton
-    );
-  }
-  if (
-      conflict.status === "finalized" &&
-      conflict.result?.dominant === "madness" &&
-      !conflict.dominanceResolved
-    ) {
       const actor =
         foundry.utils.fromUuidSync(
-          conflict.actorUuid
+          participant.actorUuid
         );
-
 
       if (
         !actor ||
         actor.documentName !== "Actor" ||
         actor.type !== "awake"
       ) {
-        return;
+        continue;
       }
-
 
       const canApply =
         game.user.isGM ||
@@ -593,49 +586,72 @@ Hooks.on("renderChatMessageHTML", (message, html) => {
           CONST.DOCUMENT_OWNERSHIP_LEVELS.OWNER
         );
 
-
       if (!canApply) {
-        return;
+        continue;
       }
 
-
       const consequenceButton =
-        document.createElement(
-          "button"
-        );
+        document.createElement("button");
 
-      consequenceButton.type =
-        "button";
+      consequenceButton.type = "button";
 
       consequenceButton.classList.add(
         "awake-apply-consequence-button"
       );
 
-      consequenceButton.textContent =
+      const label =
         game.i18n.localize(
           "AWAKE.Conflict.ApplyConsequences"
         );
 
+      consequenceButton.textContent =
+        conflict.helper
+          ? `${label} — ${actor.name}`
+          : label;
 
       consequenceButton.addEventListener(
         "click",
-        () => {
-          openMadnessConsequenceSheet({
-            messageId: message.id
-          });
+        async () => {
+          const options = {
+            messageId: message.id,
+
+            actorUuid:
+              participant.actorUuid
+          };
+
+          switch (conflict.result.dominant) {
+            case "discipline":
+              openDisciplineConsequenceSheet(
+                options
+              );
+              break;
+
+            case "exhaustion":
+              await applyExhaustionConsequence(
+                options
+              );
+              break;
+
+            case "madness":
+              openMadnessConsequenceSheet(
+                options
+              );
+              break;
+          }
         }
       );
 
-
-      card.append(
-        consequenceButton
-      );
+      card.append(consequenceButton);
     }
+  }
+
+
+
     if (
       game.user.isGM &&
       conflict.status === "finalized" &&
       conflict.result?.success === false &&
-      conflict.dominanceResolved &&
+      allDominanceResolved(conflict) &&
       !conflict.failureResolved &&
       !conflict.becameNightmare
     ) {
@@ -732,6 +748,14 @@ Hooks.once("ready", async () => {
             submission
           );
         }
+      else if (
+        submission?.type === "joinAsHelper" ||
+        submission?.type === "closeHelping"
+      ) {
+        await handleHelpingSubmission(
+          submission
+        );
+      }
     }
   );
 

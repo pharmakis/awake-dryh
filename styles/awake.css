@@ -1388,3 +1388,9 @@
 .awake-transform-scar [data-transform-talent-note][hidden] {
   display: none;
 }
+
+.awake-transform-card .awake-transform-effect {
+  margin: 0;
+  font-weight: 600;
+  text-align: center;
+}

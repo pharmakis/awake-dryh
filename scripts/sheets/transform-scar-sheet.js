@@ -647,23 +647,59 @@ async function applyTransformScarSubmission(
     });
 
     if (TALENT_EFFECTS.has(submission.effect)) {
-    const notice = document.createElement("p");
+        const card = document.createElement("section");
 
-    notice.textContent =
-        game.i18n.format(
-        "AWAKE.Scars.TransformTalentNotice",
-        {
-            name: actor.name,
-            effect: game.i18n.localize(
-            TALENT_EFFECTS.get(submission.effect)
-            )
-        }
+        card.classList.add(
+            "awake-conflict-card",
+            "awake-transform-card"
         );
 
-    await ChatMessage.create({
-        speaker: ChatMessage.getSpeaker({ actor }),
-        content: notice.outerHTML
-    });
+        const title = document.createElement("h3");
+
+        title.textContent =
+            game.i18n.localize(
+            "AWAKE.Scars.TransformTitle"
+            );
+
+        const notice = document.createElement("p");
+
+        notice.textContent =
+            game.i18n.format(
+            "AWAKE.Scars.TransformTalentNotice",
+            {
+                name: actor.name
+            }
+            );
+
+        const resultBlock = document.createElement("div");
+
+        resultBlock.classList.add(
+            "awake-conflict-result"
+        );
+
+        const effect = document.createElement("p");
+
+        effect.classList.add(
+            "awake-transform-effect"
+        );
+
+        effect.textContent =
+            game.i18n.localize(
+            TALENT_EFFECTS.get(submission.effect)
+            );
+
+        resultBlock.append(effect);
+
+        card.append(
+            title,
+            notice,
+            resultBlock
+        );
+
+        await ChatMessage.create({
+            speaker: ChatMessage.getSpeaker({ actor }),
+            content: card.outerHTML
+        });
     }
 
     return true;

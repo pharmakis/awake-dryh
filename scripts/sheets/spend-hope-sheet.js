@@ -6,6 +6,10 @@ import {
   buildRollResultContent
 } from "./build-roll-sheet.js";
 
+import {
+  enqueueHelpingOperation
+} from "../rules/helping.js";
+
 
 const {
   ApplicationV2,
@@ -111,7 +115,7 @@ export class SpendHopeSheet extends HandlebarsApplicationMixin(ApplicationV2) {
     };
 
 
-    if (game.user.isGM) {
+    if (game.user.isActiveGM) {
       await handleSpendHopeSubmission(
         submission
       );
@@ -196,6 +200,15 @@ export function openSpendHopeSheet({
 
 
 export async function handleSpendHopeSubmission(
+  submission
+) {
+  return enqueueHelpingOperation(
+    () => applySpendHopeSubmission(submission)
+  );
+}
+
+
+async function applySpendHopeSubmission(
   submission
 ) {
   if (!game.user.isActiveGM) {
@@ -327,6 +340,10 @@ export async function handleSpendHopeSubmission(
       dominant:
         result.dominant
     },
+    
+    painDominanceCreatedByDespair:
+      result.dominant === "pain" &&
+      conflict.painDominanceCreatedByDespair === true,
 
     spentHope:
       (conflict.spentHope ?? 0) +

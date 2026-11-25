@@ -703,7 +703,7 @@ async function rollConflictPools({
   }
 
   await animateDiceRoll(roll);
-  
+
   return pools;
 }
 
@@ -1015,8 +1015,17 @@ function getPoolLabel(
 
 export async function finalizeConflict({
   messageId
+  }) {
+    return enqueueHelpingOperation(
+      () => applyFinalizeConflict({ messageId })
+    );
+  }
+
+
+async function applyFinalizeConflict({
+  messageId
 }) {
-  if (!game.user.isGM) {
+  if (!game.user.isActiveGM) {
     return;
   }
 

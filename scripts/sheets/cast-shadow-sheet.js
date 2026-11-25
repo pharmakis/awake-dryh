@@ -6,6 +6,10 @@ import {
   buildRollResultContent
 } from "./build-roll-sheet.js";
 
+import {
+  enqueueHelpingOperation
+} from "../rules/helping.js";
+
 
 const {
   ApplicationV2,
@@ -132,7 +136,7 @@ export class CastShadowSheet extends HandlebarsApplicationMixin(ApplicationV2) {
     event,
     target
   ) {
-    if (!game.user.isGM) {
+    if (!game.user.isActiveGM) {
       return;
     }
 
@@ -152,9 +156,15 @@ export class CastShadowSheet extends HandlebarsApplicationMixin(ApplicationV2) {
     }
 
 
-    if (!POOLS.includes(pool)) {
+        if (!POOLS.includes(pool)) {
       return;
     }
+
+
+    return enqueueHelpingOperation(async () => {
+      if (!game.user.isActiveGM) {
+        return;
+      }
 
 
     const message =
@@ -375,6 +385,7 @@ export class CastShadowSheet extends HandlebarsApplicationMixin(ApplicationV2) {
     this.render({
       force: true
     });
+  });
   }
 }
 
@@ -382,7 +393,7 @@ export class CastShadowSheet extends HandlebarsApplicationMixin(ApplicationV2) {
 export function openCastShadowSheet({
   messageId
 }) {
-  if (!game.user.isGM) {
+  if (!game.user.isActiveGM) {
     return;
   }
 

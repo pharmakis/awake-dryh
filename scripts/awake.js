@@ -626,7 +626,7 @@ Hooks.on("renderChatMessageHTML", (message, html) => {
     }
 
 
-    if (game.user.isGM) {
+    if (game.user.isActiveGM) {
       const castShadowButton =
         document.createElement("button");
 

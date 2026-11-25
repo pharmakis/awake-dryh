@@ -4,6 +4,9 @@ import {
 import {
   resolveRoll
 } from "../rules/roll.js";
+import {
+  animateDiceRoll
+} from "../integrations/dice-so-nice.js";
 
 
 
@@ -699,7 +702,8 @@ async function rollConflictPools({
     }
   }
 
-
+  await animateDiceRoll(roll);
+  
   return pools;
 }
 

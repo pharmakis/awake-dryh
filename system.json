@@ -8,6 +8,14 @@
     "verified": "14",
     "maximum": "14"
   },
+  "relationships": {
+    "recommends": [
+      {
+        "id": "dice-so-nice",
+        "type": "module"
+      }
+    ]
+  },
   "socket": true,
   "esmodules": [
     "scripts/awake.js"

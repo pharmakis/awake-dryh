@@ -1,6 +1,9 @@
 import {
   countSuccesses
 } from "./roll.js";
+import {
+  animateDiceRoll
+} from "../integrations/dice-so-nice.js";
 
 let helpingQueue = Promise.resolve();
 
@@ -177,6 +180,8 @@ async function applyHelpingSubmission(submission) {
 
     const dice =
     [...roll.dice[0].values];
+    
+    await animateDiceRoll(roll);
 
     await message.update({
     [`flags.${game.system.id}.conflict.helper`]: {

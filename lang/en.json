@@ -40,7 +40,12 @@
       "SelectPool": "Reroll Dice Pool",
       "RecallUnavailable": "No scars or dice pools are available.",
       "RecallApproval": "{name} wants to recall the scar “{scar}” and reroll {pool}. Allow it?",
-      "RecallNotice": "{name} recalled a scar and rerolled {pool}."
+      "RecallNotice": "{name} recalled a scar and rerolled {pool}.",
+      "TransformHope": "Spend up to 5 Hope",
+      "TransformHopeReminder": "Use up to five Hope immediately. Unused Hope is lost.",
+      "InvalidTransformHope": "Choose available effects with a total cost of 1 to 5 Hope.",
+      "TransformUnavailable": "This scar cannot be transformed.",
+      "TransformApproval": "{name} wants to transform the scar “{scar}” and immediately spend {cost} Hope. Allow it?"
     },
 
     "Questionnaire": {

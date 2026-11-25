@@ -1,0 +1,115 @@
+<div class="awake-transform-scar">
+
+  {{#if available}}
+
+    <h3>{{actorName}}</h3>
+
+    <p class="awake-transform-scar-text">
+      {{scarText}}
+    </p>
+
+    <h3>
+      {{localize "AWAKE.Scars.TransformHope"}}
+    </h3>
+
+    <p>
+      {{localize "AWAKE.Scars.TransformHopeReminder"}}
+    </p>
+
+    <div class="form-group">
+      <label>
+        {{localize "AWAKE.Hope.ReduceExhaustion"}}
+      </label>
+
+      <input
+        type="number"
+        name="exhaustion"
+        value="0"
+        min="0"
+        max="{{maxExhaustion}}"
+        step="1"
+        required
+      />
+    </div>
+
+    <div class="form-group">
+      <label>
+        {{localize "AWAKE.Hope.ClearFight"}}
+      </label>
+
+      <input
+        type="number"
+        name="fight"
+        value="0"
+        min="0"
+        max="{{maxFight}}"
+        step="1"
+        required
+      />
+    </div>
+
+    <div class="form-group">
+      <label>
+        {{localize "AWAKE.Hope.ClearFlight"}}
+      </label>
+
+      <input
+        type="number"
+        name="flight"
+        value="0"
+        min="0"
+        max="{{maxFlight}}"
+        step="1"
+        required
+      />
+    </div>
+
+    {{#if canRestoreDiscipline}}
+      <div class="form-group">
+        <label>
+          {{localize "AWAKE.Hope.RestoreDiscipline"}}
+          ({{restoreCost}} Hope)
+        </label>
+
+        <select name="restoreDiscipline">
+          <option value="0">0</option>
+          <option value="1">1</option>
+        </select>
+      </div>
+    {{/if}}
+
+    <p class="awake-transform-warning">
+      {{localize "AWAKE.Scars.TransformWarning"}}
+    </p>
+
+    <div class="awake-transform-actions">
+
+      <button
+        type="button"
+        data-action="cancel"
+      >
+        {{localize "AWAKE.Scars.Cancel"}}
+      </button>
+
+      <button type="submit">
+        {{localize "AWAKE.Scars.Transform"}}
+      </button>
+
+    </div>
+
+  {{else}}
+
+    <p>
+      {{localize "AWAKE.Scars.TransformUnavailable"}}
+    </p>
+
+    <button
+      type="button"
+      data-action="cancel"
+    >
+      {{localize "AWAKE.Scars.Cancel"}}
+    </button>
+
+  {{/if}}
+
+</div>

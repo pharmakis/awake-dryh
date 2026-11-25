@@ -1,6 +1,7 @@
 import { validateResponseAllocation } from "../rules/responses.js";
 import { autoResizeTextareas } from "./auto-resize-textareas.js";
 import { ActorHopeSheet } from "./actor-hope-sheet.js";
+import { openTransformScarSheet } from "./transform-scar-sheet.js";
 const { HandlebarsApplicationMixin } = foundry.applications.api;
 const { ActorSheetV2 } = foundry.applications.sheets;
 
@@ -382,65 +383,23 @@ export class AwakeActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
   /**
    * Transform a Scar.
    */
-  static async #onTransformScar(event, target) {
+  static #onTransformScar(event, target) {
     if (!this.isEditable) return;
 
-    const index = Number(target.dataset.scarIndex);
+    const index =
+      Number(target.dataset.scarIndex);
 
-    if (!Number.isInteger(index) || index < 0 || index > 8) {
+    if (
+      !Number.isInteger(index) ||
+      index < 0 ||
+      index > 8
+    ) {
       return;
     }
 
-    const scar = this.actor.system.scars[index];
-
-    if (!scar || scar.transformed) {
-      return;
-    }
-
-    const confirmed = await foundry.applications.api.DialogV2.confirm({
-      window: {
-        title: game.i18n.localize("AWAKE.Scars.TransformTitle")
-      },
-
-      content: `
-        <p>${game.i18n.localize("AWAKE.Scars.TransformWarning")}</p>
-        <p>${game.i18n.localize("AWAKE.Scars.TransformReminder")}</p>
-      `,
-
-      yes: {
-        label: game.i18n.localize("AWAKE.Scars.TransformConfirm")
-      },
-
-      no: {
-        label: game.i18n.localize("AWAKE.Scars.Cancel")
-      }
-    });
-
-    if (!confirmed) return;
-
-    const scars = this.actor.system.scars.map(scar => ({
-      text: scar.text,
-      recalled: scar.recalled,
-      transformed: scar.transformed
-    }));
-
-    for (const row of this.element.querySelectorAll(".awake-scar")) {
-      const rowIndex = Number(row.dataset.scarIndex);
-
-      if (!Number.isInteger(rowIndex)) continue;
-
-      const textInput = row.querySelector("input.awake-scar-text");
-
-      if (textInput) {
-        scars[rowIndex].text = textInput.value;
-      }
-    }
-
-    scars[index].transformed = true;
-    scars[index].recalled = false;
-
-    await this.actor.update({
-      "system.scars": scars
+    openTransformScarSheet({
+      actorUuid: this.actor.uuid,
+      scarIndex: index
     });
   }
 

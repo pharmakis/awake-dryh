@@ -21,6 +21,7 @@ import { getEligibleHelpers, requestHelpingAction, handleHelpingSubmission, getD
 import { NightmareActorData } from "./data/nightmare-actor.js";
 import { NightmareActorSheet } from "./sheets/nightmare-actor-sheet.js";
 import { getRecallScarTargets, openRecallScarSheet, handleRecallScarSubmission } from "./sheets/recall-scar-sheet.js";
+import { handleTransformScarSubmission } from "./sheets/transform-scar-sheet.js";
 
 
 
@@ -916,6 +917,13 @@ Hooks.once("ready", async () => {
         submission?.type === "recallScar"
       ) {
         await handleRecallScarSubmission(
+          submission
+        );
+      }
+      else if (
+        submission?.type === "transformScarHope"
+      ) {
+        await handleTransformScarSubmission(
           submission
         );
       }

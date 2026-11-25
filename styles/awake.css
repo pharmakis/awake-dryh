@@ -1328,3 +1328,33 @@
   flex-direction: column;
   gap: 0.75rem;
 }
+
+/* Transform Scar Sheet */
+
+.awake-transform-scar {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.awake-transform-scar-text {
+  font-style: italic;
+}
+
+.awake-transform-scar input[type="number"] {
+  max-width: 70px;
+}
+
+.awake-transform-warning {
+  font-style: italic;
+  color: #cfc6b8;
+}
+
+.awake-transform-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.awake-transform-actions button {
+  flex: 1;
+}

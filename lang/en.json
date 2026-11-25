@@ -43,9 +43,10 @@
       "RecallNotice": "{name} recalled a scar and rerolled {pool}.",
       "TransformHope": "Spend up to 5 Hope",
       "TransformHopeReminder": "Use up to five Hope immediately. Unused Hope is lost.",
-      "InvalidTransformHope": "Choose available effects with a total cost of 1 to 5 Hope.",
+      "InvalidTransformHope": "You cannot spend more than 5 Hope when transforming a Scar.",
       "TransformUnavailable": "This scar cannot be transformed.",
-      "TransformApproval": "{name} wants to transform the scar “{scar}” and immediately spend {cost} Hope. Allow it?"
+      "TransformApproval": "{name} wants to transform the scar “{scar}” and immediately spend {cost} Hope. Allow it?",
+      "AvailableHope": "Available Hope"
     },
 
     "Questionnaire": {

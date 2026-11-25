@@ -1358,3 +1358,18 @@
 .awake-transform-actions button {
   flex: 1;
 }
+
+.awake-transform-hope-budget {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 1.1rem;
+}
+
+.awake-transform-hope-budget strong {
+  font-size: 1.4rem;
+}
+
+.awake-transform-hope-budget .over-budget {
+  color: #c94b4b;
+}

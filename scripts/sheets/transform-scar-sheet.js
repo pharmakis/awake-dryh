@@ -230,6 +230,56 @@ export class TransformScarSheet extends
     return context;
   }
 
+  async _onRender(context, options) {
+    await super._onRender(context, options);
+
+    const budget = this.element.querySelector(
+        "[data-transform-hope-budget]"
+    );
+
+    const submit = this.element.querySelector(
+        'button[type="submit"]'
+    );
+
+    if (!budget || !submit) return;
+
+    const updateBudget = () => {
+        const getAmount = name =>
+        Number(
+            this.element.querySelector(
+            `[name="${name}"]`
+            )?.value ?? 0
+        );
+
+        const spent =
+        getAmount("exhaustion") +
+        getAmount("fight") +
+        getAmount("flight") +
+        getAmount("restoreDiscipline") *
+            context.restoreCost;
+
+        budget.textContent =
+        `${HOPE_LIMIT - spent} / ${HOPE_LIMIT}`;
+
+        budget.classList.toggle(
+        "over-budget",
+        spent > HOPE_LIMIT
+        );
+
+        submit.disabled =
+        spent <= 0 || spent > HOPE_LIMIT;
+    };
+
+    for (const field of this.element.querySelectorAll(
+        "input[type='number'], select"
+    )) {
+        field.addEventListener("input", updateBudget);
+        field.addEventListener("change", updateBudget);
+    }
+
+    updateBudget();
+    }
+
 
   static #onCancel() {
     return this.close();
